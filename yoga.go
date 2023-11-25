@@ -11,8 +11,8 @@ type YGSize struct {
 	height float32
 }
 
-func DefaultLogger(config *YGConfig,
-	node *YGNode,
+func DefaultLogger(config *Config,
+	node *Node,
 	level YGLogLevel,
 	format string,
 	args ...interface{}) int {
@@ -40,6 +40,14 @@ var (
 // IsNaN reports whether f is an IEEE 754 “not-a-number” value.
 func IsNaN(f float32) (is bool) {
 	return f != f
+}
+
+func IsInf(f float32, sign int) bool {
+	// Test for infinity by comparing against maximum float.
+	// To avoid the floating-point hardware, could use:
+	//	x := Float64bits(f);
+	//	return sign >= 0 && x == uvinf || sign <= 0 && x == uvneginf;
+	return sign >= 0 && f > math.MaxFloat32 || sign <= 0 && f < -math.MaxFloat32
 }
 
 func If[T any](expr bool, a, b T) T {

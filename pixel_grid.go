@@ -24,8 +24,8 @@ func roundValueToPixelGrid(value float64, pointScaleFactor float64, forceCeil bo
 	return If(math.IsNaN(scaledValue) || math.IsNaN(pointScaleFactor), YGUndefined, float32(scaledValue/pointScaleFactor))
 }
 
-func roundLayoutResultsToPixelGrid(node *YGNode, absoluteLeft float64, absoluteTop float64) {
-	pointScaleFactor := float64(node.getConfig().getPointScaleFactor())
+func roundLayoutResultsToPixelGrid(node *Node, absoluteLeft float64, absoluteTop float64) {
+	pointScaleFactor := float64(node.getConfig().GetPointScaleFactor())
 	nodeLeft := float64(node.getLayout().position[YGEdgeLeft])
 	nodeTop := float64(node.getLayout().position[YGEdgeTop])
 

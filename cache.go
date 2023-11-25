@@ -17,13 +17,13 @@ func newMeasureSizeIsStricterAndStillValid(sizeMode YGMeasureMode, size float32,
 
 func canUseCachedMeasurement(widthMode YGMeasureMode, availableWidth float32, heightMode YGMeasureMode, availableHeight float32,
 	lastWidthMode YGMeasureMode, lastAvailableWidth float32, lastHeightMode YGMeasureMode, lastAvailableHeight float32,
-	lastComputedWidth, lastComputedHeight, marginRow, marginColumn float32, config *YGConfig) bool {
+	lastComputedWidth, lastComputedHeight, marginRow, marginColumn float32, config *Config) bool {
 	if (!IsNaN(lastComputedHeight) && lastComputedHeight < 0) ||
 		(!IsNaN(lastComputedWidth) && lastComputedWidth < 0) {
 		return false
 	}
 
-	pointScaleFactor := config.getPointScaleFactor()
+	pointScaleFactor := config.GetPointScaleFactor()
 
 	useRoundedComparison := config != nil && pointScaleFactor != 0
 	effectiveWidth := availableWidth

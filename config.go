@@ -1,32 +1,36 @@
 package yoga
 
 type YGCloneNodeFunc func(
-	oldNode *YGNode,
-	owner *YGNode,
+	oldNode *Node,
+	owner *Node,
 	childIndex uint32,
-) *YGNode
+) *Node
 
 type YGLogger func(
-	config *YGConfig,
-	node *YGNode,
+	config *Config,
+	node *Node,
 	level YGLogLevel,
 	format string,
-	args ...interface{},
+	args ...any,
 ) int
 
-type YGConfig struct {
+type Config struct {
 	cloneNodeCallback_    YGCloneNodeFunc
 	logger_               YGLogger
 	useWebDefaults_       bool
 	printTree_            bool
 	experimentalFeatures_ EnumBitset
 	errata_               YGErrata
-	context_              interface{}
+	context_              any
 	pointScaleFactor_     float32
 }
 
-func NewConfig(logger YGLogger) *YGConfig {
-	return &YGConfig{
+func ConfigNew() *Config {
+	return NewConfig(DefaultLogger)
+}
+
+func NewConfig(logger YGLogger) *Config {
+	return &Config{
 		cloneNodeCallback_:    nil,
 		logger_:               logger,
 		useWebDefaults_:       false,
@@ -37,23 +41,23 @@ func NewConfig(logger YGLogger) *YGConfig {
 	}
 }
 
-func (config *YGConfig) setUseWebDefaults(useWebDefaults bool) {
+func (config *Config) SetUseWebDefaults(useWebDefaults bool) {
 	config.useWebDefaults_ = useWebDefaults
 }
 
-func (config *YGConfig) useWebDefaults() bool {
+func (config *Config) UseWebDefaults() bool {
 	return config.useWebDefaults_
 }
 
-func (config *YGConfig) setPrintTreeEnabled(printTree bool) {
+func (config *Config) setPrintTreeEnabled(printTree bool) {
 	config.printTree_ = printTree
 }
 
-func (config *YGConfig) shouldPrintTree() bool {
+func (config *Config) shouldPrintTree() bool {
 	return config.printTree_
 }
 
-func (config *YGConfig) setExperimentalFeatureEnabled(feature YGExperimentalFeature, enabled bool) {
+func (config *Config) SetExperimentalFeatureEnabled(feature YGExperimentalFeature, enabled bool) {
 	if enabled {
 		config.experimentalFeatures_.Set(int(feature))
 	} else {
@@ -61,105 +65,105 @@ func (config *YGConfig) setExperimentalFeatureEnabled(feature YGExperimentalFeat
 	}
 }
 
-func (config *YGConfig) isExperimentalFeatureEnabled(feature YGExperimentalFeature) bool {
+func (config *Config) IsExperimentalFeatureEnabled(feature YGExperimentalFeature) bool {
 	return config.experimentalFeatures_.Test(int(feature))
 }
 
-func (config *YGConfig) getEnabledExperiments() EnumBitset {
+func (config *Config) GetEnabledExperiments() EnumBitset {
 	return config.experimentalFeatures_
 }
 
 // setErrata
-func (config *YGConfig) setErrata(errata YGErrata) {
+func (config *Config) setErrata(errata YGErrata) {
 	config.errata_ = errata
 }
 
 // addErrata
-func (config *YGConfig) addErrata(errata YGErrata) {
+func (config *Config) addErrata(errata YGErrata) {
 	config.errata_ |= errata
 }
 
 // removeErrata
-func (config *YGConfig) removeErrata(errata YGErrata) {
+func (config *Config) removeErrata(errata YGErrata) {
 	config.errata_ &= ^errata
 }
 
 // getErrata
-func (config *YGConfig) getErrata() YGErrata {
+func (config *Config) getErrata() YGErrata {
 	return config.errata_
 }
 
 // hasErrata
-func (config *YGConfig) hasErrata(errata YGErrata) bool {
+func (config *Config) hasErrata(errata YGErrata) bool {
 	return config.errata_&errata != YGErrataNone
 }
 
-// setPointScaleFactor
-func (config *YGConfig) setPointScaleFactor(pointScaleFactor float32) {
+// SetPointScaleFactor
+func (config *Config) SetPointScaleFactor(pointScaleFactor float32) {
 	config.pointScaleFactor_ = pointScaleFactor
 }
 
-// getPointScaleFactor
-func (config *YGConfig) getPointScaleFactor() float32 {
+// GetPointScaleFactor
+func (config *Config) GetPointScaleFactor() float32 {
 	return config.pointScaleFactor_
 }
 
-// setContext
-func (config *YGConfig) setContext(context interface{}) {
+// SetContext
+func (config *Config) SetContext(context any) {
 	config.context_ = context
 }
 
-// getContext
-func (config *YGConfig) getContext() interface{} {
+// GetContext
+func (config *Config) GetContext() any {
 	return config.context_
 }
 
-// setLogger
-func (config *YGConfig) setLogger(logger YGLogger) {
+// SetLogger
+func (config *Config) SetLogger(logger YGLogger) {
 	config.logger_ = logger
 }
 
 // log
-func (config *YGConfig) log(node *YGNode, level YGLogLevel, format string, args ...interface{}) {
+func (config *Config) log(node *Node, level YGLogLevel, format string, args ...any) {
 	if config.logger_ != nil {
 		config.logger_(config, node, level, format, args...)
 	}
 }
 
 // setCloneNodeCallback
-func (config *YGConfig) setCloneNodeCallback(callback YGCloneNodeFunc) {
+func (config *Config) setCloneNodeCallback(callback YGCloneNodeFunc) {
 	config.cloneNodeCallback_ = callback
 }
 
 // cloneNode
-func (config *YGConfig) cloneNode(oldNode *YGNode, owner *YGNode, childIndex uint32) *YGNode {
-	var clone *YGNode
+func (config *Config) cloneNode(oldNode *Node, owner *Node, childIndex uint32) *Node {
+	var clone *Node
 	if config.cloneNodeCallback_ != nil {
 		clone = config.cloneNodeCallback_(oldNode, owner, childIndex)
 	}
 	if clone == nil {
-		clone = &YGNode{}
+		clone = &Node{}
 		*clone = *oldNode
 		clone.setOwner(nil)
 	}
 	return clone
 }
 
-var defaultConfig YGConfig
+var defaultConfig Config
 
-func getDefault() *YGConfig {
+func getDefault() *Config {
 	return &defaultConfig
 }
 
 func init() {
-	defaultConfig = YGConfig{
+	defaultConfig = Config{
 		logger_: DefaultLogger,
 	}
 }
 
-func configUpdateInvalidatesLayout(oldConfig, newConfig *YGConfig) bool {
+func configUpdateInvalidatesLayout(oldConfig, newConfig *Config) bool {
 	return oldConfig.getErrata() != newConfig.getErrata() ||
-		oldConfig.getEnabledExperiments() != newConfig.getEnabledExperiments() ||
-		oldConfig.getPointScaleFactor() != newConfig.getPointScaleFactor() ||
-		oldConfig.useWebDefaults() != newConfig.useWebDefaults()
+		oldConfig.GetEnabledExperiments() != newConfig.GetEnabledExperiments() ||
+		oldConfig.GetPointScaleFactor() != newConfig.GetPointScaleFactor() ||
+		oldConfig.UseWebDefaults() != newConfig.UseWebDefaults()
 }

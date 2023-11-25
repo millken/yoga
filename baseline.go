@@ -1,6 +1,6 @@
 package yoga
 
-func calculateBaseline(node *YGNode) float32 {
+func calculateBaseline(node *Node) float32 {
 	if node.hasBaselineFunc() {
 		//Event.Publish(Event.NodeBaselineStart, node)
 
@@ -16,7 +16,7 @@ func calculateBaseline(node *YGNode) float32 {
 		return baseline
 	}
 
-	var baselineChild *YGNode
+	var baselineChild *Node
 	childCount := node.getChildCount()
 	for i := uint32(0); i < childCount; i++ {
 		child := node.getChild(i)
@@ -45,7 +45,7 @@ func calculateBaseline(node *YGNode) float32 {
 	return baseline + baselineChild.getLayout().position[YGEdgeTop]
 }
 
-func isBaselineLayout(node *YGNode) bool {
+func isBaselineLayout(node *Node) bool {
 	if isColumn(node.getStyle().flexDirection()) {
 		return false
 	}

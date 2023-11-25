@@ -27,7 +27,7 @@ type FlexLine struct {
 	// List of children which are part of the line flow. This means they are not
 	// positioned absolutely, or with `display: "none"`, and do not overflow the
 	// available dimensions.
-	itemsInFlow []*YGNode
+	itemsInFlow []*Node
 
 	// Accumulation of the dimensions and margin of all the children on the
 	// current line. This will be used in order to either set the dimensions of
@@ -49,7 +49,7 @@ type FlexLine struct {
 // computedFlexBasis properly computed (To do this, use the
 // computeFlexBasisForChildren function).
 func calculateFlexLine(
-	node *YGNode,
+	node *Node,
 	ownerDirection YGDirection,
 	mainAxisOwnerSize float32,
 	availableInnerWidth float32,
@@ -57,7 +57,7 @@ func calculateFlexLine(
 	startOfLineIndex uint32,
 	lineCount uint32,
 ) FlexLine {
-	itemsInFlow := make([]*YGNode, 0, len(node.getChildren()))
+	itemsInFlow := make([]*Node, 0, len(node.getChildren()))
 
 	sizeConsumed := float32(0)
 	totalFlexGrowFactors := float32(0)

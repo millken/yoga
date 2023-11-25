@@ -50,9 +50,9 @@ func getEnumData(flags uint32, index uint8, enumT any) uint8 {
 	return uint8((flags & mask(bitWidth, index)) >> index)
 }
 
-func setEnumData(flags *uint32, index uint8, newValue any) {
-	mask := mask(minimumBitCount(newValue), index)
-	*flags = (*flags & ^uint32(mask)) | (uint32(newValue.(uint8)) << index & mask)
+func setEnumData(flags *uint32, index uint8, enumT any, newValue uint8) {
+	mask := mask(minimumBitCount(enumT), index)
+	*flags = (*flags & ^uint32(mask)) | (uint32(newValue) << index & mask)
 }
 
 func setBooleanData(flags *uint8, index uint8, value bool) {

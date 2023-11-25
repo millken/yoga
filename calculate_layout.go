@@ -9,12 +9,12 @@ var (
 	gCurrentGenerationCount uint32 = 0
 )
 
-func dimensionWithMargin(node *YGNode, axis YGFlexDirection, widthSize float32) float32 {
+func dimensionWithMargin(node *Node, axis YGFlexDirection, widthSize float32) float32 {
 	return node.getLayout().measuredDimension(dimension(axis)) +
 		node.getMarginForAxis(axis, widthSize)
 }
 
-func styleDefinesDimension(node *YGNode, axis YGFlexDirection, ownerSize float32) bool {
+func styleDefinesDimension(node *Node, axis YGFlexDirection, ownerSize float32) bool {
 	isDefined := isDefined(node.getResolvedDimension(dimension(axis)).value)
 	resolvedDimension := node.getResolvedDimension(dimension(axis))
 	return !(resolvedDimension.unit == YGUnitAuto ||
@@ -25,14 +25,14 @@ func styleDefinesDimension(node *YGNode, axis YGFlexDirection, ownerSize float32
 			(resolvedDimension.value < 0.0 || isUndefined(ownerSize))))
 }
 
-func isLayoutDimensionDefined(node *YGNode, axis YGFlexDirection) bool {
+func isLayoutDimensionDefined(node *Node, axis YGFlexDirection) bool {
 	value := node.getLayout().measuredDimension(dimension(axis))
 	return isDefined(value) && value >= 0.0
 }
 
 func setChildTrailingPosition(
-	node *YGNode,
-	child *YGNode,
+	node *Node,
+	child *Node,
 	axis YGFlexDirection) {
 	size := child.getLayout().measuredDimension(dimension(axis))
 	child.setLayoutPosition(
@@ -41,7 +41,7 @@ func setChildTrailingPosition(
 		flexEndEdge(axis))
 }
 
-func constrainMaxSizeForMode(node *YGNode, axis YGFlexDirection, ownerAxisSize, ownerWidth float32, mode *YGMeasureMode, size *float32) {
+func constrainMaxSizeForMode(node *Node, axis YGFlexDirection, ownerAxisSize, ownerWidth float32, mode *YGMeasureMode, size *float32) {
 	maxSize := resolveValue(node.getStyle().maxDimension(dimension(axis)).YGValue(), ownerAxisSize).unwrap() + node.getMarginForAxis(axis, ownerWidth)
 	switch *mode {
 	case YGMeasureModeExactly:
@@ -55,7 +55,7 @@ func constrainMaxSizeForMode(node *YGNode, axis YGFlexDirection, ownerAxisSize, 
 	}
 }
 
-func computeFlexBasisForChild(node *YGNode, child *YGNode, width float32, widthMode YGMeasureMode, height float32, ownerWidth float32, ownerHeight float32, heightMode YGMeasureMode, direction YGDirection, layoutMarkerData *LayoutData, depth uint32, generationCount uint32) {
+func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode YGMeasureMode, height float32, ownerWidth float32, ownerHeight float32, heightMode YGMeasureMode, direction YGDirection, layoutMarkerData *LayoutData, depth uint32, generationCount uint32) {
 	mainAxis :=
 		resolveDirection(node.getStyle().flexDirection(), direction)
 	isMainAxisRow := isRow(mainAxis)
@@ -71,7 +71,7 @@ func computeFlexBasisForChild(node *YGNode, child *YGNode, width float32, widthM
 
 	if resolvedFlexBasis.isDefined() && isDefined(mainAxisSize) {
 		if child.getLayout().computedFlexBasis.isUndefined() ||
-			(child.getConfig().isExperimentalFeatureEnabled(
+			(child.getConfig().IsExperimentalFeatureEnabled(
 				YGExperimentalFeatureWebFlexBasis) &&
 				child.getLayout().computedFlexBasisGeneration != generationCount) {
 			paddingAndBorder :=
@@ -228,7 +228,7 @@ func computeFlexBasisForChild(node *YGNode, child *YGNode, width float32, widthM
 }
 
 func measureNodeWithMeasureFunc(
-	node *YGNode,
+	node *Node,
 	availableWidth float32,
 	availableHeight float32,
 	widthMeasureMode YGMeasureMode,
@@ -316,7 +316,7 @@ func measureNodeWithMeasureFunc(
 // For nodes with no children, use the available values if they were provided,
 // or the minimum size as indicated by the padding and border sizes.
 func measureNodeWithoutChildren(
-	node *YGNode,
+	node *Node,
 	availableWidth float32,
 	availableHeight float32,
 	widthMeasureMode YGMeasureMode,
@@ -347,7 +347,7 @@ func measureNodeWithoutChildren(
 }
 
 func measureNodeWithFixedSize(
-	node *YGNode,
+	node *Node,
 	availableWidth float32,
 	availableHeight float32,
 	widthMeasureMode YGMeasureMode,
@@ -388,7 +388,7 @@ func measureNodeWithFixedSize(
 	return false
 }
 
-func zeroOutLayoutRecursively(node *YGNode) {
+func zeroOutLayoutRecursively(node *Node) {
 	node.setLayout(LayoutResults{})
 	node.setLayoutDimension(0, YGDimensionWidth)
 	node.setLayoutDimension(0, YGDimensionHeight)
@@ -401,8 +401,8 @@ func zeroOutLayoutRecursively(node *YGNode) {
 }
 
 func layoutAbsoluteChild(
-	node *YGNode,
-	child *YGNode,
+	node *Node,
+	child *Node,
 	width float32,
 	widthMode YGMeasureMode,
 	height float32,
@@ -534,7 +534,7 @@ func layoutAbsoluteChild(
 				child.getLayout().measuredDimension(dimension(mainAxis)),
 			flexStartEdge(mainAxis),
 		)
-	} else if node.getConfig().isExperimentalFeatureEnabled(YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
+	} else if node.getConfig().IsExperimentalFeatureEnabled(YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
 		child.isFlexStartPositionDefined(mainAxis) {
 		child.setLayoutPosition(
 			child.getFlexStartPosition(
@@ -570,7 +570,7 @@ func layoutAbsoluteChild(
 				child.getLayout().measuredDimension(dimension(crossAxis)),
 			flexStartEdge(crossAxis),
 		)
-	} else if node.getConfig().isExperimentalFeatureEnabled(YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
+	} else if node.getConfig().IsExperimentalFeatureEnabled(YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
 		child.isFlexStartPositionDefined(crossAxis) {
 		child.setLayoutPosition(
 			child.getFlexStartPosition(
@@ -585,7 +585,7 @@ func layoutAbsoluteChild(
 }
 
 func calculateAvailableInnerDimension(
-	node *YGNode,
+	node *Node,
 	dimension YGDimension,
 	availableDim float32,
 	paddingAndBorder float32,
@@ -611,7 +611,7 @@ func calculateAvailableInnerDimension(
 }
 
 func computeFlexBasisForChildren(
-	node *YGNode,
+	node *Node,
 	availableInnerWidth float32,
 	availableInnerHeight float32,
 	widthMeasureMode YGMeasureMode,
@@ -624,7 +624,7 @@ func computeFlexBasisForChildren(
 	generationCount uint32,
 ) float32 {
 	totalOuterFlexBasis := float32(0.0)
-	var singleFlexChild *YGNode
+	var singleFlexChild *Node
 	children := node.getChildren()
 	measureModeMainDim := If(isRow(mainAxis), widthMeasureMode, heightMeasureMode)
 
@@ -694,7 +694,7 @@ func computeFlexBasisForChildren(
 // please ensure that distributeFreeSpaceFirstPass is called.
 func distributeFreeSpaceSecondPass(
 	flexLine *FlexLine,
-	node *YGNode,
+	node *Node,
 	mainAxis YGFlexDirection,
 	crossAxis YGFlexDirection,
 	mainAxisOwnerSize float32,
@@ -970,7 +970,7 @@ func distributeFreeSpaceFirstPass(
 // At the end of this function the child nodes would have the proper size
 // assigned to them.
 func resolveFlexibleLength(
-	node *YGNode,
+	node *Node,
 	flexLine *FlexLine,
 	mainAxis YGFlexDirection,
 	crossAxis YGFlexDirection,
@@ -1019,7 +1019,7 @@ func resolveFlexibleLength(
 }
 
 func justifyMainAxis(
-	node *YGNode,
+	node *Node,
 	flexLine *FlexLine,
 	startOfLineIndex uint32,
 	mainAxis YGFlexDirection,
@@ -1259,7 +1259,7 @@ func justifyMainAxis(
 //	caller passes an available size of undefined then it must also pass a
 //	measure mode of MeasureMode::Undefined in that dimension.
 func calculateLayoutImpl(
-	node *YGNode,
+	node *Node,
 	availableWidth float32,
 	availableHeight float32,
 	ownerDirection YGDirection,
@@ -1974,7 +1974,7 @@ func calculateLayoutImpl(
 				continue
 			}
 			absolutePercentageAgainstPaddingEdge :=
-				node.getConfig().isExperimentalFeatureEnabled(
+				node.getConfig().IsExperimentalFeatureEnabled(
 					YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge)
 
 			layoutAbsoluteChild(
@@ -2056,7 +2056,7 @@ func measureModeName(mode YGMeasureMode, performLayout bool) string {
 //	Input parameters are the same as calculateLayoutImpl (see above)
 //	Return parameter is true if layout was performed, false if skipped
 func calculateLayoutInternal(
-	node *YGNode,
+	node *Node,
 	availableWidth float32,
 	availableHeight float32,
 	ownerDirection YGDirection,
@@ -2298,7 +2298,7 @@ func calculateLayoutInternal(
 	return needToVisitNode || cachedResults == nil
 }
 
-func CalculateLayout(node *YGNode, ownerWidth, ownerHeight float32, ownerDirection YGDirection) {
+func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection YGDirection) {
 	//EventPublishLayoutPassStart(node)
 	markerData := LayoutData{}
 

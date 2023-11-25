@@ -1,13 +1,13 @@
 package yoga
 
-func paddingAndBorderForAxis(node *YGNode, axis YGFlexDirection, widthSize float32) float32 {
+func paddingAndBorderForAxis(node *Node, axis YGFlexDirection, widthSize float32) float32 {
 	// The total padding/border for a given axis does not depend on the direction
 	// so hardcoding LTR here to avoid piping direction to this function
 	return node.getInlineStartPaddingAndBorder(axis, YGDirectionLTR, widthSize) +
 		node.getInlineEndPaddingAndBorder(axis, YGDirectionLTR, widthSize)
 }
 
-func boundAxisWithinMinAndMax(node *YGNode, axis YGFlexDirection, value FloatOptional, axisSize float32) FloatOptional {
+func boundAxisWithinMinAndMax(node *Node, axis YGFlexDirection, value FloatOptional, axisSize float32) FloatOptional {
 	var min, max FloatOptional
 
 	if isColumn(axis) {
@@ -36,7 +36,7 @@ func boundAxisWithinMinAndMax(node *YGNode, axis YGFlexDirection, value FloatOpt
 // Like boundAxisWithinMinAndMax but also ensures that the value doesn't
 // go below the padding and border amount.
 func boundAxis(
-	node *YGNode,
+	node *Node,
 	axis YGFlexDirection,
 	value float32,
 	axisSize float32,

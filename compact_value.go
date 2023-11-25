@@ -1,6 +1,8 @@
 package yoga
 
-import "math"
+import (
+	"math"
+)
 
 type CompactValue struct {
 	repr uint32
@@ -31,6 +33,10 @@ func (cv CompactValue) isDefined() bool {
 
 func (cv CompactValue) isAuto() bool {
 	return cv.repr == AUTO_BITS
+}
+
+func (cv CompactValue) equal(other CompactValue) bool {
+	return cv.repr == other.repr
 }
 
 func (cv CompactValue) YGValue() YGValue {
@@ -94,7 +100,7 @@ func CompactValueOfAuto() CompactValue {
 }
 
 func CompactValueOfMaybe(unit YGUnit, value float32) CompactValue {
-	if math.IsNaN(float64(value)) || math.IsInf(float64(value), 0) {
+	if IsNaN(value) || IsInf(value, 0) {
 		return CompactValueOfUndefined()
 	}
 	return CompactValueOf(value, unit)

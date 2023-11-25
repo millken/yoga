@@ -36,6 +36,27 @@ var (
 	flexWrapOffset       uint8 = positionTypeOffset + minimumBitCount(YGPositionType(0))
 	overflowOffset       uint8 = flexWrapOffset + minimumBitCount(YGWrap(0))
 	displayOffset        uint8 = overflowOffset + minimumBitCount(YGOverflow(0))
+
+	edgeUndefinedCompactValue      = [EdgeCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined()}
+	gutterUndefinedCompactValue    = [GutterCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined()}
+	dimensionUndefinedCompactValue = [DimensionCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined()}
+
+	defaultStyle = YGStyle{
+		flags: 0,
+
+		flex_:          undefinedFloatOptional,
+		flexGrow_:      undefinedFloatOptional,
+		flexShrink_:    undefinedFloatOptional,
+		margin_:        edgeUndefinedCompactValue,
+		position_:      edgeUndefinedCompactValue,
+		padding_:       edgeUndefinedCompactValue,
+		border_:        edgeUndefinedCompactValue,
+		gap_:           gutterUndefinedCompactValue,
+		dimensions_:    dimensionUndefinedCompactValue,
+		minDimensions_: dimensionUndefinedCompactValue,
+		maxDimensions_: dimensionUndefinedCompactValue,
+		aspectRatio_:   undefinedFloatOptional,
+	}
 )
 
 func NewStyle() *YGStyle {
@@ -45,14 +66,14 @@ func NewStyle() *YGStyle {
 		flex_:          undefinedFloatOptional,
 		flexGrow_:      undefinedFloatOptional,
 		flexShrink_:    undefinedFloatOptional,
-		margin_:        [EdgeCount]CompactValue{},
-		position_:      [EdgeCount]CompactValue{},
-		padding_:       [EdgeCount]CompactValue{},
-		border_:        [EdgeCount]CompactValue{},
-		gap_:           [GutterCount]CompactValue{},
-		dimensions_:    [DimensionCount]CompactValue{},
-		minDimensions_: [DimensionCount]CompactValue{},
-		maxDimensions_: [DimensionCount]CompactValue{},
+		margin_:        edgeUndefinedCompactValue,
+		position_:      edgeUndefinedCompactValue,
+		padding_:       edgeUndefinedCompactValue,
+		border_:        edgeUndefinedCompactValue,
+		gap_:           gutterUndefinedCompactValue,
+		dimensions_:    dimensionUndefinedCompactValue,
+		minDimensions_: dimensionUndefinedCompactValue,
+		maxDimensions_: dimensionUndefinedCompactValue,
 		aspectRatio_:   undefinedFloatOptional,
 	}
 }

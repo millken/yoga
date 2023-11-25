@@ -1,6 +1,6 @@
 package yoga
 
-func resolveChildAlignment(node *YGNode, child *YGNode) YGAlign {
+func resolveChildAlignment(node *Node, child *Node) YGAlign {
 	align := child.getStyle().alignSelf()
 	if align == YGAlignAuto {
 		align = node.getStyle().alignItems()

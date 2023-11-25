@@ -27,3 +27,7 @@ func (opt FloatOptional) isDefined() bool {
 func (opt FloatOptional) unwrapOrDefault(defaultValue float32) float32 {
 	return If(opt.isUndefined(), defaultValue, opt.value)
 }
+
+func (opt FloatOptional) equal(other FloatOptional) bool {
+	return opt.value == other.value || (opt.isUndefined() && other.isUndefined())
+}
