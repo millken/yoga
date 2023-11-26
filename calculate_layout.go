@@ -1281,9 +1281,9 @@ func calculateLayoutImpl(
 	}
 
 	if performLayout {
-		layoutMarkerData.layouts++
+		layoutMarkerData.layouts += 1
 	} else {
-		layoutMarkerData.measures++
+		layoutMarkerData.measures += 1
 	}
 
 	direction := node.resolveDirection(ownerDirection)
@@ -1687,8 +1687,7 @@ func calculateLayoutImpl(
 					}
 					// And we apply the position
 					child.setLayoutPosition(
-						child.getLayout().position[flexStartEdge(crossAxis)]+
-							totalLineCrossDim+leadingCrossDim,
+						child.getLayout().position[flexStartEdge(crossAxis)]+totalLineCrossDim+leadingCrossDim,
 						flexStartEdge(crossAxis),
 					)
 				}

@@ -23,10 +23,10 @@ type LayoutResults struct {
 
 func NewLayoutResults() *LayoutResults {
 	return &LayoutResults{
-		position:                    [4]float32{},
-		margin:                      [4]float32{},
-		border:                      [4]float32{},
-		padding:                     [4]float32{},
+		position:                    [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
+		margin:                      [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
+		border:                      [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
+		padding:                     [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
 		direction_:                  YGDirectionInherit,
 		hadOverflow_:                false,
 		dimension_:                  [2]float32{YGUndefined, YGUndefined},

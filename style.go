@@ -134,20 +134,40 @@ func (s *YGStyle) flexBasis() CompactValue {
 	return s.flexBasis_
 }
 
-func (s *YGStyle) margin() [EdgeCount]CompactValue {
-	return s.margin_
+func (s *YGStyle) margin(edge YGEdge) CompactValue {
+	return s.margin_[edge]
 }
 
-func (s *YGStyle) position() [EdgeCount]CompactValue {
-	return s.position_
+// setMargin
+func (s *YGStyle) setMargin(edge YGEdge, value CompactValue) {
+	s.margin_[edge] = value
 }
 
-func (s *YGStyle) padding() [EdgeCount]CompactValue {
-	return s.padding_
+func (s *YGStyle) position(edge YGEdge) CompactValue {
+	return s.position_[edge]
 }
 
-func (s *YGStyle) border() [EdgeCount]CompactValue {
-	return s.border_
+// setPosition
+func (s *YGStyle) setPosition(edge YGEdge, value CompactValue) {
+	s.position_[edge] = value
+}
+
+func (s *YGStyle) padding(edge YGEdge) CompactValue {
+	return s.padding_[edge]
+}
+
+// setPadding
+func (s *YGStyle) setPadding(edge YGEdge, value CompactValue) {
+	s.padding_[edge] = value
+}
+
+func (s *YGStyle) border(edge YGEdge) CompactValue {
+	return s.border_[edge]
+}
+
+// setBorder
+func (s *YGStyle) setBorder(edge YGEdge, value CompactValue) {
+	s.border_[edge] = value
 }
 
 func (s *YGStyle) gap(gutter YGGutter) CompactValue {

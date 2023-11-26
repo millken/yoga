@@ -382,7 +382,7 @@ func (n *Node) StyleGetPositionType() YGPositionType {
 // StyleSetPosition
 func (n *Node) StyleSetPosition(edge YGEdge, position float32) {
 	value := CompactValueOfMaybe(YGUnitPoint, position)
-	if !n.getStyle().position()[edge].equal(value) {
+	if !n.getStyle().position(edge).equal(value) {
 		n.getStyle().position_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -391,7 +391,7 @@ func (n *Node) StyleSetPosition(edge YGEdge, position float32) {
 // StyleSetPositionPercent
 func (n *Node) StyleSetPositionPercent(edge YGEdge, position float32) {
 	value := CompactValueOfMaybe(YGUnitPercent, position)
-	if !n.getStyle().position()[edge].equal(value) {
+	if !n.getStyle().position(edge).equal(value) {
 		n.getStyle().position_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -399,7 +399,7 @@ func (n *Node) StyleSetPositionPercent(edge YGEdge, position float32) {
 
 // StyleGetPosition
 func (n *Node) StyleGetPosition(edge YGEdge) YGValue {
-	position := n.getStyle().position()[edge].YGValue()
+	position := n.getStyle().position(edge).YGValue()
 	if position.unit == YGUnitUndefined || position.unit == YGUnitAuto {
 		position.value = YGUndefined
 	}
@@ -409,7 +409,7 @@ func (n *Node) StyleGetPosition(edge YGEdge) YGValue {
 // StyleSetMargin
 func (n *Node) StyleSetMargin(edge YGEdge, margin float32) {
 	value := CompactValueOfMaybe(YGUnitPoint, margin)
-	if !n.getStyle().margin()[edge].equal(value) {
+	if !n.getStyle().margin(edge).equal(value) {
 		n.getStyle().margin_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -418,7 +418,7 @@ func (n *Node) StyleSetMargin(edge YGEdge, margin float32) {
 // StyleSetMarginPercent
 func (n *Node) StyleSetMarginPercent(edge YGEdge, margin float32) {
 	value := CompactValueOfMaybe(YGUnitPercent, margin)
-	if !n.getStyle().margin()[edge].equal(value) {
+	if !n.getStyle().margin(edge).equal(value) {
 		n.getStyle().margin_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -427,7 +427,7 @@ func (n *Node) StyleSetMarginPercent(edge YGEdge, margin float32) {
 // StyleSetMarginAuto
 func (n *Node) StyleSetMarginAuto(edge YGEdge) {
 	value := CompactValueOfMaybe(YGUnitAuto, 0.0)
-	if !n.getStyle().margin()[edge].equal(value) {
+	if !n.getStyle().margin(edge).equal(value) {
 		n.getStyle().margin_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -435,7 +435,7 @@ func (n *Node) StyleSetMarginAuto(edge YGEdge) {
 
 // StyleGetMargin
 func (n *Node) StyleGetMargin(edge YGEdge) YGValue {
-	margin := n.getStyle().margin()[edge].YGValue()
+	margin := n.getStyle().margin(edge).YGValue()
 	if margin.unit == YGUnitUndefined || margin.unit == YGUnitAuto {
 		margin.value = YGUndefined
 	}
@@ -445,7 +445,7 @@ func (n *Node) StyleGetMargin(edge YGEdge) YGValue {
 // StyleSetPadding
 func (n *Node) StyleSetPadding(edge YGEdge, padding float32) {
 	value := CompactValueOfMaybe(YGUnitPoint, padding)
-	if !n.getStyle().padding()[edge].equal(value) {
+	if !n.getStyle().padding(edge).equal(value) {
 		n.getStyle().padding_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -454,7 +454,7 @@ func (n *Node) StyleSetPadding(edge YGEdge, padding float32) {
 // StyleSetPaddingPercent
 func (n *Node) StyleSetPaddingPercent(edge YGEdge, padding float32) {
 	value := CompactValueOfMaybe(YGUnitPercent, padding)
-	if !n.getStyle().padding()[edge].equal(value) {
+	if !n.getStyle().padding(edge).equal(value) {
 		n.getStyle().padding_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -462,7 +462,7 @@ func (n *Node) StyleSetPaddingPercent(edge YGEdge, padding float32) {
 
 // StyleGetPadding
 func (n *Node) StyleGetPadding(edge YGEdge) YGValue {
-	padding := n.getStyle().padding()[edge].YGValue()
+	padding := n.getStyle().padding(edge).YGValue()
 	if padding.unit == YGUnitUndefined || padding.unit == YGUnitAuto {
 		padding.value = YGUndefined
 	}
@@ -472,7 +472,7 @@ func (n *Node) StyleGetPadding(edge YGEdge) YGValue {
 // StyleSetBorder
 func (n *Node) StyleSetBorder(edge YGEdge, border float32) {
 	value := CompactValueOfMaybe(YGUnitPoint, border)
-	if !n.getStyle().border()[edge].equal(value) {
+	if !n.getStyle().border(edge).equal(value) {
 		n.getStyle().border_[edge] = value
 		n.markDirtyAndPropagate()
 	}
@@ -480,7 +480,7 @@ func (n *Node) StyleSetBorder(edge YGEdge, border float32) {
 
 // StyleGetBorder
 func (n *Node) StyleGetBorder(edge YGEdge) float32 {
-	border := n.getStyle().border()[edge]
+	border := n.getStyle().border(edge)
 	if border.isUndefined() || border.isAuto() {
 		return YGUndefined
 	}

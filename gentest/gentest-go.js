@@ -54,7 +54,7 @@ function toValueGo(value) {
   
       this.push('config := yoga.ConfigNew()')
       for (var i in experiments) {
-        this.push('config.SetExperimentalFeatureEnabled(Experiment' + experiments[i] +', true)');
+        this.push('config.SetExperimentalFeatureEnabled(yoga.YGExperimentalFeature' + experiments[i] +', true)');
       }
       this.push('');
     }},
@@ -75,58 +75,64 @@ function toValueGo(value) {
       this.push('assert.EqualValues(t, ' + v0 + ', ' + v1 + ')');
     }},
   
-    YGAlignAuto:{value:'AlignAuto'},
-    YGAlignCenter:{value:'AlignCenter'},
-    YGAlignFlexEnd:{value:'AlignFlexEnd'},
-    YGAlignFlexStart:{value:'AlignFlexStart'},
-    YGAlignStretch:{value:'AlignStretch'},
-    YGAlignSpaceBetween:{value:'AlignSpaceBetween'},
-    YGAlignSpaceAround:{value:'AlignSpaceAround'},
-    YGAlignBaseline:{value:'AlignBaseline'},
-  
-    YGDirectionInherit:{value:'DirectionInherit'},
-    YGDirectionLTR:{value:'DirectionLTR'},
-    YGDirectionRTL:{value:'DirectionRTL'},
-  
-    YGEdgeBottom:{value:'EdgeBottom'},
-    YGEdgeEnd:{value:'EdgeEnd'},
-    YGEdgeLeft:{value:'EdgeLeft'},
-    YGEdgeRight:{value:'EdgeRight'},
-    YGEdgeStart:{value:'EdgeStart'},
-    YGEdgeTop:{value:'EdgeTop'},
-  
-    YGFlexDirectionColumn:{value:'FlexDirectionColumn'},
-    YGFlexDirectionColumnReverse:{value:'FlexDirectionColumnReverse'},
-    YGFlexDirectionRow:{value:'FlexDirectionRow'},
-    YGFlexDirectionRowReverse:{value:'FlexDirectionRowReverse'},
-  
-    YGJustifyCenter:{value:'JustifyCenter'},
-    YGJustifyFlexEnd:{value:'JustifyFlexEnd'},
-    YGJustifyFlexStart:{value:'JustifyFlexStart'},
-    YGJustifySpaceAround:{value:'JustifySpaceAround'},
-    YGJustifySpaceBetween:{value:'JustifySpaceBetween'},
-    YGJustifySpaceEvenly:{value:'JustifySpaceEvenly'},
-  
-    YGOverflowHidden:{value:'OverflowHidden'},
-    YGOverflowVisible:{value:'OverflowVisible'},
-  
-    YGPositionTypeAbsolute:{value:'PositionAbsolute'},
-    YGPositionTypeRelative:{value:'PositionRelative'},
-  
-    YGUndefined:{value:'Undefined'},
-  
-    YGDisplayFlex:{value:'DisplayFlex'},
-    YGDisplayNone:{value:'DisplayNone'},
-    YGAuto:{value:'Auto'},
-  
-  
-    YGWrapNoWrap:{value:'WrapNone'},
-    YGWrapWrap:{value:'WrapWrap'},
-    YGWrapWrapReverse:{value: 'WrapReverse'},
+    YGAlignAuto: {value: 'yoga.YGAlignAuto'},
+  YGAlignCenter: {value: 'yoga.YGAlignCenter'},
+  YGAlignFlexEnd: {value: 'yoga.YGAlignFlexEnd'},
+  YGAlignFlexStart: {value: 'yoga.YGAlignFlexStart'},
+  YGAlignStretch: {value: 'yoga.YGAlignStretch'},
+  YGAlignSpaceBetween: {value: 'yoga.YGAlignSpaceBetween'},
+  YGAlignSpaceAround: {value: 'yoga.YGAlignSpaceAround'},
+  YGAlignSpaceEvenly: {value: 'yoga.YGAlignSpaceEvenly'},
+  YGAlignBaseline: {value: 'yoga.YGAlignBaseline'},
+
+  YGDirectionInherit: {value: 'yoga.YGDirectionInherit'},
+  YGDirectionLTR: {value: 'yoga.YGDirectionLTR'},
+  YGDirectionRTL: {value: 'yoga.YGDirectionRTL'},
+
+  YGEdgeBottom: {value: 'yoga.YGEdgeBottom'},
+  YGEdgeEnd: {value: 'yoga.YGEdgeEnd'},
+  YGEdgeLeft: {value: 'yoga.YGEdgeLeft'},
+  YGEdgeRight: {value: 'yoga.YGEdgeRight'},
+  YGEdgeStart: {value: 'yoga.YGEdgeStart'},
+  YGEdgeTop: {value: 'yoga.YGEdgeTop'},
+
+  YGGutterAll: {value: 'yoga.YGGutterAll'},
+  YGGutterColumn: {value: 'yoga.YGGutterColumn'},
+  YGGutterRow: {value: 'yoga.YGGutterRow'},
+
+  YGFlexDirectionColumn: {value: 'yoga.YGFlexDirectionColumn'},
+  YGFlexDirectionColumnReverse: {value: 'yoga.YGFlexDirectionColumnReverse'},
+  YGFlexDirectionRow: {value: 'yoga.YGFlexDirectionRow'},
+  YGFlexDirectionRowReverse: {value: 'yoga.YGFlexDirectionRowReverse'},
+
+  YGJustifyCenter: {value: 'yoga.YGJustifyCenter'},
+  YGJustifyFlexEnd: {value: 'yoga.YGJustifyFlexEnd'},
+  YGJustifyFlexStart: {value: 'yoga.YGJustifyFlexStart'},
+  YGJustifySpaceAround: {value: 'yoga.YGJustifySpaceAround'},
+  YGJustifySpaceBetween: {value: 'yoga.YGJustifySpaceBetween'},
+  YGJustifySpaceEvenly: {value: 'yoga.YGJustifySpaceEvenly'},
+
+  YGOverflowHidden: {value: 'yoga.YGOverflowHidden'},
+  YGOverflowVisible: {value: 'yoga.YGOverflowVisible'},
+  YGOverflowScroll: {value: 'yoga.YGOverflowScroll'},
+
+  YGPositionTypeAbsolute: {value: 'yoga.YGPositionTypeAbsolute'},
+  YGPositionTypeRelative: {value: 'yoga.YGPositionTypeRelative'},
+  YGPositionTypeStatic: {value: 'yoga.YGPositionTypeStatic'},
+
+  YGWrapNoWrap: {value: 'yoga.YGWrapNoWrap'},
+  YGWrapWrap: {value: 'yoga.YGWrapWrap'},
+  YGWrapWrapReverse: {value: 'yoga.YGWrapWrapReverse'},
+
+  YGUndefined: {value: 'yoga.YGUndefined'},
+
+  YGDisplayFlex: {value: 'yoga.YGDisplayFlex'},
+  YGDisplayNone: {value: 'yoga.YGDisplayNone'},
+  YGAuto: {value: 'yoga.YGAuto'},
   
     YGNodeCalculateLayout:{value:function(node, dir, experiments) {
       this.push(node + '.StyleSetDirection(' + dir + ')');
-      this.push(node + '.CalculateLayout(Undefined, Undefined, ' + dir +')');
+      this.push('yoga.CalculateLayout('+node+',yoga.YGUndefined, yoga.YGUndefined, ' + dir +')');
     }},
   
     YGNodeInsertChild:{value:function(parentName, nodeName, index) {
@@ -202,8 +208,8 @@ function toValueGo(value) {
     }},
   
     YGNodeStyleSetMargin:{value:function(nodeName, edge, value) {
-      var valueStr = toValueGo(value);
-      if (valueStr != 'Auto') {
+      let valueStr = toValueGo(value);
+      if (valueStr != 'yoga.YGAuto') {
         valueStr = ', ' + valueStr + '';
       } else {
         valueStr = '';
@@ -247,4 +253,23 @@ function toValueGo(value) {
     YGNodeStyleSetWidth:{value:function(nodeName, value) {
       this.push(nodeName + '.StyleSetWidth' + toMethodName(value) + '(' + toValueGo(value) + ')');
     }},
+
+    YGNodeStyleSetGap: {
+        value: function (nodeName, gap, value) {
+          this.push(
+            nodeName +
+              '.StyleSetGap(' +
+              gap +
+              ', ' +
+              toValueGo(value) +
+              ');',
+          );
+        },
+      },
+
+    YGNodeStyleSetAspectRatio: {
+    value: function (nodeName, value) {
+        this.push(nodeName + '.StyleSetAspectRatio(' + toValueGo(value) + ');');
+    },
+    },
   });
