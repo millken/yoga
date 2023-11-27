@@ -2167,46 +2167,38 @@ func calculateLayoutInternal(
 		} else {
 			layoutMarkerData.cachedMeasures += 1
 		}
-		// if (gPrintChanges && gPrintSkips) {
-		// 	yoga::log(
-		// 		node,
-		// 		LogLevel::Verbose,
-		// 		"%s%d.{[skipped] ",
-		// 		spacerWithLength(depth),
-		// 		depth);
-		// 	node->print();
-		// 	yoga::log(
-		// 		node,
-		// 		LogLevel::Verbose,
-		// 		"wm: %s, hm: %s, aw: %f ah: %f => d: (%f, %f) %s\n",
-		// 		measureModeName(widthMeasureMode, performLayout),
-		// 		measureModeName(heightMeasureMode, performLayout),
-		// 		availableWidth,
-		// 		availableHeight,
-		// 		cachedResults->computedWidth,
-		// 		cachedResults->computedHeight,
-		// 		LayoutPassReasonToString(reason));
-		//   }
+		if gPrintChanges && gPrintSkips {
+			vlog(nil, node, YGLogLevelVerbose, "%s%d.{[skipped] ", spacerWithLength(depth), depth)
+			node.print()
+			vlog(nil, node, YGLogLevelVerbose, "wm: %s, hm: %s, aw: %f ah: %f => d: (%f, %f) %s\n",
+				measureModeName(widthMeasureMode, performLayout),
+				measureModeName(heightMeasureMode, performLayout),
+				availableWidth,
+				availableHeight,
+				cachedResults.computedWidth,
+				cachedResults.computedHeight,
+				reason)
+		}
 	} else {
-		// if (gPrintChanges) {
-		// 	yoga::log(
-		// 		node,
-		// 		LogLevel::Verbose,
-		// 		"%s%d.{%s",
-		// 		spacerWithLength(depth),
-		// 		depth,
-		// 		needToVisitNode ? "*" : "");
-		// 	node->print();
-		// 	yoga::log(
-		// 		node,
-		// 		LogLevel::Verbose,
-		// 		"wm: %s, hm: %s, aw: %f ah: %f %s\n",
-		// 		measureModeName(widthMeasureMode, performLayout),
-		// 		measureModeName(heightMeasureMode, performLayout),
-		// 		availableWidth,
-		// 		availableHeight,
-		// 		LayoutPassReasonToString(reason));
-		//   }
+		if gPrintChanges {
+			vlog(nil,
+				node,
+				YGLogLevelVerbose,
+				"%s%d.{%s",
+				spacerWithLength(depth),
+				depth,
+				If(needToVisitNode, "*", ""))
+			node.print()
+			vlog(nil,
+				node,
+				YGLogLevelVerbose,
+				"wm: %s, hm: %s, aw: %f ah: %f %s\n",
+				measureModeName(widthMeasureMode, performLayout),
+				measureModeName(heightMeasureMode, performLayout),
+				availableWidth,
+				availableHeight,
+				reason)
+		}
 		calculateLayoutImpl(
 			node,
 			availableWidth,
@@ -2222,31 +2214,34 @@ func calculateLayoutInternal(
 			generationCount,
 			reason,
 		)
-		// if (gPrintChanges) {
-		// 	yoga::log(
-		// 		node,
-		// 		LogLevel::Verbose,
-		// 		"%s%d.}%s",
-		// 		spacerWithLength(depth),
-		// 		depth,
-		// 		needToVisitNode ? "*" : "");
-		// 	node->print();
-		// 	yoga::log(
-		// 		node,
-		// 		LogLevel::Verbose,
-		// 		"wm: %s, hm: %s, d: (%f, %f) %s\n",
-		// 		measureModeName(widthMeasureMode, performLayout),
-		// 		measureModeName(heightMeasureMode, performLayout),
-		// 		layout->measuredDimension(Dimension::Width),
-		// 		layout->measuredDimension(Dimension::Height),
-		// 		LayoutPassReasonToString(reason));
-		//   }
+		if gPrintChanges {
+			vlog(nil,
+				node,
+				YGLogLevelVerbose,
+				"%s%d.}%s",
+				spacerWithLength(depth),
+				depth,
+				If(needToVisitNode, "*", ""))
+			node.print()
+			vlog(nil,
+				node,
+				YGLogLevelVerbose,
+				"wm: %s, hm: %s, d: (%f, %f) %s\n",
+				measureModeName(widthMeasureMode, performLayout),
+				measureModeName(heightMeasureMode, performLayout),
+				layout.measuredDimension(YGDimensionWidth),
+				layout.measuredDimension(YGDimensionHeight),
+				reason)
+		}
 		layout.lastOwnerDirection = ownerDirection
 
 		if cachedResults == nil {
 			layoutMarkerData.maxMeasureCache = max(layoutMarkerData.maxMeasureCache, layout.nextCachedMeasurementsIndex+1)
 
 			if layout.nextCachedMeasurementsIndex == uint32(MaxCachedMeasurements) {
+				if gPrintChanges {
+					vlog(nil, node, YGLogLevelVerbose, "Out of cache entries!\n")
+				}
 				layout.nextCachedMeasurementsIndex = 0
 			}
 
@@ -2299,7 +2294,7 @@ func calculateLayoutInternal(
 
 func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection YGDirection) {
 	//EventPublishLayoutPassStart(node)
-	markerData := LayoutData{}
+	markerData := defaultLayoutData
 
 	// Increment the generation count. This will force the recursive routine to
 	// visit all dirty nodes at least once. Subsequent visits will be skipped if
@@ -2348,9 +2343,9 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		roundLayoutResultsToPixelGrid(node, 0.0, 0.0)
 
 		// #ifdef DEBUG
-		// if node.GetConfig().ShouldPrintTree() {
-		// 	YGPrint(node, YGPrintOptionsLayout|YGPrintOptionsChildren|YGPrintOptionsStyle)
-		// }
+		if node.getConfig().ShouldPrintTree() {
+			vprint(node, YGPrintOptionsLayout|YGPrintOptionsChildren|YGPrintOptionsStyle)
+		}
 		// #endif
 	}
 

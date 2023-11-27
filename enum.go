@@ -377,7 +377,7 @@ func (p YGPositionType) String() string {
 	return "unknown"
 }
 
-type YGPrintOptions int
+type YGPrintOptions uint32
 
 const (
 	YGPrintOptionsLayout YGPrintOptions = 1 << iota

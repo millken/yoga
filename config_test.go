@@ -7,6 +7,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestMaina(t *testing.T) {
+	r := require.New(t)
+	a := struct {
+		Foo int32
+	}{
+		Foo: 0x1234ABCD,
+	}
+	t.Logf("%p", &a)
+	b := &a
+	t.Logf("%p", b)
+	b.Foo = 0x1234
+	r.Equal(&a, b)
+	t.Logf("%x", a.Foo)
+
+}
 func TestConfig(t *testing.T) {
 	r := require.New(t)
 	config := yoga.ConfigNew()

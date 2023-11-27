@@ -49,7 +49,7 @@ var (
 		lineIndex_:           0,
 		owner_:               nil,
 		children_:            make([]*Node, 0),
-		config_:              nil,
+		config_:              &defaultConfig,
 		resolvedDimensions_:  [2]YGValue{},
 	}
 )
@@ -547,6 +547,9 @@ func (node *Node) setLayoutPosition(position float32, edge YGEdge) {
 	if int(edge) >= len(node.getLayout().position) {
 		panic("Edge must be top/left/bottom/right")
 	}
+	if edge == YGEdgeLeft {
+		node.config_.log(node, YGLogLevelDebug, "Left: %g", position)
+	}
 	node.getLayout().position[edge] = position
 }
 
@@ -659,9 +662,17 @@ func (node *Node) replaceChildIdx(child *Node, index uint32) {
 
 // insertChild
 func (node *Node) InsertChild(child *Node, index uint32) {
+	if child.getOwner() != nil {
+		panic("Child already has a owner, it must be removed first.")
+	}
+	if node.hasMeasureFunc() {
+		panic("Cannot add child: Nodes with measure functions cannot have children.")
+	}
 	node.children_ = append(node.children_, nil)
 	copy(node.children_[index+1:], node.children_[index:])
 	node.children_[index] = child
+	child.setOwner(node)
+	node.markDirtyAndPropagate()
 }
 
 func (node *Node) removeChild(child *Node) {
@@ -693,7 +704,7 @@ func (node *Node) cloneChildrenIfNeeded() {
 func (node *Node) markDirtyAndPropagate() {
 	if !node.isDirty_ {
 		node.setDirty(true)
-		node.setLayoutComputedFlexBasis(FloatOptional{})
+		node.setLayoutComputedFlexBasis(undefinedFloatOptional)
 		if node.getOwner() != nil {
 			node.getOwner().markDirtyAndPropagate()
 		}
@@ -731,6 +742,13 @@ func (node *Node) resolveFlexShrink() float32 {
 // isNodeFlexible
 func (node *Node) isNodeFlexible() bool {
 	return (node.getStyle().positionType() != YGPositionTypeAbsolute) && (node.resolveFlexGrow() != 0 || node.resolveFlexShrink() != 0)
+}
+
+// print
+func (node *Node) print() {
+	if node.printFunc_ != nil {
+		node.printFunc_(node)
+	}
 }
 
 // reset

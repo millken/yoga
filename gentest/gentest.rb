@@ -54,7 +54,7 @@ Dir[files].each do |file|
   f = File.open('test.html', 'w')
   f.write sprintf(template, name, ltr_fixture, rtl_fixture, fixture)
   f.close
-  FileUtils.copy('test.html', "#{name}.html") if $DEBUG
+  FileUtils.copy('test.html', "#{name}.html")
 
   browser.goto('file://' + Dir.pwd + '/test.html')
   logs = browser.driver.logs.get(:browser)

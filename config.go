@@ -49,24 +49,24 @@ func (config *Config) UseWebDefaults() bool {
 	return config.useWebDefaults_
 }
 
-func (config *Config) setPrintTreeEnabled(printTree bool) {
+func (config *Config) SetPrintTreeEnabled(printTree bool) {
 	config.printTree_ = printTree
 }
 
-func (config *Config) shouldPrintTree() bool {
+func (config *Config) ShouldPrintTree() bool {
 	return config.printTree_
 }
 
 func (config *Config) SetExperimentalFeatureEnabled(feature YGExperimentalFeature, enabled bool) {
 	if enabled {
-		config.experimentalFeatures_.Set(int(feature))
+		config.experimentalFeatures_.Set(uint(feature))
 	} else {
-		config.experimentalFeatures_.Reset(int(feature))
+		config.experimentalFeatures_.Reset(uint(feature))
 	}
 }
 
 func (config *Config) IsExperimentalFeatureEnabled(feature YGExperimentalFeature) bool {
-	return config.experimentalFeatures_.Test(int(feature))
+	return config.experimentalFeatures_.Test(uint(feature))
 }
 
 func (config *Config) GetEnabledExperiments() EnumBitset {

@@ -55,3 +55,13 @@ type LayoutData struct {
 	measureCallbacks            int32
 	measureCallbackReasonsCount [LayoutPassReasonCount]uint8
 }
+
+var defaultLayoutData = LayoutData{
+	layouts:                     0,
+	measures:                    0,
+	maxMeasureCache:             0,
+	cachedLayouts:               0,
+	cachedMeasures:              0,
+	measureCallbacks:            0,
+	measureCallbackReasonsCount: [LayoutPassReasonCount]uint8{},
+}

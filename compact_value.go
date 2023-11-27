@@ -40,6 +40,9 @@ func (cv CompactValue) equal(other CompactValue) bool {
 }
 
 func (cv CompactValue) YGValue() YGValue {
+	if cv.isUndefined() {
+		return YGValueUndefined
+	}
 	switch cv.repr {
 	case AUTO_BITS:
 		return YGValueAuto
