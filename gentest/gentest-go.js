@@ -48,10 +48,15 @@ function toValueGo(value) {
           },
     },
   
-    emitTestPrologue:{value:function(name, experiments) {
+    emitTestPrologue:{value:function(name, experiments, disabled) {
       this.push('func Test' + toExportName(name) + '(t *testing.T) {');
       this.pushIndent();
-  
+
+      if (disabled) {
+        this.push('t.Skip()');
+        this.push('');
+      }
+
       this.push('config := yoga.ConfigNew()')
       for (var i in experiments) {
         this.push('config.SetExperimentalFeatureEnabled(yoga.YGExperimentalFeature' + experiments[i] +', true)');

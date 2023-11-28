@@ -26,23 +26,23 @@ const (
 func (r LayoutPassReason) String() string {
 	switch r {
 	case LayoutPassReasonInitial:
-		return "Initial"
+		return "initial"
 	case LayoutPassReasonAbsLayout:
-		return "AbsLayout"
+		return "abs_layout"
 	case LayoutPassReasonStretch:
-		return "Stretch"
+		return "stretch"
 	case LayoutPassReasonMultilineStretch:
-		return "MultilineStretch"
+		return "multiline_stretch"
 	case LayoutPassReasonFlexLayout:
-		return "FlexLayout"
+		return "flex_layout"
 	case LayoutPassReasonMeasureChild:
-		return "MeasureChild"
+		return "measure"
 	case LayoutPassReasonAbsMeasureChild:
-		return "AbsMeasureChild"
+		return "abs_measure"
 	case LayoutPassReasonFlexMeasure:
-		return "FlexMeasure"
+		return "flex_measure"
 	default:
-		return "Unknown"
+		return "unknown"
 	}
 }
 

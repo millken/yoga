@@ -42,11 +42,11 @@ var (
 	dimensionUndefinedCompactValue = [DimensionCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined()}
 
 	defaultStyle = YGStyle{
-		flags: 0,
-
+		flags:          0,
 		flex_:          undefinedFloatOptional,
 		flexGrow_:      undefinedFloatOptional,
 		flexShrink_:    undefinedFloatOptional,
+		flexBasis_:     CompactValueOfUndefined(),
 		margin_:        edgeUndefinedCompactValue,
 		position_:      edgeUndefinedCompactValue,
 		padding_:       edgeUndefinedCompactValue,

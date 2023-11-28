@@ -1,5 +1,10 @@
 package yoga
 
+import (
+	"fmt"
+	"sync/atomic"
+)
+
 type YGMeasureFunc func(
 	node *Node,
 	width float32,
@@ -58,12 +63,22 @@ var (
 func NewNodeWithConfig(config *Config) *Node {
 	node := nodeDefaults
 	node.config_ = config
+	if config.UseWebDefaults() {
+		node.useWebDefaults()
+	}
+	node.StyleSetAlignContent(YGAlignFlexStart)
+	node.StyleSetAlignItems(YGAlignStretch)
 	return &node
 }
 
 func NewNode() *Node {
 
 	return NewNodeWithConfig(&defaultConfig)
+}
+
+func (node *Node) useWebDefaults() {
+	node.StyleSetFlexDirection(YGFlexDirectionRow)
+	node.StyleSetAlignContent(YGAlignStretch)
 }
 
 // getHasNewLayout
@@ -297,8 +312,9 @@ func (node *Node) getInlineEndMargin(axis YGFlexDirection, direction YGDirection
 
 // getFlexStartBorder
 func (node *Node) getFlexStartBorder(axis YGFlexDirection, direction YGDirection) float32 {
-	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
-	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
+	leadRelativeFlexItemEdge := flexStartRelativeEdge(axis, direction)
+	startEdge := flexStartEdge(axis)
+	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, leadRelativeFlexItemEdge, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
 	return maxOrDefined(leadingBorder.YGValue().value, 0)
 }
 
@@ -544,11 +560,13 @@ func (node *Node) setLayoutPadding(padding float32, edge YGEdge) {
 
 // setLayoutPosition
 func (node *Node) setLayoutPosition(position float32, edge YGEdge) {
+	if gDebuging {
+		atomic.AddUint32(&gCurrentDebugCount, 1)
+		fmt.Printf("setLayoutPosition: %d %s=%f\n", atomic.LoadUint32(&gCurrentDebugCount),
+			edge.String(), position)
+	}
 	if int(edge) >= len(node.getLayout().position) {
 		panic("Edge must be top/left/bottom/right")
-	}
-	if edge == YGEdgeLeft {
-		node.config_.log(node, YGLogLevelDebug, "Left: %g", position)
 	}
 	node.getLayout().position[edge] = position
 }
@@ -567,6 +585,11 @@ func (node *Node) setPosition(
 	mainSize float32,
 	crossSize float32,
 	ownerWidth float32) {
+	if gDebuging {
+		atomic.AddUint32(&gCurrentDebugCount, 1)
+		fmt.Printf("setPosition: %d (%s,%f,%f,%f)\n", atomic.LoadUint32(&gCurrentDebugCount),
+			direction.String(), mainSize, crossSize, ownerWidth)
+	}
 	/* Root nodes should be always layouted as LTR, so we don't return negative
 	 * values. */
 	directionRespectingRoot := If(node.owner_ != nil, direction, YGDirectionLTR)
@@ -613,7 +636,7 @@ func (node *Node) resolveFlexBasisPtr() YGValue {
 	if flexBasis.unit != YGUnitAuto && flexBasis.unit != YGUnitUndefined {
 		return flexBasis
 	}
-	if !node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() > 0 {
+	if node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() > 0 {
 		return If(node.getConfig().UseWebDefaults(), YGValueAuto, YGValueZero)
 	}
 	return YGValueAuto

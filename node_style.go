@@ -286,7 +286,7 @@ func (n *Node) StyleSetFlexBasisPercent(flexBasis float32) {
 
 // StyleSetFlexBasisAuto
 func (n *Node) StyleSetFlexBasisAuto() {
-	value := CompactValueOfMaybe(YGUnitAuto, 0.0)
+	value := CompactValueOfAuto()
 	if !n.getStyle().flexBasis().equal(value) {
 		n.getStyle().flexBasis_ = value
 		n.markDirtyAndPropagate()
@@ -322,7 +322,7 @@ func (n *Node) StyleSetWidthPercent(percent float32) {
 
 // StyleSetWidthAuto sets width auto
 func (n *Node) StyleSetWidthAuto() {
-	value := CompactValueOfMaybe(YGUnitAuto, 0.0)
+	value := CompactValueOfAuto()
 	if !n.getStyle().dimension(YGDimensionWidth).equal(value) {
 		n.getStyle().setDimension(YGDimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -354,7 +354,7 @@ func (n *Node) StyleSetHeightPercent(height float32) {
 
 // StyleSetHeightAuto sets height auto
 func (n *Node) StyleSetHeightAuto() {
-	value := CompactValueOfMaybe(YGUnitAuto, 0.0)
+	value := CompactValueOfAuto()
 	if !n.getStyle().dimension(YGDimensionHeight).equal(value) {
 		n.getStyle().setDimension(YGDimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -426,7 +426,7 @@ func (n *Node) StyleSetMarginPercent(edge YGEdge, margin float32) {
 
 // StyleSetMarginAuto
 func (n *Node) StyleSetMarginAuto(edge YGEdge) {
-	value := CompactValueOfMaybe(YGUnitAuto, 0.0)
+	value := CompactValueOfAuto()
 	if !n.getStyle().margin(edge).equal(value) {
 		n.getStyle().margin_[edge] = value
 		n.markDirtyAndPropagate()

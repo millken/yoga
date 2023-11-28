@@ -5,9 +5,14 @@ import (
 	"strings"
 )
 
+const (
+	gPrintChanges = false
+	gPrintSkips   = false
+	gDebuging     = false
+)
+
 var (
-	gPrintChanges = true
-	gPrintSkips   = true
+	gCurrentDebugCount uint32 = 0
 )
 
 func vlog(config *Config,
@@ -96,7 +101,7 @@ func nodeToString(str *strings.Builder, node *Node, options YGPrintOptions, leve
 	if options&YGPrintOptionsStyle == YGPrintOptionsStyle {
 		str.WriteString("style=\"")
 		style := node.getStyle()
-		oriStyle := (&nodeDefaults).getStyle()
+		oriStyle := NewNode().getStyle()
 		if style.flexDirection() != oriStyle.flexDirection() {
 			str.WriteString(fmt.Sprintf("flex-direction: %s; ", style.flexDirection().String()))
 		}
@@ -160,7 +165,7 @@ func nodeToString(str *strings.Builder, node *Node, options YGPrintOptions, leve
 			str.WriteString(fmt.Sprintf("has-custom-measure-func: true; "))
 		}
 	}
-	str.WriteString(fmt.Sprintf(">"))
+	str.WriteString("\">")
 
 	childCount := node.getChildCount()
 	if options&YGPrintOptionsChildren == YGPrintOptionsChildren && childCount > 0 {

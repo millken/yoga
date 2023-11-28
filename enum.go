@@ -1,7 +1,7 @@
 package yoga
 
 const (
-	AlignCount               = 8
+	AlignCount               = 9
 	DimensionCount           = 2
 	DirectionCount           = 3
 	DisplayCount             = 2

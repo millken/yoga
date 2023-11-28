@@ -17,7 +17,7 @@ type LayoutResults struct {
 	generationCount             uint32
 	lastOwnerDirection          YGDirection
 	nextCachedMeasurementsIndex uint32
-	cachedMeasurements          [4]CachedMeasurement
+	cachedMeasurements          [MaxCachedMeasurements]CachedMeasurement
 	cachedLayout                CachedMeasurement
 }
 
@@ -34,6 +34,7 @@ func NewLayoutResults() *LayoutResults {
 		computedFlexBasisGeneration: 0,
 		computedFlexBasis:           undefinedFloatOptional,
 		lastOwnerDirection:          YGDirectionInherit,
+		cachedMeasurements:          [MaxCachedMeasurements]CachedMeasurement{},
 		cachedLayout:                CachedMeasurement{},
 	}
 }

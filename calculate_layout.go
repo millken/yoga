@@ -1,6 +1,7 @@
 package yoga
 
 import (
+	"fmt"
 	"math"
 	"sync/atomic"
 )
@@ -411,6 +412,10 @@ func layoutAbsoluteChild(
 	depth uint32,
 	generationCount uint32,
 ) {
+	if gDebuging {
+		atomic.AddUint32(&gCurrentDebugCount, 1)
+		fmt.Printf("layoutAbsoluteChild %d\n", atomic.LoadUint32(&gCurrentDebugCount))
+	}
 	mainAxis := resolveDirection(node.getStyle().flexDirection(), direction)
 	crossAxis := resolveCrossDirection(mainAxis, direction)
 	isMainAxisRow := isRow(mainAxis)
@@ -828,7 +833,7 @@ func distributeFreeSpaceSecondPass(
 				currentLineChild.marginTrailingValue(crossAxis).unit != YGUnitAuto
 
 		childWidth := childMainSize
-		childHeight := childMainSize
+		childHeight := childCrossSize
 		childWidthMeasureMode := childMainMeasureMode
 		childHeightMeasureMode := childCrossMeasureMode
 		if !isMainAxisRow {
@@ -1035,7 +1040,6 @@ func justifyMainAxis(
 	performLayout bool) {
 
 	style := node.getStyle()
-
 	leadingPaddingAndBorderMain := If(node.hasErrata(YGErrataStartingEndingEdgeFromFlexDirection), node.getInlineStartPaddingAndBorder(mainAxis, direction, ownerWidth), node.getFlexStartPaddingAndBorder(mainAxis, direction, ownerWidth))
 	trailingPaddingAndBorderMain := If(node.hasErrata(YGErrataStartingEndingEdgeFromFlexDirection), node.getInlineEndPaddingAndBorder(mainAxis, direction, ownerWidth), node.getFlexEndPaddingAndBorder(mainAxis, direction, ownerWidth))
 
@@ -1099,6 +1103,7 @@ func justifyMainAxis(
 				float32(len(flexLine.itemsInFlow))
 			betweenMainDim += leadingMainDim * 2
 		case YGJustifyFlexStart:
+			break
 		}
 	}
 
@@ -1273,6 +1278,10 @@ func calculateLayoutImpl(
 	generationCount uint32,
 	reason LayoutPassReason,
 ) {
+	if gDebuging {
+		atomic.AddUint32(&gCurrentDebugCount, 1)
+		fmt.Printf("calculateLayoutImpl  %d\n", atomic.LoadUint32(&gCurrentDebugCount))
+	}
 	if !If(isUndefined(availableWidth), widthMeasureMode == YGMeasureModeUndefined, true) {
 		panic("availableWidth is indefinite so widthMeasureMode must be MeasureModeUndefined")
 	}
@@ -2069,6 +2078,10 @@ func calculateLayoutInternal(
 	depth uint32,
 	generationCount uint32,
 ) bool {
+	if gDebuging {
+		atomic.AddUint32(&gCurrentDebugCount, 1)
+		fmt.Printf("calculateLayoutInternal  %d\n", atomic.LoadUint32(&gCurrentDebugCount))
+	}
 	layout := node.getLayout()
 
 	depth++
@@ -2300,6 +2313,10 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 	// visit all dirty nodes at least once. Subsequent visits will be skipped if
 	// the input parameters don't change.
 	atomic.AddUint32(&gCurrentGenerationCount, 1)
+	if gDebuging {
+		atomic.AddUint32(&gCurrentDebugCount, 1)
+		fmt.Printf("CalculateLayout  %d\n", atomic.LoadUint32(&gCurrentDebugCount))
+	}
 	node.resolveDimension()
 	width := YGUndefined
 	widthMeasureMode := YGMeasureModeUndefined
