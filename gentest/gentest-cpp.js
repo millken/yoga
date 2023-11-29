@@ -47,7 +47,7 @@ CPPEmitter.prototype = Object.create(Emitter.prototype, {
       this.push('const YGConfigRef config = YGConfigNew();');
       for (const i in experiments) {
         this.push(
-          'YGConfigSetExperimentalFeatureEnabled(config, YGExperimentalFeature' +
+          'YGConfigSetExperimentalFeatureEnabled(config, ExperimentalFeature' +
             experiments[i] +
             ', true);',
         );
@@ -84,59 +84,59 @@ CPPEmitter.prototype = Object.create(Emitter.prototype, {
     },
   },
 
-  YGAlignAuto: {value: 'YGAlignAuto'},
-  YGAlignCenter: {value: 'YGAlignCenter'},
-  YGAlignFlexEnd: {value: 'YGAlignFlexEnd'},
-  YGAlignFlexStart: {value: 'YGAlignFlexStart'},
-  YGAlignStretch: {value: 'YGAlignStretch'},
-  YGAlignSpaceBetween: {value: 'YGAlignSpaceBetween'},
-  YGAlignSpaceAround: {value: 'YGAlignSpaceAround'},
-  YGAlignSpaceEvenly: {value: 'YGAlignSpaceEvenly'},
-  YGAlignBaseline: {value: 'YGAlignBaseline'},
+  AlignAuto: {value: 'AlignAuto'},
+  AlignCenter: {value: 'AlignCenter'},
+  AlignFlexEnd: {value: 'AlignFlexEnd'},
+  AlignFlexStart: {value: 'AlignFlexStart'},
+  AlignStretch: {value: 'AlignStretch'},
+  AlignSpaceBetween: {value: 'AlignSpaceBetween'},
+  AlignSpaceAround: {value: 'AlignSpaceAround'},
+  AlignSpaceEvenly: {value: 'AlignSpaceEvenly'},
+  AlignBaseline: {value: 'AlignBaseline'},
 
-  YGDirectionInherit: {value: 'YGDirectionInherit'},
-  YGDirectionLTR: {value: 'YGDirectionLTR'},
-  YGDirectionRTL: {value: 'YGDirectionRTL'},
+  DirectionInherit: {value: 'DirectionInherit'},
+  DirectionLTR: {value: 'DirectionLTR'},
+  DirectionRTL: {value: 'DirectionRTL'},
 
-  YGEdgeBottom: {value: 'YGEdgeBottom'},
-  YGEdgeEnd: {value: 'YGEdgeEnd'},
-  YGEdgeLeft: {value: 'YGEdgeLeft'},
-  YGEdgeRight: {value: 'YGEdgeRight'},
-  YGEdgeStart: {value: 'YGEdgeStart'},
-  YGEdgeTop: {value: 'YGEdgeTop'},
+  EdgeBottom: {value: 'EdgeBottom'},
+  EdgeEnd: {value: 'EdgeEnd'},
+  EdgeLeft: {value: 'EdgeLeft'},
+  EdgeRight: {value: 'EdgeRight'},
+  EdgeStart: {value: 'EdgeStart'},
+  EdgeTop: {value: 'EdgeTop'},
 
-  YGGutterAll: {value: 'YGGutterAll'},
-  YGGutterColumn: {value: 'YGGutterColumn'},
-  YGGutterRow: {value: 'YGGutterRow'},
+  GutterAll: {value: 'GutterAll'},
+  GutterColumn: {value: 'GutterColumn'},
+  GutterRow: {value: 'GutterRow'},
 
-  YGFlexDirectionColumn: {value: 'YGFlexDirectionColumn'},
-  YGFlexDirectionColumnReverse: {value: 'YGFlexDirectionColumnReverse'},
-  YGFlexDirectionRow: {value: 'YGFlexDirectionRow'},
-  YGFlexDirectionRowReverse: {value: 'YGFlexDirectionRowReverse'},
+  FlexDirectionColumn: {value: 'FlexDirectionColumn'},
+  FlexDirectionColumnReverse: {value: 'FlexDirectionColumnReverse'},
+  FlexDirectionRow: {value: 'FlexDirectionRow'},
+  FlexDirectionRowReverse: {value: 'FlexDirectionRowReverse'},
 
-  YGJustifyCenter: {value: 'YGJustifyCenter'},
-  YGJustifyFlexEnd: {value: 'YGJustifyFlexEnd'},
-  YGJustifyFlexStart: {value: 'YGJustifyFlexStart'},
-  YGJustifySpaceAround: {value: 'YGJustifySpaceAround'},
-  YGJustifySpaceBetween: {value: 'YGJustifySpaceBetween'},
-  YGJustifySpaceEvenly: {value: 'YGJustifySpaceEvenly'},
+  JustifyCenter: {value: 'JustifyCenter'},
+  JustifyFlexEnd: {value: 'JustifyFlexEnd'},
+  JustifyFlexStart: {value: 'JustifyFlexStart'},
+  JustifySpaceAround: {value: 'JustifySpaceAround'},
+  JustifySpaceBetween: {value: 'JustifySpaceBetween'},
+  JustifySpaceEvenly: {value: 'JustifySpaceEvenly'},
 
-  YGOverflowHidden: {value: 'YGOverflowHidden'},
-  YGOverflowVisible: {value: 'YGOverflowVisible'},
-  YGOverflowScroll: {value: 'YGOverflowScroll'},
+  OverflowHidden: {value: 'OverflowHidden'},
+  OverflowVisible: {value: 'OverflowVisible'},
+  OverflowScroll: {value: 'OverflowScroll'},
 
   YGPositionTypeAbsolute: {value: 'YGPositionTypeAbsolute'},
   YGPositionTypeRelative: {value: 'YGPositionTypeRelative'},
   YGPositionTypeStatic: {value: 'YGPositionTypeStatic'},
 
-  YGWrapNoWrap: {value: 'YGWrapNoWrap'},
-  YGWrapWrap: {value: 'YGWrapWrap'},
-  YGWrapWrapReverse: {value: 'YGWrapWrapReverse'},
+  WrapNoWrap: {value: 'WrapNoWrap'},
+  WrapWrap: {value: 'WrapWrap'},
+  WrapWrapReverse: {value: 'WrapWrapReverse'},
 
   YGUndefined: {value: 'YGUndefined'},
 
-  YGDisplayFlex: {value: 'YGDisplayFlex'},
-  YGDisplayNone: {value: 'YGDisplayNone'},
+  DisplayFlex: {value: 'DisplayFlex'},
+  DisplayNone: {value: 'DisplayNone'},
   YGAuto: {value: 'YGAuto'},
 
   YGNodeCalculateLayout: {

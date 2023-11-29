@@ -1,25 +1,25 @@
 package yoga
 
-func paddingAndBorderForAxis(node *Node, axis YGFlexDirection, widthSize float32) float32 {
+func paddingAndBorderForAxis(node *Node, axis FlexDirection, widthSize float32) float32 {
 	// The total padding/border for a given axis does not depend on the direction
 	// so hardcoding LTR here to avoid piping direction to this function
-	return node.getInlineStartPaddingAndBorder(axis, YGDirectionLTR, widthSize) +
-		node.getInlineEndPaddingAndBorder(axis, YGDirectionLTR, widthSize)
+	return node.getInlineStartPaddingAndBorder(axis, DirectionLTR, widthSize) +
+		node.getInlineEndPaddingAndBorder(axis, DirectionLTR, widthSize)
 }
 
-func boundAxisWithinMinAndMax(node *Node, axis YGFlexDirection, value FloatOptional, axisSize float32) FloatOptional {
+func boundAxisWithinMinAndMax(node *Node, axis FlexDirection, value FloatOptional, axisSize float32) FloatOptional {
 	var min, max FloatOptional
 
 	if isColumn(axis) {
 		min = resolveValue(
-			node.getStyle().minDimension(YGDimensionHeight).YGValue(), axisSize)
+			node.getStyle().minDimension(DimensionHeight).YGValue(), axisSize)
 		max = resolveValue(
-			node.getStyle().maxDimension(YGDimensionHeight).YGValue(), axisSize)
+			node.getStyle().maxDimension(DimensionHeight).YGValue(), axisSize)
 	} else if isRow(axis) {
 		min = resolveValue(
-			node.getStyle().minDimension(YGDimensionWidth).YGValue(), axisSize)
+			node.getStyle().minDimension(DimensionWidth).YGValue(), axisSize)
 		max = resolveValue(
-			node.getStyle().maxDimension(YGDimensionWidth).YGValue(), axisSize)
+			node.getStyle().maxDimension(DimensionWidth).YGValue(), axisSize)
 	}
 
 	if max.unwrap() >= 0 && value.unwrap() > max.unwrap() {
@@ -37,7 +37,7 @@ func boundAxisWithinMinAndMax(node *Node, axis YGFlexDirection, value FloatOptio
 // go below the padding and border amount.
 func boundAxis(
 	node *Node,
-	axis YGFlexDirection,
+	axis FlexDirection,
 	value float32,
 	axisSize float32,
 	widthSize float32,

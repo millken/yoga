@@ -5,8 +5,8 @@ func calculateBaseline(node *Node) float32 {
 		//Event.Publish(Event.NodeBaselineStart, node)
 
 		baseline := node.baseline(
-			node.getLayout().measuredDimension(YGDimensionWidth),
-			node.getLayout().measuredDimension(YGDimensionHeight),
+			node.getLayout().measuredDimension(DimensionWidth),
+			node.getLayout().measuredDimension(DimensionHeight),
 		)
 
 		//Event.Publish(Event.NodeBaselineEnd, node)
@@ -26,7 +26,7 @@ func calculateBaseline(node *Node) float32 {
 		if child.getStyle().positionType() == YGPositionTypeAbsolute {
 			continue
 		}
-		if resolveChildAlignment(node, child) == YGAlignBaseline ||
+		if resolveChildAlignment(node, child) == AlignBaseline ||
 			child.isReferenceBaseline() {
 			baselineChild = child
 			break
@@ -38,25 +38,25 @@ func calculateBaseline(node *Node) float32 {
 	}
 
 	if baselineChild == nil {
-		return node.getLayout().measuredDimension(YGDimensionHeight)
+		return node.getLayout().measuredDimension(DimensionHeight)
 	}
 
 	baseline := calculateBaseline(baselineChild)
-	return baseline + baselineChild.getLayout().position[YGEdgeTop]
+	return baseline + baselineChild.getLayout().position[EdgeTop]
 }
 
 func isBaselineLayout(node *Node) bool {
 	if isColumn(node.getStyle().flexDirection()) {
 		return false
 	}
-	if node.getStyle().alignItems() == YGAlignBaseline {
+	if node.getStyle().alignItems() == AlignBaseline {
 		return true
 	}
 	childCount := node.getChildCount()
 	for i := uint32(0); i < childCount; i++ {
 		child := node.getChild(i)
 		if child.getStyle().positionType() != YGPositionTypeAbsolute &&
-			child.getStyle().alignSelf() == YGAlignBaseline {
+			child.getStyle().alignSelf() == AlignBaseline {
 			return true
 		}
 	}

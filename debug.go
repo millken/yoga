@@ -17,7 +17,7 @@ var (
 
 func vlog(config *Config,
 	node *Node,
-	level YGLogLevel,
+	level LogLevel,
 	format string,
 	args ...interface{}) {
 	if config != nil {
@@ -40,13 +40,13 @@ func appendFloatOptionalIfDefined(base *strings.Builder, str string, value Float
 }
 
 func appendNumberIfNotAuto(base *strings.Builder, str string, value YGValue) {
-	if value.unit != YGUnitAuto {
+	if value.unit != UnitAuto {
 		appendNumberIfNotUndefined(base, str, value)
 	}
 }
 
 func appendNumberIfNotZero(base *strings.Builder, str string, number YGValue) {
-	if number.unit == YGUnitAuto {
+	if number.unit == UnitAuto {
 		base.WriteString(str)
 		base.WriteString(": auto; ")
 	} else if !number.isUndefined() && number.value != 0 {
@@ -62,43 +62,43 @@ func areFourValuesEqual(four [EdgeCount]CompactValue) bool {
 
 func appendEdges(base *strings.Builder, key string, edges [EdgeCount]CompactValue) {
 	if areFourValuesEqual(edges) {
-		edgeValue := (&nodeDefaults).computeEdgeValueForColumn(edges, YGEdgeLeft)
+		edgeValue := (&nodeDefaults).computeEdgeValueForColumn(edges, EdgeLeft)
 		appendNumberIfNotUndefined(base, key, edgeValue.YGValue())
 	} else {
-		for edge := YGEdgeLeft; edge < EdgeCount; edge++ {
+		for edge := EdgeLeft; edge < EdgeCount; edge++ {
 			appendNumberIfNotZero(base, fmt.Sprintf("%s-%s", key, edge.String()), edges[edge].YGValue())
 		}
 	}
 }
 
 func appendNumberIfNotUndefined(base *strings.Builder, str string, number YGValue) {
-	if number.unit != YGUnitUndefined {
-		if number.unit == YGUnitAuto {
+	if number.unit != UnitUndefined {
+		if number.unit == UnitAuto {
 			base.WriteString(str)
 			base.WriteString(": auto; ")
 		} else {
-			unit := If(number.unit == YGUnitPoint, "px", "%")
+			unit := If(number.unit == UnitPoint, "px", "%")
 			base.WriteString(fmt.Sprintf("%s: %g%s; ", str, number.value, unit))
 		}
 	}
 }
 
-func nodeToString(str *strings.Builder, node *Node, options YGPrintOptions, level uint32) {
+func nodeToString(str *strings.Builder, node *Node, options PrintOptions, level uint32) {
 	if node == nil {
 		return
 	}
 	indent(str, level)
 	str.WriteString("<div ")
-	if options&YGPrintOptionsLayout == YGPrintOptionsLayout {
+	if options&PrintOptionsLayout == PrintOptionsLayout {
 		str.WriteString("layout=\"")
-		str.WriteString(fmt.Sprintf("width: %g; ", node.getLayout().dimension(YGDimensionWidth)))
-		str.WriteString(fmt.Sprintf("height: %g; ", node.getLayout().dimension(YGDimensionHeight)))
-		str.WriteString(fmt.Sprintf("top: %g;", node.getLayout().position[YGEdgeTop]))
-		str.WriteString(fmt.Sprintf("left: %g; ", node.getLayout().position[YGEdgeLeft]))
+		str.WriteString(fmt.Sprintf("width: %g; ", node.getLayout().dimension(DimensionWidth)))
+		str.WriteString(fmt.Sprintf("height: %g; ", node.getLayout().dimension(DimensionHeight)))
+		str.WriteString(fmt.Sprintf("top: %g;", node.getLayout().position[EdgeTop]))
+		str.WriteString(fmt.Sprintf("left: %g; ", node.getLayout().position[EdgeLeft]))
 		str.WriteString("\" ")
 	}
 
-	if options&YGPrintOptionsStyle == YGPrintOptionsStyle {
+	if options&PrintOptionsStyle == PrintOptionsStyle {
 		str.WriteString("style=\"")
 		style := node.getStyle()
 		oriStyle := NewNode().getStyle()
@@ -138,28 +138,28 @@ func nodeToString(str *strings.Builder, node *Node, options YGPrintOptions, leve
 		appendEdges(str, "padding", style.padding_)
 		appendEdges(str, "border", style.border_)
 
-		if style.gap(YGGutterAll).isDefined() {
-			appendNumberIfNotUndefined(str, "gap", style.gap(YGGutterAll).YGValue())
+		if style.gap(GutterAll).isDefined() {
+			appendNumberIfNotUndefined(str, "gap", style.gap(GutterAll).YGValue())
 		} else {
-			appendNumberIfNotUndefined(str, "column-gap", style.gap(YGGutterColumn).YGValue())
-			appendNumberIfNotUndefined(str, "row-gap", style.gap(YGGutterRow).YGValue())
+			appendNumberIfNotUndefined(str, "column-gap", style.gap(GutterColumn).YGValue())
+			appendNumberIfNotUndefined(str, "row-gap", style.gap(GutterRow).YGValue())
 		}
 
-		appendNumberIfNotAuto(str, "width", style.dimension(YGDimensionWidth).YGValue())
-		appendNumberIfNotAuto(str, "height", style.dimension(YGDimensionHeight).YGValue())
-		appendNumberIfNotAuto(str, "max-width", style.maxDimension(YGDimensionWidth).YGValue())
-		appendNumberIfNotAuto(str, "max-height", style.maxDimension(YGDimensionHeight).YGValue())
-		appendNumberIfNotAuto(str, "min-width", style.minDimension(YGDimensionWidth).YGValue())
-		appendNumberIfNotAuto(str, "min-height", style.minDimension(YGDimensionHeight).YGValue())
+		appendNumberIfNotAuto(str, "width", style.dimension(DimensionWidth).YGValue())
+		appendNumberIfNotAuto(str, "height", style.dimension(DimensionHeight).YGValue())
+		appendNumberIfNotAuto(str, "max-width", style.maxDimension(DimensionWidth).YGValue())
+		appendNumberIfNotAuto(str, "max-height", style.maxDimension(DimensionHeight).YGValue())
+		appendNumberIfNotAuto(str, "min-width", style.minDimension(DimensionWidth).YGValue())
+		appendNumberIfNotAuto(str, "min-height", style.minDimension(DimensionHeight).YGValue())
 
 		if style.positionType() != oriStyle.positionType() {
 			str.WriteString(fmt.Sprintf("position: %s; ", style.positionType().String()))
 		}
 
-		appendNumberIfNotUndefined(str, "left", style.position(YGEdgeLeft).YGValue())
-		appendNumberIfNotUndefined(str, "right", style.position(YGEdgeRight).YGValue())
-		appendNumberIfNotUndefined(str, "top", style.position(YGEdgeTop).YGValue())
-		appendNumberIfNotUndefined(str, "bottom", style.position(YGEdgeBottom).YGValue())
+		appendNumberIfNotUndefined(str, "left", style.position(EdgeLeft).YGValue())
+		appendNumberIfNotUndefined(str, "right", style.position(EdgeRight).YGValue())
+		appendNumberIfNotUndefined(str, "top", style.position(EdgeTop).YGValue())
+		appendNumberIfNotUndefined(str, "bottom", style.position(EdgeBottom).YGValue())
 
 		if node.hasMeasureFunc() {
 			str.WriteString(fmt.Sprintf("has-custom-measure-func: true; "))
@@ -168,7 +168,7 @@ func nodeToString(str *strings.Builder, node *Node, options YGPrintOptions, leve
 	str.WriteString("\">")
 
 	childCount := node.getChildCount()
-	if options&YGPrintOptionsChildren == YGPrintOptionsChildren && childCount > 0 {
+	if options&PrintOptionsChildren == PrintOptionsChildren && childCount > 0 {
 		str.WriteString("\n")
 		for i := uint32(0); i < childCount; i++ {
 			nodeToString(str, node.getChild(i), options, level+1)
@@ -178,9 +178,9 @@ func nodeToString(str *strings.Builder, node *Node, options YGPrintOptions, leve
 	}
 }
 
-func vprint(node *Node, printOptions YGPrintOptions) {
+func vprint(node *Node, printOptions PrintOptions) {
 	var str strings.Builder
 	str.Reset()
 	nodeToString(&str, node, printOptions, 0)
-	vlog(node.getConfig(), node, YGLogLevelDebug, str.String())
+	vlog(node.getConfig(), node, LogLevelDebug, str.String())
 }

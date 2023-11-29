@@ -50,7 +50,7 @@ type FlexLine struct {
 // computeFlexBasisForChildren function).
 func calculateFlexLine(
 	node *Node,
-	ownerDirection YGDirection,
+	ownerDirection Direction,
 	mainAxisOwnerSize float32,
 	availableInnerWidth float32,
 	availableInnerMainDim float32,
@@ -67,12 +67,12 @@ func calculateFlexLine(
 
 	sizeConsumedIncludingMinConstraint := float32(0)
 	mainAxis := resolveDirection(node.getStyle().flexDirection(), node.resolveDirection(ownerDirection))
-	isNodeFlexWrap := node.getStyle().flexWrap() != YGWrapNoWrap
+	isNodeFlexWrap := node.getStyle().flexWrap() != WrapNoWrap
 	gap := node.getGapForAxis(mainAxis)
 
 	for ; endOfLineIndex < uint32(len(node.getChildren())); endOfLineIndex++ {
 		child := node.getChild(endOfLineIndex)
-		if child.getStyle().display() == YGDisplayNone || child.getStyle().positionType() == YGPositionTypeAbsolute {
+		if child.getStyle().display() == DisplayNone || child.getStyle().positionType() == YGPositionTypeAbsolute {
 			if firstElementInLineIndex == endOfLineIndex {
 				firstElementInLineIndex++
 			}

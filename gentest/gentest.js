@@ -106,7 +106,7 @@ function printTest(e, ext, LTRContainer, RTLContainer, genericContainer) {
 
     e.YGNodeCalculateLayout(
       'root',
-      e.YGDirectionLTR,
+      e.DirectionLTR,
       genericLayoutTree[i].experiments,
     );
     e.push('');
@@ -116,7 +116,7 @@ function printTest(e, ext, LTRContainer, RTLContainer, genericContainer) {
 
     e.YGNodeCalculateLayout(
       'root',
-      e.YGDirectionRTL,
+      e.DirectionRTL,
       genericLayoutTree[i].experiments,
     );
     e.push('');
@@ -204,21 +204,21 @@ function setupTestTree(
         case 'gap':
           e.YGNodeStyleSetGap(
             nodeName,
-            e.YGGutterAll,
+            e.GutterAll,
             pointValue(e, node.style[style]),
           );
           break;
         case 'column-gap':
           e.YGNodeStyleSetGap(
             nodeName,
-            e.YGGutterColumn,
+            e.GutterColumn,
             pointValue(e, node.style[style]),
           );
           break;
         case 'row-gap':
           e.YGNodeStyleSetGap(
             nodeName,
-            e.YGGutterRow,
+            e.GutterRow,
             pointValue(e, node.style[style]),
           );
           break;
@@ -288,13 +288,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('start:') >= 0) {
             e.YGNodeStyleSetPosition(
               nodeName,
-              e.YGEdgeStart,
+              e.EdgeStart,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetPosition(
               nodeName,
-              e.YGEdgeLeft,
+              e.EdgeLeft,
               pointValue(e, node.style[style]),
             );
           }
@@ -302,7 +302,7 @@ function setupTestTree(
         case 'top':
           e.YGNodeStyleSetPosition(
             nodeName,
-            e.YGEdgeTop,
+            e.EdgeTop,
             pointValue(e, node.style[style]),
           );
           break;
@@ -310,13 +310,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('end:') >= 0) {
             e.YGNodeStyleSetPosition(
               nodeName,
-              e.YGEdgeEnd,
+              e.EdgeEnd,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetPosition(
               nodeName,
-              e.YGEdgeRight,
+              e.EdgeRight,
               pointValue(e, node.style[style]),
             );
           }
@@ -324,7 +324,7 @@ function setupTestTree(
         case 'bottom':
           e.YGNodeStyleSetPosition(
             nodeName,
-            e.YGEdgeBottom,
+            e.EdgeBottom,
             pointValue(e, node.style[style]),
           );
           break;
@@ -332,13 +332,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('margin-start:') >= 0) {
             e.YGNodeStyleSetMargin(
               nodeName,
-              e.YGEdgeStart,
+              e.EdgeStart,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetMargin(
               nodeName,
-              e.YGEdgeLeft,
+              e.EdgeLeft,
               pointValue(e, node.style[style]),
             );
           }
@@ -346,7 +346,7 @@ function setupTestTree(
         case 'margin-top':
           e.YGNodeStyleSetMargin(
             nodeName,
-            e.YGEdgeTop,
+            e.EdgeTop,
             pointValue(e, node.style[style]),
           );
           break;
@@ -354,13 +354,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('margin-end:') >= 0) {
             e.YGNodeStyleSetMargin(
               nodeName,
-              e.YGEdgeEnd,
+              e.EdgeEnd,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetMargin(
               nodeName,
-              e.YGEdgeRight,
+              e.EdgeRight,
               pointValue(e, node.style[style]),
             );
           }
@@ -368,7 +368,7 @@ function setupTestTree(
         case 'margin-bottom':
           e.YGNodeStyleSetMargin(
             nodeName,
-            e.YGEdgeBottom,
+            e.EdgeBottom,
             pointValue(e, node.style[style]),
           );
           break;
@@ -376,13 +376,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('padding-start:') >= 0) {
             e.YGNodeStyleSetPadding(
               nodeName,
-              e.YGEdgeStart,
+              e.EdgeStart,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetPadding(
               nodeName,
-              e.YGEdgeLeft,
+              e.EdgeLeft,
               pointValue(e, node.style[style]),
             );
           }
@@ -390,7 +390,7 @@ function setupTestTree(
         case 'padding-top':
           e.YGNodeStyleSetPadding(
             nodeName,
-            e.YGEdgeTop,
+            e.EdgeTop,
             pointValue(e, node.style[style]),
           );
           break;
@@ -398,13 +398,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('padding-end:') >= 0) {
             e.YGNodeStyleSetPadding(
               nodeName,
-              e.YGEdgeEnd,
+              e.EdgeEnd,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetPadding(
               nodeName,
-              e.YGEdgeRight,
+              e.EdgeRight,
               pointValue(e, node.style[style]),
             );
           }
@@ -412,7 +412,7 @@ function setupTestTree(
         case 'padding-bottom':
           e.YGNodeStyleSetPadding(
             nodeName,
-            e.YGEdgeBottom,
+            e.EdgeBottom,
             pointValue(e, node.style[style]),
           );
           break;
@@ -420,13 +420,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('border-start-width:') >= 0) {
             e.YGNodeStyleSetBorder(
               nodeName,
-              e.YGEdgeStart,
+              e.EdgeStart,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetBorder(
               nodeName,
-              e.YGEdgeLeft,
+              e.EdgeLeft,
               pointValue(e, node.style[style]),
             );
           }
@@ -434,7 +434,7 @@ function setupTestTree(
         case 'border-top-width':
           e.YGNodeStyleSetBorder(
             nodeName,
-            e.YGEdgeTop,
+            e.EdgeTop,
             pointValue(e, node.style[style]),
           );
           break;
@@ -442,13 +442,13 @@ function setupTestTree(
           if (genericNode.rawStyle.indexOf('border-end-width:') >= 0) {
             e.YGNodeStyleSetBorder(
               nodeName,
-              e.YGEdgeEnd,
+              e.EdgeEnd,
               pointValue(e, node.style[style]),
             );
           } else {
             e.YGNodeStyleSetBorder(
               nodeName,
-              e.YGEdgeRight,
+              e.EdgeRight,
               pointValue(e, node.style[style]),
             );
           }
@@ -456,7 +456,7 @@ function setupTestTree(
         case 'border-bottom-width':
           e.YGNodeStyleSetBorder(
             nodeName,
-            e.YGEdgeBottom,
+            e.EdgeBottom,
             pointValue(e, node.style[style]),
           );
           break;
@@ -507,52 +507,52 @@ function setupTestTree(
 function overflowValue(e, value) {
   switch (value) {
     case 'visible':
-      return e.YGOverflowVisible;
+      return e.OverflowVisible;
     case 'hidden':
-      return e.YGOverflowHidden;
+      return e.OverflowHidden;
     case 'scroll':
-      return e.YGOverflowScroll;
+      return e.OverflowScroll;
   }
 }
 
 function wrapValue(e, value) {
   switch (value) {
     case 'wrap':
-      return e.YGWrapWrap;
+      return e.WrapWrap;
     case 'wrap-reverse':
-      return e.YGWrapWrapReverse;
+      return e.WrapWrapReverse;
     case 'nowrap':
-      return e.YGWrapNoWrap;
+      return e.WrapNoWrap;
   }
 }
 
 function flexDirectionValue(e, value) {
   switch (value) {
     case 'row':
-      return e.YGFlexDirectionRow;
+      return e.FlexDirectionRow;
     case 'row-reverse':
-      return e.YGFlexDirectionRowReverse;
+      return e.FlexDirectionRowReverse;
     case 'column':
-      return e.YGFlexDirectionColumn;
+      return e.FlexDirectionColumn;
     case 'column-reverse':
-      return e.YGFlexDirectionColumnReverse;
+      return e.FlexDirectionColumnReverse;
   }
 }
 
 function justifyValue(e, value) {
   switch (value) {
     case 'center':
-      return e.YGJustifyCenter;
+      return e.JustifyCenter;
     case 'space-around':
-      return e.YGJustifySpaceAround;
+      return e.JustifySpaceAround;
     case 'space-between':
-      return e.YGJustifySpaceBetween;
+      return e.JustifySpaceBetween;
     case 'space-evenly':
-      return e.YGJustifySpaceEvenly;
+      return e.JustifySpaceEvenly;
     case 'flex-start':
-      return e.YGJustifyFlexStart;
+      return e.JustifyFlexStart;
     case 'flex-end':
-      return e.YGJustifyFlexEnd;
+      return e.JustifyFlexEnd;
   }
 }
 
@@ -570,34 +570,34 @@ function positionValue(e, value) {
 function directionValue(e, value) {
   switch (value) {
     case 'ltr':
-      return e.YGDirectionLTR;
+      return e.DirectionLTR;
     case 'rtl':
-      return e.YGDirectionRTL;
+      return e.DirectionRTL;
     case 'inherit':
-      return e.YGDirectionInherit;
+      return e.DirectionInherit;
   }
 }
 
 function alignValue(e, value) {
   switch (value) {
     case 'auto':
-      return e.YGAlignAuto;
+      return e.AlignAuto;
     case 'center':
-      return e.YGAlignCenter;
+      return e.AlignCenter;
     case 'stretch':
-      return e.YGAlignStretch;
+      return e.AlignStretch;
     case 'flex-start':
-      return e.YGAlignFlexStart;
+      return e.AlignFlexStart;
     case 'flex-end':
-      return e.YGAlignFlexEnd;
+      return e.AlignFlexEnd;
     case 'space-between':
-      return e.YGAlignSpaceBetween;
+      return e.AlignSpaceBetween;
     case 'space-around':
-      return e.YGAlignSpaceAround;
+      return e.AlignSpaceAround;
     case 'space-evenly':
-      return e.YGAlignSpaceEvenly;
+      return e.AlignSpaceEvenly;
     case 'baseline':
-      return e.YGAlignBaseline;
+      return e.AlignBaseline;
   }
 }
 
@@ -615,9 +615,9 @@ function pointValue(e, value) {
 function displayValue(e, value) {
   switch (value) {
     case 'flex':
-      return e.YGDisplayFlex;
+      return e.DisplayFlex;
     case 'none':
-      return e.YGDisplayNone;
+      return e.DisplayNone;
   }
 }
 

@@ -47,9 +47,9 @@ func (cv CompactValue) YGValue() YGValue {
 	case AUTO_BITS:
 		return YGValueAuto
 	case ZERO_BITS_POINT:
-		return YGValue{value: 0.0, unit: YGUnitPoint}
+		return YGValue{value: 0.0, unit: UnitPoint}
 	case ZERO_BITS_PERCENT:
-		return YGValue{value: 0.0, unit: YGUnitPercent}
+		return YGValue{value: 0.0, unit: UnitPercent}
 	}
 
 	if IsNaN(math.Float32frombits(cv.repr)) {
@@ -60,20 +60,20 @@ func (cv CompactValue) YGValue() YGValue {
 	data &= ^PERCENT_BIT
 	data += BIAS
 
-	return YGValue{value: math.Float32frombits(data), unit: If(cv.repr&0x40000000 != 0, YGUnitPercent, YGUnitPoint)}
+	return YGValue{value: math.Float32frombits(data), unit: If(cv.repr&0x40000000 != 0, UnitPercent, UnitPoint)}
 }
 
-func CompactValueOf(value float32, unit YGUnit) CompactValue {
+func CompactValueOf(value float32, unit Unit) CompactValue {
 	if value == 0.0 || (value < LOWER_BOUND && value > -LOWER_BOUND) {
 		zero := ZERO_BITS_POINT
-		if unit == YGUnitPercent {
+		if unit == UnitPercent {
 			zero = ZERO_BITS_PERCENT
 		}
 		return CompactValue{repr: zero}
 	}
 
 	upperBound := UPPER_BOUND_POINT
-	if unit == YGUnitPercent {
+	if unit == UnitPercent {
 		upperBound = UPPER_BOUND_PERCENT
 	}
 	if value > upperBound || value < -upperBound {
@@ -81,7 +81,7 @@ func CompactValueOf(value float32, unit YGUnit) CompactValue {
 	}
 
 	unitBit := uint32(0)
-	if unit == YGUnitPercent {
+	if unit == UnitPercent {
 		unitBit = PERCENT_BIT
 	}
 	data := math.Float32bits(value)
@@ -102,7 +102,7 @@ func CompactValueOfAuto() CompactValue {
 	return CompactValue{repr: AUTO_BITS}
 }
 
-func CompactValueOfMaybe(unit YGUnit, value float32) CompactValue {
+func CompactValueOfMaybe(unit Unit, value float32) CompactValue {
 	if IsNaN(value) || IsInf(value, 0) {
 		return CompactValueOfUndefined()
 	}

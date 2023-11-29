@@ -9,7 +9,7 @@ type YGCloneNodeFunc func(
 type YGLogger func(
 	config *Config,
 	node *Node,
-	level YGLogLevel,
+	level LogLevel,
 	format string,
 	args ...any,
 ) int
@@ -20,7 +20,7 @@ type Config struct {
 	useWebDefaults_       bool
 	printTree_            bool
 	experimentalFeatures_ EnumBitset
-	errata_               YGErrata
+	errata_               Errata
 	context_              any
 	pointScaleFactor_     float32
 }
@@ -57,7 +57,7 @@ func (config *Config) ShouldPrintTree() bool {
 	return config.printTree_
 }
 
-func (config *Config) SetExperimentalFeatureEnabled(feature YGExperimentalFeature, enabled bool) {
+func (config *Config) SetExperimentalFeatureEnabled(feature ExperimentalFeature, enabled bool) {
 	if enabled {
 		config.experimentalFeatures_.Set(uint(feature))
 	} else {
@@ -65,7 +65,7 @@ func (config *Config) SetExperimentalFeatureEnabled(feature YGExperimentalFeatur
 	}
 }
 
-func (config *Config) IsExperimentalFeatureEnabled(feature YGExperimentalFeature) bool {
+func (config *Config) IsExperimentalFeatureEnabled(feature ExperimentalFeature) bool {
 	return config.experimentalFeatures_.Test(uint(feature))
 }
 
@@ -74,28 +74,28 @@ func (config *Config) GetEnabledExperiments() EnumBitset {
 }
 
 // setErrata
-func (config *Config) setErrata(errata YGErrata) {
+func (config *Config) setErrata(errata Errata) {
 	config.errata_ = errata
 }
 
 // addErrata
-func (config *Config) addErrata(errata YGErrata) {
+func (config *Config) addErrata(errata Errata) {
 	config.errata_ |= errata
 }
 
 // removeErrata
-func (config *Config) removeErrata(errata YGErrata) {
+func (config *Config) removeErrata(errata Errata) {
 	config.errata_ &= ^errata
 }
 
 // getErrata
-func (config *Config) getErrata() YGErrata {
+func (config *Config) getErrata() Errata {
 	return config.errata_
 }
 
 // hasErrata
-func (config *Config) hasErrata(errata YGErrata) bool {
-	return config.errata_&errata != YGErrataNone
+func (config *Config) hasErrata(errata Errata) bool {
+	return config.errata_&errata != ErrataNone
 }
 
 // SetPointScaleFactor
@@ -124,7 +124,7 @@ func (config *Config) SetLogger(logger YGLogger) {
 }
 
 // log
-func (config *Config) log(node *Node, level YGLogLevel, format string, args ...any) {
+func (config *Config) log(node *Node, level LogLevel, format string, args ...any) {
 	if config.logger_ != nil {
 		config.logger_(config, node, level, format, args...)
 	}

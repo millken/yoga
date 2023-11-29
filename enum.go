@@ -20,352 +20,352 @@ const (
 	GutterCount              = 3
 )
 
-type YGAlign int
+type Align uint8
 
 const (
-	YGAlignAuto YGAlign = iota
-	YGAlignFlexStart
-	YGAlignCenter
-	YGAlignFlexEnd
-	YGAlignStretch
-	YGAlignBaseline
-	YGAlignSpaceBetween
-	YGAlignSpaceAround
-	YGAlignSpaceEvenly
+	AlignAuto Align = iota
+	AlignFlexStart
+	AlignCenter
+	AlignFlexEnd
+	AlignStretch
+	AlignBaseline
+	AlignSpaceBetween
+	AlignSpaceAround
+	AlignSpaceEvenly
 )
 
-func (a YGAlign) String() string {
+func (a Align) String() string {
 	switch a {
-	case YGAlignAuto:
+	case AlignAuto:
 		return "auto"
-	case YGAlignFlexStart:
+	case AlignFlexStart:
 		return "flex-start"
-	case YGAlignCenter:
+	case AlignCenter:
 		return "center"
-	case YGAlignFlexEnd:
+	case AlignFlexEnd:
 		return "flex-end"
-	case YGAlignStretch:
+	case AlignStretch:
 		return "stretch"
-	case YGAlignBaseline:
+	case AlignBaseline:
 		return "baseline"
-	case YGAlignSpaceBetween:
+	case AlignSpaceBetween:
 		return "space-between"
-	case YGAlignSpaceAround:
+	case AlignSpaceAround:
 		return "space-around"
-	case YGAlignSpaceEvenly:
+	case AlignSpaceEvenly:
 		return "space-evenly"
 	}
 	return "unknown"
 }
 
-type YGDimension int
+type Dimension uint8
 
 const (
-	YGDimensionWidth YGDimension = iota
-	YGDimensionHeight
+	DimensionWidth Dimension = iota
+	DimensionHeight
 )
 
-func (d YGDimension) String() string {
+func (d Dimension) String() string {
 	switch d {
-	case YGDimensionWidth:
+	case DimensionWidth:
 		return "width"
-	case YGDimensionHeight:
+	case DimensionHeight:
 		return "height"
 	}
 	return "unknown"
 }
 
-type YGDirection uint8
+type Direction uint8
 
 const (
-	YGDirectionInherit YGDirection = iota
-	YGDirectionLTR
-	YGDirectionRTL
+	DirectionInherit Direction = iota
+	DirectionLTR
+	DirectionRTL
 )
 
-func (d YGDirection) String() string {
+func (d Direction) String() string {
 	switch d {
-	case YGDirectionInherit:
+	case DirectionInherit:
 		return "inherit"
-	case YGDirectionLTR:
+	case DirectionLTR:
 		return "ltr"
-	case YGDirectionRTL:
+	case DirectionRTL:
 		return "rtl"
 	}
 	return "unknown"
 }
 
-type YGDisplay int
+type Display uint8
 
 const (
-	YGDisplayFlex YGDisplay = iota
-	YGDisplayNone
+	DisplayFlex Display = iota
+	DisplayNone
 )
 
-func (d YGDisplay) String() string {
+func (d Display) String() string {
 	switch d {
-	case YGDisplayFlex:
+	case DisplayFlex:
 		return "flex"
-	case YGDisplayNone:
+	case DisplayNone:
 		return "none"
 	}
 	return "unknown"
 }
 
-type YGEdge int
+type Edge uint8
 
 const (
-	YGEdgeLeft YGEdge = iota
-	YGEdgeTop
-	YGEdgeRight
-	YGEdgeBottom
-	YGEdgeStart
-	YGEdgeEnd
-	YGEdgeHorizontal
-	YGEdgeVertical
-	YGEdgeAll
+	EdgeLeft Edge = iota
+	EdgeTop
+	EdgeRight
+	EdgeBottom
+	EdgeStart
+	EdgeEnd
+	EdgeHorizontal
+	EdgeVertical
+	EdgeAll
 )
 
-func (e YGEdge) String() string {
+func (e Edge) String() string {
 	switch e {
-	case YGEdgeLeft:
+	case EdgeLeft:
 		return "left"
-	case YGEdgeTop:
+	case EdgeTop:
 		return "top"
-	case YGEdgeRight:
+	case EdgeRight:
 		return "right"
-	case YGEdgeBottom:
+	case EdgeBottom:
 		return "bottom"
-	case YGEdgeStart:
+	case EdgeStart:
 		return "start"
-	case YGEdgeEnd:
+	case EdgeEnd:
 		return "end"
-	case YGEdgeHorizontal:
+	case EdgeHorizontal:
 		return "horizontal"
-	case YGEdgeVertical:
+	case EdgeVertical:
 		return "vertical"
-	case YGEdgeAll:
+	case EdgeAll:
 		return "all"
 	}
 	return "unknown"
 }
 
-type YGErrata uint32
+type Errata uint32
 
 const (
-	YGErrataNone                                YGErrata = iota
-	YGErrataStretchFlexBasis                             = 1
-	YGErrataStartingEndingEdgeFromFlexDirection          = 2
-	YGErrataPositionStaticBehavesLikeRelative            = 4
-	YGErrataAll                                          = 2147483647
-	YGErrataClassic                                      = 2147483646
+	ErrataNone                                Errata = iota
+	ErrataStretchFlexBasis                           = 1
+	ErrataStartingEndingEdgeFromFlexDirection        = 2
+	ErrataPositionStaticBehavesLikeRelative          = 4
+	ErrataAll                                        = 2147483647
+	ErrataClassic                                    = 2147483646
 )
 
-func (e YGErrata) String() string {
+func (e Errata) String() string {
 	switch e {
-	case YGErrataNone:
+	case ErrataNone:
 		return "none"
-	case YGErrataStretchFlexBasis:
+	case ErrataStretchFlexBasis:
 		return "stretch-flex-basis"
-	case YGErrataStartingEndingEdgeFromFlexDirection:
+	case ErrataStartingEndingEdgeFromFlexDirection:
 		return "starting-ending-edge-from-flex-direction"
-	case YGErrataPositionStaticBehavesLikeRelative:
+	case ErrataPositionStaticBehavesLikeRelative:
 		return "position-static-behaves-like-relative"
-	case YGErrataAll:
+	case ErrataAll:
 		return "all"
-	case YGErrataClassic:
+	case ErrataClassic:
 		return "classic"
 	}
 	return "unknown"
 }
 
-type YGExperimentalFeature int
+type ExperimentalFeature uint8
 
 const (
-	YGExperimentalFeatureWebFlexBasis YGExperimentalFeature = iota
-	YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge
-	YGExperimentalFeatureFixJNILocalRefOverflows
+	ExperimentalFeatureWebFlexBasis ExperimentalFeature = iota
+	ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge
+	ExperimentalFeatureFixJNILocalRefOverflows
 )
 
-func (e YGExperimentalFeature) String() string {
+func (e ExperimentalFeature) String() string {
 	switch e {
-	case YGExperimentalFeatureWebFlexBasis:
+	case ExperimentalFeatureWebFlexBasis:
 		return "web-flex-basis"
-	case YGExperimentalFeatureAbsolutePercentageAgainstPaddingEdge:
+	case ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge:
 		return "absolute-percentage-against-padding-edge"
-	case YGExperimentalFeatureFixJNILocalRefOverflows:
+	case ExperimentalFeatureFixJNILocalRefOverflows:
 		return "fix-jni-local-ref-overflows"
 	}
 	return "unknown"
 }
 
-type YGFlexDirection int
+type FlexDirection uint8
 
 const (
-	YGFlexDirectionColumn YGFlexDirection = iota
-	YGFlexDirectionColumnReverse
-	YGFlexDirectionRow
-	YGFlexDirectionRowReverse
+	FlexDirectionColumn FlexDirection = iota
+	FlexDirectionColumnReverse
+	FlexDirectionRow
+	FlexDirectionRowReverse
 )
 
-func (f YGFlexDirection) String() string {
+func (f FlexDirection) String() string {
 	switch f {
-	case YGFlexDirectionColumn:
+	case FlexDirectionColumn:
 		return "column"
-	case YGFlexDirectionColumnReverse:
+	case FlexDirectionColumnReverse:
 		return "column-reverse"
-	case YGFlexDirectionRow:
+	case FlexDirectionRow:
 		return "row"
-	case YGFlexDirectionRowReverse:
+	case FlexDirectionRowReverse:
 		return "row-reverse"
 	}
 	return "unknown"
 }
 
-type YGGutter int
+type Gutter uint8
 
 const (
-	YGGutterColumn YGGutter = iota
-	YGGutterRow
-	YGGutterAll
+	GutterColumn Gutter = iota
+	GutterRow
+	GutterAll
 )
 
-func (g YGGutter) String() string {
+func (g Gutter) String() string {
 	switch g {
-	case YGGutterColumn:
+	case GutterColumn:
 		return "column"
-	case YGGutterRow:
+	case GutterRow:
 		return "row"
-	case YGGutterAll:
+	case GutterAll:
 		return "all"
 	}
 	return "unknown"
 }
 
-type YGJustify int
+type Justify uint8
 
 const (
-	YGJustifyFlexStart YGJustify = iota
-	YGJustifyCenter
-	YGJustifyFlexEnd
-	YGJustifySpaceBetween
-	YGJustifySpaceAround
-	YGJustifySpaceEvenly
+	JustifyFlexStart Justify = iota
+	JustifyCenter
+	JustifyFlexEnd
+	JustifySpaceBetween
+	JustifySpaceAround
+	JustifySpaceEvenly
 )
 
-func (j YGJustify) String() string {
+func (j Justify) String() string {
 	switch j {
-	case YGJustifyCenter:
+	case JustifyCenter:
 		return "center"
-	case YGJustifyFlexEnd:
+	case JustifyFlexEnd:
 		return "flex-end"
-	case YGJustifySpaceBetween:
+	case JustifySpaceBetween:
 		return "space-between"
-	case YGJustifySpaceAround:
+	case JustifySpaceAround:
 		return "space-around"
-	case YGJustifyFlexStart:
+	case JustifyFlexStart:
 		return "flex-start"
-	case YGJustifySpaceEvenly:
+	case JustifySpaceEvenly:
 		return "space-evenly"
 	}
 	return "unknown"
 }
 
-type YGLogLevel int
+type LogLevel uint8
 
 const (
-	YGLogLevelError YGLogLevel = iota
-	YGLogLevelWarn
-	YGLogLevelInfo
-	YGLogLevelDebug
-	YGLogLevelVerbose
-	YGLogLevelFatal
+	LogLevelError LogLevel = iota
+	LogLevelWarn
+	LogLevelInfo
+	LogLevelDebug
+	LogLevelVerbose
+	LogLevelFatal
 )
 
-func (l YGLogLevel) String() string {
+func (l LogLevel) String() string {
 	switch l {
-	case YGLogLevelError:
+	case LogLevelError:
 		return "error"
-	case YGLogLevelWarn:
+	case LogLevelWarn:
 		return "warn"
-	case YGLogLevelInfo:
+	case LogLevelInfo:
 		return "info"
-	case YGLogLevelDebug:
+	case LogLevelDebug:
 		return "debug"
-	case YGLogLevelVerbose:
+	case LogLevelVerbose:
 		return "verbose"
-	case YGLogLevelFatal:
+	case LogLevelFatal:
 		return "fatal"
 	}
 	return "unknown"
 }
 
-type YGMeasureMode int
+type MeasureMode uint8
 
 const (
-	YGMeasureModeUndefined YGMeasureMode = iota
-	YGMeasureModeExactly
-	YGMeasureModeAtMost
+	MeasureModeUndefined MeasureMode = iota
+	MeasureModeExactly
+	MeasureModeAtMost
 )
 
-func (m YGMeasureMode) String() string {
+func (m MeasureMode) String() string {
 	switch m {
-	case YGMeasureModeUndefined:
+	case MeasureModeUndefined:
 		return "undefined"
-	case YGMeasureModeExactly:
+	case MeasureModeExactly:
 		return "exactly"
-	case YGMeasureModeAtMost:
+	case MeasureModeAtMost:
 		return "at-most"
 	}
 	return "unknown"
 }
 
-type YGNodeType int
+type NodeType uint8
 
 const (
-	YGNodeTypeDefault YGNodeType = iota
-	YGNodeTypeText
+	NodeTypeDefault NodeType = iota
+	NodeTypeText
 )
 
-func (n YGNodeType) String() string {
+func (n NodeType) String() string {
 	switch n {
-	case YGNodeTypeDefault:
+	case NodeTypeDefault:
 		return "default"
-	case YGNodeTypeText:
+	case NodeTypeText:
 		return "text"
 	}
 	return "unknown"
 }
 
-type YGOverflow int
+type Overflow uint8
 
 const (
-	YGOverflowVisible YGOverflow = iota
-	YGOverflowHidden
-	YGOverflowScroll
+	OverflowVisible Overflow = iota
+	OverflowHidden
+	OverflowScroll
 )
 
-func (o YGOverflow) String() string {
+func (o Overflow) String() string {
 	switch o {
-	case YGOverflowVisible:
+	case OverflowVisible:
 		return "visible"
-	case YGOverflowHidden:
+	case OverflowHidden:
 		return "hidden"
-	case YGOverflowScroll:
+	case OverflowScroll:
 		return "scroll"
 	}
 	return "unknown"
 }
 
-type YGPositionType int
+type PositionType uint8
 
 const (
-	YGPositionTypeStatic YGPositionType = iota
+	YGPositionTypeStatic PositionType = iota
 	YGPositionTypeRelative
 	YGPositionTypeAbsolute
 )
 
-func (p YGPositionType) String() string {
+func (p PositionType) String() string {
 	switch p {
 	case YGPositionTypeStatic:
 		return "static"
@@ -377,64 +377,64 @@ func (p YGPositionType) String() string {
 	return "unknown"
 }
 
-type YGPrintOptions uint32
+type PrintOptions uint8
 
 const (
-	YGPrintOptionsLayout YGPrintOptions = 1 << iota
-	YGPrintOptionsStyle
-	YGPrintOptionsChildren
+	PrintOptionsLayout PrintOptions = 1 << iota
+	PrintOptionsStyle
+	PrintOptionsChildren
 )
 
-func (p YGPrintOptions) String() string {
+func (p PrintOptions) String() string {
 	switch p {
-	case YGPrintOptionsLayout:
+	case PrintOptionsLayout:
 		return "layout"
-	case YGPrintOptionsStyle:
+	case PrintOptionsStyle:
 		return "style"
-	case YGPrintOptionsChildren:
+	case PrintOptionsChildren:
 		return "children"
 	}
 	return "unknown"
 }
 
-type YGUnit int
+type Unit uint8
 
 const (
-	YGUnitUndefined YGUnit = iota
-	YGUnitPoint
-	YGUnitPercent
-	YGUnitAuto
+	UnitUndefined Unit = iota
+	UnitPoint
+	UnitPercent
+	UnitAuto
 )
 
-func (u YGUnit) String() string {
+func (u Unit) String() string {
 	switch u {
-	case YGUnitUndefined:
+	case UnitUndefined:
 		return "undefined"
-	case YGUnitPoint:
+	case UnitPoint:
 		return "point"
-	case YGUnitPercent:
+	case UnitPercent:
 		return "percent"
-	case YGUnitAuto:
+	case UnitAuto:
 		return "auto"
 	}
 	return "unknown"
 }
 
-type YGWrap int
+type Wrap uint8
 
 const (
-	YGWrapNoWrap YGWrap = iota
-	YGWrapWrap
-	YGWrapWrapReverse
+	WrapNoWrap Wrap = iota
+	WrapWrap
+	WrapWrapReverse
 )
 
-func (w YGWrap) String() string {
+func (w Wrap) String() string {
 	switch w {
-	case YGWrapNoWrap:
+	case WrapNoWrap:
 		return "no-wrap"
-	case YGWrapWrap:
+	case WrapWrap:
 		return "wrap"
-	case YGWrapWrapReverse:
+	case WrapWrapReverse:
 		return "wrap-reverse"
 	}
 	return "unknown"

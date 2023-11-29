@@ -7,7 +7,7 @@ type LayoutResults struct {
 	margin              [4]float32
 	border              [4]float32
 	padding             [4]float32
-	direction_          YGDirection
+	direction_          Direction
 	hadOverflow_        bool
 	dimension_          [2]float32
 	measuredDimensions_ [2]float32
@@ -15,7 +15,7 @@ type LayoutResults struct {
 	computedFlexBasisGeneration uint32
 	computedFlexBasis           FloatOptional
 	generationCount             uint32
-	lastOwnerDirection          YGDirection
+	lastOwnerDirection          Direction
 	nextCachedMeasurementsIndex uint32
 	cachedMeasurements          [MaxCachedMeasurements]CachedMeasurement
 	cachedLayout                CachedMeasurement
@@ -27,23 +27,23 @@ func NewLayoutResults() *LayoutResults {
 		margin:                      [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
 		border:                      [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
 		padding:                     [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
-		direction_:                  YGDirectionInherit,
+		direction_:                  DirectionInherit,
 		hadOverflow_:                false,
 		dimension_:                  [2]float32{YGUndefined, YGUndefined},
 		measuredDimensions_:         [2]float32{YGUndefined, YGUndefined},
 		computedFlexBasisGeneration: 0,
 		computedFlexBasis:           undefinedFloatOptional,
-		lastOwnerDirection:          YGDirectionInherit,
+		lastOwnerDirection:          DirectionInherit,
 		cachedMeasurements:          [MaxCachedMeasurements]CachedMeasurement{},
 		cachedLayout:                CachedMeasurement{},
 	}
 }
 
-func (l *LayoutResults) direction() YGDirection {
+func (l *LayoutResults) direction() Direction {
 	return l.direction_
 }
 
-func (l *LayoutResults) setDirection(direction YGDirection) {
+func (l *LayoutResults) setDirection(direction Direction) {
 	l.direction_ = direction
 }
 
@@ -55,19 +55,19 @@ func (l *LayoutResults) setHadOverflow(hadOverflow bool) {
 	l.hadOverflow_ = hadOverflow
 }
 
-func (l *LayoutResults) dimension(axis YGDimension) float32 {
+func (l *LayoutResults) dimension(axis Dimension) float32 {
 	return l.dimension_[axis]
 }
 
-func (l *LayoutResults) setDimension(axis YGDimension, value float32) {
+func (l *LayoutResults) setDimension(axis Dimension, value float32) {
 	l.dimension_[axis] = value
 }
 
-func (l *LayoutResults) measuredDimension(axis YGDimension) float32 {
+func (l *LayoutResults) measuredDimension(axis Dimension) float32 {
 	return l.measuredDimensions_[axis]
 }
 
-func (l *LayoutResults) setMeasuredDimension(axis YGDimension, value float32) {
+func (l *LayoutResults) setMeasuredDimension(axis Dimension, value float32) {
 	l.measuredDimensions_[axis] = value
 }
 

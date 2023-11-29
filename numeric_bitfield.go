@@ -69,39 +69,39 @@ func getBooleanData(flags uint8, index uint8) bool {
 
 func ordinalCount(enum any) uint8 {
 	switch enum.(type) {
-	case YGAlign:
+	case Align:
 		return AlignCount
-	case YGDimension:
+	case Dimension:
 		return DimensionCount
-	case YGDirection:
+	case Direction:
 		return DirectionCount
-	case YGDisplay:
+	case Display:
 		return DisplayCount
-	case YGEdge:
+	case Edge:
 		return EdgeCount
-	case YGExperimentalFeature:
+	case ExperimentalFeature:
 		return ExperimentalFeatureCount
-	case YGFlexDirection:
+	case FlexDirection:
 		return FlexDirectionCount
-	case YGJustify:
+	case Justify:
 		return JustifyCount
-	case YGLogLevel:
+	case LogLevel:
 		return LogLevelCount
-	case YGMeasureMode:
+	case MeasureMode:
 		return MeasureModeCount
-	case YGNodeType:
+	case NodeType:
 		return NodeTypeCount
-	case YGOverflow:
+	case Overflow:
 		return OverflowCount
-	case YGPositionType:
+	case PositionType:
 		return PositionTypeCount
-	case YGPrintOptions:
+	case PrintOptions:
 		return PrintOptionsCount
-	case YGUnit:
+	case Unit:
 		return UnitCount
-	case YGWrap:
+	case Wrap:
 		return WrapCount
-	case YGGutter:
+	case Gutter:
 		return GutterCount
 	}
 	return 0

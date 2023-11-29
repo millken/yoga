@@ -1,88 +1,88 @@
 package yoga
 
-func isRow(flexDirection YGFlexDirection) bool {
-	return flexDirection == YGFlexDirectionRow || flexDirection == YGFlexDirectionRowReverse
+func isRow(flexDirection FlexDirection) bool {
+	return flexDirection == FlexDirectionRow || flexDirection == FlexDirectionRowReverse
 }
 
-func isColumn(flexDirection YGFlexDirection) bool {
-	return flexDirection == YGFlexDirectionColumn || flexDirection == YGFlexDirectionColumnReverse
+func isColumn(flexDirection FlexDirection) bool {
+	return flexDirection == FlexDirectionColumn || flexDirection == FlexDirectionColumnReverse
 }
 
-func resolveDirection(flexDirection YGFlexDirection, direction YGDirection) YGFlexDirection {
-	if direction == YGDirectionRTL {
-		if flexDirection == YGFlexDirectionRow {
-			return YGFlexDirectionRowReverse
-		} else if flexDirection == YGFlexDirectionRowReverse {
-			return YGFlexDirectionRow
+func resolveDirection(flexDirection FlexDirection, direction Direction) FlexDirection {
+	if direction == DirectionRTL {
+		if flexDirection == FlexDirectionRow {
+			return FlexDirectionRowReverse
+		} else if flexDirection == FlexDirectionRowReverse {
+			return FlexDirectionRow
 		}
 	}
 	return flexDirection
 }
 
-func resolveCrossDirection(flexDirection YGFlexDirection, direction YGDirection) YGFlexDirection {
-	return If(isColumn(flexDirection), resolveDirection(YGFlexDirectionRow, direction), YGFlexDirectionColumn)
+func resolveCrossDirection(flexDirection FlexDirection, direction Direction) FlexDirection {
+	return If(isColumn(flexDirection), resolveDirection(FlexDirectionRow, direction), FlexDirectionColumn)
 }
 
-func flexStartEdge(flexDirection YGFlexDirection) YGEdge {
+func flexStartEdge(flexDirection FlexDirection) Edge {
 	switch flexDirection {
-	case YGFlexDirectionColumn:
-		return YGEdgeTop
-	case YGFlexDirectionColumnReverse:
-		return YGEdgeBottom
-	case YGFlexDirectionRow:
-		return YGEdgeLeft
-	case YGFlexDirectionRowReverse:
-		return YGEdgeRight
+	case FlexDirectionColumn:
+		return EdgeTop
+	case FlexDirectionColumnReverse:
+		return EdgeBottom
+	case FlexDirectionRow:
+		return EdgeLeft
+	case FlexDirectionRowReverse:
+		return EdgeRight
 	}
 	panic("Invalid FlexDirection")
 }
 
-func flexEndEdge(flexDirection YGFlexDirection) YGEdge {
+func flexEndEdge(flexDirection FlexDirection) Edge {
 	switch flexDirection {
-	case YGFlexDirectionColumn:
-		return YGEdgeBottom
-	case YGFlexDirectionColumnReverse:
-		return YGEdgeTop
-	case YGFlexDirectionRow:
-		return YGEdgeRight
-	case YGFlexDirectionRowReverse:
-		return YGEdgeLeft
+	case FlexDirectionColumn:
+		return EdgeBottom
+	case FlexDirectionColumnReverse:
+		return EdgeTop
+	case FlexDirectionRow:
+		return EdgeRight
+	case FlexDirectionRowReverse:
+		return EdgeLeft
 	}
 	panic("Invalid FlexDirection")
 }
 
-func inlineStartEdge(flexDirection YGFlexDirection, direction YGDirection) YGEdge {
+func inlineStartEdge(flexDirection FlexDirection, direction Direction) Edge {
 	if isRow(flexDirection) {
-		return If(direction == YGDirectionRTL, YGEdgeRight, YGEdgeLeft)
+		return If(direction == DirectionRTL, EdgeRight, EdgeLeft)
 	}
-	return YGEdgeTop
+	return EdgeTop
 }
 
-func inlineEndEdge(flexDirection YGFlexDirection, direction YGDirection) YGEdge {
+func inlineEndEdge(flexDirection FlexDirection, direction Direction) Edge {
 	if isRow(flexDirection) {
-		return If(direction == YGDirectionRTL, YGEdgeLeft, YGEdgeRight)
+		return If(direction == DirectionRTL, EdgeLeft, EdgeRight)
 	}
-	return YGEdgeBottom
+	return EdgeBottom
 }
 
-func flexStartRelativeEdge(flexDirection YGFlexDirection, direction YGDirection) YGEdge {
+func flexStartRelativeEdge(flexDirection FlexDirection, direction Direction) Edge {
 	leadLayoutEdge := inlineStartEdge(flexDirection, direction)
 	leadFlexItemEdge := flexStartEdge(flexDirection)
-	return If(leadLayoutEdge == leadFlexItemEdge, YGEdgeStart, YGEdgeEnd)
+	return If(leadLayoutEdge == leadFlexItemEdge, EdgeStart, EdgeEnd)
 }
 
-func flexEndRelativeEdge(flexDirection YGFlexDirection, direction YGDirection) YGEdge {
+func flexEndRelativeEdge(flexDirection FlexDirection, direction Direction) Edge {
 	trailLayoutEdge := inlineEndEdge(flexDirection, direction)
 	trailFlexItemEdge := flexEndEdge(flexDirection)
-	return If(trailLayoutEdge == trailFlexItemEdge, YGEdgeEnd, YGEdgeStart)
+	return If(trailLayoutEdge == trailFlexItemEdge, EdgeEnd, EdgeStart)
 }
 
-func dimension(flexDirection YGFlexDirection) YGDimension {
+func dimension(flexDirection FlexDirection) Dimension {
 	switch flexDirection {
-	case YGFlexDirectionColumn, YGFlexDirectionColumnReverse:
-		return YGDimensionHeight
-	case YGFlexDirectionRow, YGFlexDirectionRowReverse:
-		return YGDimensionWidth
+	case FlexDirectionColumn, FlexDirectionColumnReverse:
+		return DimensionHeight
+	case FlexDirectionRow, FlexDirectionRowReverse:
+		return DimensionWidth
 	}
 	panic("Invalid FlexDirection")
 }

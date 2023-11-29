@@ -1,22 +1,22 @@
 package yoga
 
-func sizeIsExactAndMatchesOldMeasuredSize(sizeMode YGMeasureMode, size, lastComputedSize float32) bool {
-	return sizeMode == YGMeasureModeExactly && inexactEqual(size, lastComputedSize)
+func sizeIsExactAndMatchesOldMeasuredSize(sizeMode MeasureMode, size, lastComputedSize float32) bool {
+	return sizeMode == MeasureModeExactly && inexactEqual(size, lastComputedSize)
 }
 
-func oldSizeIsUnspecifiedAndStillFits(sizeMode YGMeasureMode, size float32, lastSizeMode YGMeasureMode, lastComputedSize float32) bool {
-	return sizeMode == YGMeasureModeAtMost && lastSizeMode == YGMeasureModeUndefined &&
+func oldSizeIsUnspecifiedAndStillFits(sizeMode MeasureMode, size float32, lastSizeMode MeasureMode, lastComputedSize float32) bool {
+	return sizeMode == MeasureModeAtMost && lastSizeMode == MeasureModeUndefined &&
 		(size >= lastComputedSize || inexactEqual(size, lastComputedSize))
 }
 
-func newMeasureSizeIsStricterAndStillValid(sizeMode YGMeasureMode, size float32, lastSizeMode YGMeasureMode, lastSize, lastComputedSize float32) bool {
-	return lastSizeMode == YGMeasureModeAtMost && sizeMode == YGMeasureModeAtMost && !IsNaN(lastSize) &&
+func newMeasureSizeIsStricterAndStillValid(sizeMode MeasureMode, size float32, lastSizeMode MeasureMode, lastSize, lastComputedSize float32) bool {
+	return lastSizeMode == MeasureModeAtMost && sizeMode == MeasureModeAtMost && !IsNaN(lastSize) &&
 		!IsNaN(size) && !IsNaN(lastComputedSize) && lastSize > size &&
 		(lastComputedSize <= size || inexactEqual(size, lastComputedSize))
 }
 
-func canUseCachedMeasurement(widthMode YGMeasureMode, availableWidth float32, heightMode YGMeasureMode, availableHeight float32,
-	lastWidthMode YGMeasureMode, lastAvailableWidth float32, lastHeightMode YGMeasureMode, lastAvailableHeight float32,
+func canUseCachedMeasurement(widthMode MeasureMode, availableWidth float32, heightMode MeasureMode, availableHeight float32,
+	lastWidthMode MeasureMode, lastAvailableWidth float32, lastHeightMode MeasureMode, lastAvailableHeight float32,
 	lastComputedWidth, lastComputedHeight, marginRow, marginColumn float32, config *Config) bool {
 	if (!IsNaN(lastComputedHeight) && lastComputedHeight < 0) ||
 		(!IsNaN(lastComputedWidth) && lastComputedWidth < 0) {

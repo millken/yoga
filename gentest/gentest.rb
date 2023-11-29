@@ -59,8 +59,8 @@ Dir[files].each do |file|
   browser.goto('file://' + Dir.pwd + '/test.html')
   logs = browser.driver.logs.get(:browser)
 
-  name = name.gsub(/Test$/, '_test')
-  f = File.open("../tests/#{name}.go", 'w')
+  name = name.gsub(/(^YG|Test$)/, '').gsub(/([a-z])([A-Z])/, '\1_\2').downcase
+  f = File.open("../tests/#{name}_test.go", 'w')
   f.write eval(logs[0].message.sub(/^[^"]*/, ''))
   f.close
 

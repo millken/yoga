@@ -8,9 +8,9 @@ import (
 type YGMeasureFunc func(
 	node *Node,
 	width float32,
-	widthMode YGMeasureMode,
+	widthMode MeasureMode,
 	height float32,
-	heightMode YGMeasureMode,
+	heightMode MeasureMode,
 ) YGSize
 
 type YGBaselineFunc func(node *Node, width, height float32) float32
@@ -23,7 +23,7 @@ type Node struct {
 	hasNewLayout_        bool
 	isReferenceBaseline_ bool
 	isDirty_             bool
-	nodeType_            YGNodeType
+	nodeType_            NodeType
 	context_             interface{}
 	measureFunc_         YGMeasureFunc
 	baselineFunc_        YGBaselineFunc
@@ -43,7 +43,7 @@ var (
 		hasNewLayout_:        true,
 		isReferenceBaseline_: false,
 		isDirty_:             false,
-		nodeType_:            YGNodeTypeDefault,
+		nodeType_:            NodeTypeDefault,
 		context_:             nil,
 		measureFunc_:         nil,
 		baselineFunc_:        nil,
@@ -66,8 +66,8 @@ func NewNodeWithConfig(config *Config) *Node {
 	if config.UseWebDefaults() {
 		node.useWebDefaults()
 	}
-	node.StyleSetAlignContent(YGAlignFlexStart)
-	node.StyleSetAlignItems(YGAlignStretch)
+	node.StyleSetAlignContent(AlignFlexStart)
+	node.StyleSetAlignItems(AlignStretch)
 	return &node
 }
 
@@ -77,8 +77,8 @@ func NewNode() *Node {
 }
 
 func (node *Node) useWebDefaults() {
-	node.StyleSetFlexDirection(YGFlexDirectionRow)
-	node.StyleSetAlignContent(YGAlignStretch)
+	node.StyleSetFlexDirection(FlexDirectionRow)
+	node.StyleSetAlignContent(AlignStretch)
 }
 
 // getHasNewLayout
@@ -87,7 +87,7 @@ func (node *Node) getHasNewLayout() bool {
 }
 
 // getNodeType
-func (node *Node) getNodeType() YGNodeType {
+func (node *Node) getNodeType() NodeType {
 	return node.nodeType_
 }
 
@@ -98,9 +98,9 @@ func (node *Node) hasMeasureFunc() bool {
 
 func (node *Node) measure(
 	width float32,
-	widthMode YGMeasureMode,
+	widthMode MeasureMode,
 	height float32,
-	heightMode YGMeasureMode,
+	heightMode MeasureMode,
 ) YGSize {
 	return node.measureFunc_(node, width, widthMode, height, heightMode)
 }
@@ -116,7 +116,7 @@ func (node *Node) baseline(width, height float32) float32 {
 }
 
 // hasErrata
-func (node *Node) hasErrata(errata YGErrata) bool {
+func (node *Node) hasErrata(errata Errata) bool {
 	return node.config_.hasErrata(errata)
 }
 
@@ -181,137 +181,137 @@ func (node *Node) getResolvedDimensions() [2]YGValue {
 }
 
 // getResolvedDimension
-func (node *Node) getResolvedDimension(dimension YGDimension) YGValue {
+func (node *Node) getResolvedDimension(dimension Dimension) YGValue {
 	return node.resolvedDimensions_[dimension]
 }
 
 // computeEdgeValueForColumn
 func (node *Node) computeEdgeValueForColumn(
 	edges [EdgeCount]CompactValue,
-	edge YGEdge,
+	edge Edge,
 ) CompactValue {
 	if edges[edge].isDefined() {
 		return edges[edge]
-	} else if edges[YGEdgeVertical].isDefined() {
-		return edges[YGEdgeVertical]
+	} else if edges[EdgeVertical].isDefined() {
+		return edges[EdgeVertical]
 	} else {
-		return edges[YGEdgeAll]
+		return edges[EdgeAll]
 	}
 }
 
 // computeEdgeValueForRow
 func (node *Node) computeEdgeValueForRow(
 	edges [EdgeCount]CompactValue,
-	rowEdge YGEdge,
-	edge YGEdge,
+	rowEdge Edge,
+	edge Edge,
 ) CompactValue {
 	if edges[rowEdge].isDefined() {
 		return edges[rowEdge]
 	} else if edges[edge].isDefined() {
 		return edges[edge]
-	} else if edges[YGEdgeHorizontal].isDefined() {
-		return edges[YGEdgeHorizontal]
+	} else if edges[EdgeHorizontal].isDefined() {
+		return edges[EdgeHorizontal]
 	} else {
-		return edges[YGEdgeAll]
+		return edges[EdgeAll]
 	}
 }
 
 // getInlineStartEdgeUsingErrata
-func (node *Node) getInlineStartEdgeUsingErrata(flexDirection YGFlexDirection, direction YGDirection) YGEdge {
-	return If(node.hasErrata(YGErrataStartingEndingEdgeFromFlexDirection), flexStartEdge(flexDirection), inlineStartEdge(flexDirection, direction))
+func (node *Node) getInlineStartEdgeUsingErrata(flexDirection FlexDirection, direction Direction) Edge {
+	return If(node.hasErrata(ErrataStartingEndingEdgeFromFlexDirection), flexStartEdge(flexDirection), inlineStartEdge(flexDirection, direction))
 }
 
 // getInlineEndEdgeUsingErrata
-func (node *Node) getInlineEndEdgeUsingErrata(flexDirection YGFlexDirection, direction YGDirection) YGEdge {
-	return If(node.hasErrata(YGErrataStartingEndingEdgeFromFlexDirection), flexEndEdge(flexDirection), inlineEndEdge(flexDirection, direction))
+func (node *Node) getInlineEndEdgeUsingErrata(flexDirection FlexDirection, direction Direction) Edge {
+	return If(node.hasErrata(ErrataStartingEndingEdgeFromFlexDirection), flexEndEdge(flexDirection), inlineEndEdge(flexDirection, direction))
 }
 
 // isFlexStartPositionDefined
-func (node *Node) isFlexStartPositionDefined(axis YGFlexDirection) bool {
+func (node *Node) isFlexStartPositionDefined(axis FlexDirection) bool {
 	startEdge := flexStartEdge(axis)
-	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
+	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
 	return leadingPosition.isDefined()
 }
 
 // isInlineStartPositionDefined
-func (node *Node) isInlineStartPositionDefined(axis YGFlexDirection, direction YGDirection) bool {
+func (node *Node) isInlineStartPositionDefined(axis FlexDirection, direction Direction) bool {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
-	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
+	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
 	return leadingPosition.isDefined()
 }
 
 // isFlexEndPositionDefined
-func (node *Node) isFlexEndPositionDefined(axis YGFlexDirection) bool {
+func (node *Node) isFlexEndPositionDefined(axis FlexDirection) bool {
 	endEdge := flexEndEdge(axis)
-	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
+	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
 	return trailingPosition.isDefined()
 }
 
 // isInlineEndPositionDefined
-func (node *Node) isInlineEndPositionDefined(axis YGFlexDirection, direction YGDirection) bool {
+func (node *Node) isInlineEndPositionDefined(axis FlexDirection, direction Direction) bool {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
-	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
+	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
 	return trailingPosition.isDefined()
 }
 
 // getFlexStartPosition
-func (node *Node) getFlexStartPosition(axis YGFlexDirection, axisSize float32) float32 {
+func (node *Node) getFlexStartPosition(axis FlexDirection, axisSize float32) float32 {
 	startEdge := flexStartEdge(axis)
-	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
+	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
 	return resolveCompactValue(leadingPosition, axisSize).unwrapOrDefault(0.0)
 }
 
 // getInlineStartPosition
-func (node *Node) getInlineStartPosition(axis YGFlexDirection, direction YGDirection, axisSize float32) float32 {
+func (node *Node) getInlineStartPosition(axis FlexDirection, direction Direction, axisSize float32) float32 {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
-	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
+	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
 	return resolveCompactValue(leadingPosition, axisSize).unwrapOrDefault(0.0)
 }
 
 // getFlexEndPosition
-func (node *Node) getFlexEndPosition(axis YGFlexDirection, axisSize float32) float32 {
+func (node *Node) getFlexEndPosition(axis FlexDirection, axisSize float32) float32 {
 	endEdge := flexEndEdge(axis)
-	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
+	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
 	return resolveCompactValue(trailingPosition, axisSize).unwrapOrDefault(0.0)
 }
 
 // getInlineEndPosition
-func (node *Node) getInlineEndPosition(axis YGFlexDirection, direction YGDirection, axisSize float32) float32 {
+func (node *Node) getInlineEndPosition(axis FlexDirection, direction Direction, axisSize float32) float32 {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
-	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
+	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
 	return resolveCompactValue(trailingPosition, axisSize).unwrapOrDefault(0.0)
 }
 
 // getFlexStartMargin
-func (node *Node) getFlexStartMargin(axis YGFlexDirection, widthSize float32) float32 {
+func (node *Node) getFlexStartMargin(axis FlexDirection, widthSize float32) float32 {
 	startEdge := flexStartEdge(axis)
-	leadingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, startEdge))
+	leadingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, startEdge))
 	return resolveCompactValue(leadingMargin, widthSize).unwrapOrDefault(0.0)
 }
 
 // getInlineStartMargin
-func (node *Node) getInlineStartMargin(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getInlineStartMargin(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
-	leadingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, startEdge))
+	leadingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, startEdge))
 	return resolveCompactValue(leadingMargin, widthSize).unwrapOrDefault(0.0)
 }
 
 // getFlexEndMargin
-func (node *Node) getFlexEndMargin(axis YGFlexDirection, widthSize float32) float32 {
+func (node *Node) getFlexEndMargin(axis FlexDirection, widthSize float32) float32 {
 	endEdge := flexEndEdge(axis)
-	trailingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, endEdge))
+	trailingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, endEdge))
 	return resolveCompactValue(trailingMargin, widthSize).unwrapOrDefault(0.0)
 }
 
 // getInlineEndMargin
-func (node *Node) getInlineEndMargin(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getInlineEndMargin(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
-	trailingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, endEdge))
+	trailingMargin := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().margin_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().margin_, endEdge))
 	return resolveCompactValue(trailingMargin, widthSize).unwrapOrDefault(0.0)
 }
 
 // getFlexStartBorder
-func (node *Node) getFlexStartBorder(axis YGFlexDirection, direction YGDirection) float32 {
+func (node *Node) getFlexStartBorder(axis FlexDirection, direction Direction) float32 {
 	leadRelativeFlexItemEdge := flexStartRelativeEdge(axis, direction)
 	startEdge := flexStartEdge(axis)
 	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, leadRelativeFlexItemEdge, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
@@ -319,81 +319,81 @@ func (node *Node) getFlexStartBorder(axis YGFlexDirection, direction YGDirection
 }
 
 // getInlineStartBorder
-func (node *Node) getInlineStartBorder(axis YGFlexDirection, direction YGDirection) float32 {
+func (node *Node) getInlineStartBorder(axis FlexDirection, direction Direction) float32 {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
-	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
+	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
 	return maxOrDefined(leadingBorder.YGValue().value, 0)
 }
 
 // getFlexEndBorder
-func (node *Node) getFlexEndBorder(axis YGFlexDirection, direction YGDirection) float32 {
+func (node *Node) getFlexEndBorder(axis FlexDirection, direction Direction) float32 {
 	trailRelativeFlexItemEdge := flexEndRelativeEdge(axis, direction)
 	trailingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, trailRelativeFlexItemEdge, flexEndEdge(axis)), node.computeEdgeValueForColumn(node.getStyle().border_, flexEndEdge(axis)))
 	return maxOrDefined(trailingBorder.YGValue().value, 0)
 }
 
 // getInlineEndBorder
-func (node *Node) getInlineEndBorder(axis YGFlexDirection, direction YGDirection) float32 {
+func (node *Node) getInlineEndBorder(axis FlexDirection, direction Direction) float32 {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
-	trailingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().border_, endEdge))
+	trailingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().border_, endEdge))
 	return maxOrDefined(trailingBorder.YGValue().value, 0)
 }
 
 // getFlexStartPadding
-func (node *Node) getFlexStartPadding(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getFlexStartPadding(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	leadRelativeFlexItemEdge := flexStartRelativeEdge(axis, direction)
 	leadingPadding := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().padding_, leadRelativeFlexItemEdge, flexStartEdge(axis)), node.computeEdgeValueForColumn(node.getStyle().padding_, flexStartEdge(axis)))
 	return maxOrDefined(resolveCompactValue(leadingPadding, widthSize).unwrap(), 0)
 }
 
 // getInlineStartPadding
-func (node *Node) getInlineStartPadding(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getInlineStartPadding(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
-	leadingPadding := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().padding_, YGEdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().padding_, startEdge))
+	leadingPadding := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().padding_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().padding_, startEdge))
 	return maxOrDefined(resolveCompactValue(leadingPadding, widthSize).unwrap(), 0)
 }
 
 // getFlexEndPadding
-func (node *Node) getFlexEndPadding(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getFlexEndPadding(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	trailRelativeFlexItemEdge := flexEndRelativeEdge(axis, direction)
 	trailingPadding := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().padding_, trailRelativeFlexItemEdge, flexEndEdge(axis)), node.computeEdgeValueForColumn(node.getStyle().padding_, flexEndEdge(axis)))
 	return maxOrDefined(resolveCompactValue(trailingPadding, widthSize).unwrap(), 0)
 }
 
 // getInlineEndPadding
-func (node *Node) getInlineEndPadding(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getInlineEndPadding(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
-	trailingPadding := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().padding_, YGEdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().padding_, endEdge))
+	trailingPadding := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().padding_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().padding_, endEdge))
 	return maxOrDefined(resolveCompactValue(trailingPadding, widthSize).unwrap(), 0)
 }
 
 // getFlexStartPaddingAndBorder
-func (node *Node) getFlexStartPaddingAndBorder(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getFlexStartPaddingAndBorder(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	return node.getFlexStartPadding(axis, direction, widthSize) + node.getFlexStartBorder(axis, direction)
 }
 
 // getInlineStartPaddingAndBorder
-func (node *Node) getInlineStartPaddingAndBorder(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getInlineStartPaddingAndBorder(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	return node.getInlineStartPadding(axis, direction, widthSize) + node.getInlineStartBorder(axis, direction)
 }
 
 // getFlexEndPaddingAndBorder
-func (node *Node) getFlexEndPaddingAndBorder(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getFlexEndPaddingAndBorder(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	return node.getFlexEndPadding(axis, direction, widthSize) + node.getFlexEndBorder(axis, direction)
 }
 
 // getInlineEndPaddingAndBorder
-func (node *Node) getInlineEndPaddingAndBorder(axis YGFlexDirection, direction YGDirection, widthSize float32) float32 {
+func (node *Node) getInlineEndPaddingAndBorder(axis FlexDirection, direction Direction, widthSize float32) float32 {
 	return node.getInlineEndPadding(axis, direction, widthSize) + node.getInlineEndBorder(axis, direction)
 }
 
 // getMarginForAxis
-func (node *Node) getMarginForAxis(axis YGFlexDirection, widthSize float32) float32 {
-	return node.getInlineStartMargin(axis, YGDirectionLTR, widthSize) + node.getInlineEndMargin(axis, YGDirectionLTR, widthSize)
+func (node *Node) getMarginForAxis(axis FlexDirection, widthSize float32) float32 {
+	return node.getInlineStartMargin(axis, DirectionLTR, widthSize) + node.getInlineEndMargin(axis, DirectionLTR, widthSize)
 }
 
 // getGapForAxis
-func (node *Node) getGapForAxis(axis YGFlexDirection) float32 {
+func (node *Node) getGapForAxis(axis FlexDirection) float32 {
 	gap := If(isRow(axis), node.getStyle().resolveColumnGap(), node.getStyle().resolveRowGap())
 	return maxOrDefined(resolveCompactValue(gap, 0).unwrap(), 0)
 }
@@ -414,19 +414,19 @@ func (node *Node) setHasNewLayout(hasNewLayout bool) {
 }
 
 // setNodeType
-func (node *Node) setNodeType(nodeType YGNodeType) {
+func (node *Node) setNodeType(nodeType NodeType) {
 	node.nodeType_ = nodeType
 }
 
 // setMeasureFunc
 func (node *Node) setMeasureFunc(measureFunc YGMeasureFunc) {
 	if measureFunc == nil {
-		node.setNodeType(YGNodeTypeDefault)
+		node.setNodeType(NodeTypeDefault)
 	} else {
 		if node.getChildCount() == 0 {
 			panic("Cannot set measure function: Nodes with measure functions cannot have children.")
 		}
-		node.setNodeType(YGNodeTypeText)
+		node.setNodeType(NodeTypeText)
 	}
 	node.measureFunc_ = measureFunc
 }
@@ -497,7 +497,7 @@ func (node *Node) setDirty(isDirty bool) {
 }
 
 // setLayoutLastOwnerDirection
-func (node *Node) setLayoutLastOwnerDirection(direction YGDirection) {
+func (node *Node) setLayoutLastOwnerDirection(direction Direction) {
 	node.getLayout().lastOwnerDirection = direction
 }
 
@@ -514,7 +514,7 @@ func (node *Node) setLayoutComputedFlexBasisGeneration(computedFlexBasisGenerati
 // setLayoutMeasuredDimension
 func (node *Node) setLayoutMeasuredDimension(
 	measuredDimension float32,
-	dimension YGDimension,
+	dimension Dimension,
 ) {
 	node.getLayout().setMeasuredDimension(dimension, measuredDimension)
 }
@@ -525,17 +525,17 @@ func (node *Node) setLayoutHadOverflow(hadOverflow bool) {
 }
 
 // setLayoutDimension
-func (node *Node) setLayoutDimension(dimensionValue float32, dimension YGDimension) {
+func (node *Node) setLayoutDimension(dimensionValue float32, dimension Dimension) {
 	node.getLayout().setDimension(dimension, dimensionValue)
 }
 
 // setLayoutDirection
-func (node *Node) setLayoutDirection(direction YGDirection) {
+func (node *Node) setLayoutDirection(direction Direction) {
 	node.getLayout().setDirection(direction)
 }
 
 // setLayoutMargin
-func (node *Node) setLayoutMargin(margin float32, edge YGEdge) {
+func (node *Node) setLayoutMargin(margin float32, edge Edge) {
 	if int(edge) >= len(node.getLayout().margin) {
 		panic("Edge must be top/left/bottom/right")
 	}
@@ -543,7 +543,7 @@ func (node *Node) setLayoutMargin(margin float32, edge YGEdge) {
 }
 
 // setLayoutBorder
-func (node *Node) setLayoutBorder(border float32, edge YGEdge) {
+func (node *Node) setLayoutBorder(border float32, edge Edge) {
 	if int(edge) >= len(node.getLayout().border) {
 		panic("Edge must be top/left/bottom/right")
 	}
@@ -551,7 +551,7 @@ func (node *Node) setLayoutBorder(border float32, edge YGEdge) {
 }
 
 // setLayoutPadding
-func (node *Node) setLayoutPadding(padding float32, edge YGEdge) {
+func (node *Node) setLayoutPadding(padding float32, edge Edge) {
 	if int(edge) >= len(node.getLayout().padding) {
 		panic("Edge must be top/left/bottom/right")
 	}
@@ -559,7 +559,7 @@ func (node *Node) setLayoutPadding(padding float32, edge YGEdge) {
 }
 
 // setLayoutPosition
-func (node *Node) setLayoutPosition(position float32, edge YGEdge) {
+func (node *Node) setLayoutPosition(position float32, edge Edge) {
 	if gDebuging {
 		atomic.AddUint32(&gCurrentDebugCount, 1)
 		fmt.Printf("setLayoutPosition: %d %s=%f\n", atomic.LoadUint32(&gCurrentDebugCount),
@@ -572,7 +572,7 @@ func (node *Node) setLayoutPosition(position float32, edge YGEdge) {
 }
 
 // relativePosition
-func (node *Node) relativePosition(axis YGFlexDirection, direction YGDirection, axisSize float32) float32 {
+func (node *Node) relativePosition(axis FlexDirection, direction Direction, axisSize float32) float32 {
 	if node.isInlineStartPositionDefined(axis, direction) {
 		return node.getInlineStartPosition(axis, direction, axisSize)
 	}
@@ -581,7 +581,7 @@ func (node *Node) relativePosition(axis YGFlexDirection, direction YGDirection, 
 
 // setPosition
 func (node *Node) setPosition(
-	direction YGDirection,
+	direction Direction,
 	mainSize float32,
 	crossSize float32,
 	ownerWidth float32) {
@@ -592,7 +592,7 @@ func (node *Node) setPosition(
 	}
 	/* Root nodes should be always layouted as LTR, so we don't return negative
 	 * values. */
-	directionRespectingRoot := If(node.owner_ != nil, direction, YGDirectionLTR)
+	directionRespectingRoot := If(node.owner_ != nil, direction, DirectionLTR)
 	mainAxis := resolveDirection(node.getStyle().flexDirection(), directionRespectingRoot)
 	crossAxis := resolveCrossDirection(mainAxis, directionRespectingRoot)
 	// Here we should check for `PositionType::Static` and in this case zero inset
@@ -613,18 +613,18 @@ func (node *Node) setPosition(
 }
 
 // getFlexStartMarginValue
-func (node *Node) getFlexStartMarginValue(axis YGFlexDirection) YGValue {
-	if isRow(axis) && node.getStyle().margin_[YGEdgeStart].isDefined() {
-		return node.getStyle().margin_[YGEdgeStart].YGValue()
+func (node *Node) getFlexStartMarginValue(axis FlexDirection) YGValue {
+	if isRow(axis) && node.getStyle().margin_[EdgeStart].isDefined() {
+		return node.getStyle().margin_[EdgeStart].YGValue()
 	} else {
 		return node.getStyle().margin_[flexStartEdge(axis)].YGValue()
 	}
 }
 
 // marginTrailingValue
-func (node *Node) marginTrailingValue(axis YGFlexDirection) YGValue {
-	if isRow(axis) && node.getStyle().margin_[YGEdgeEnd].isDefined() {
-		return node.getStyle().margin_[YGEdgeEnd].YGValue()
+func (node *Node) marginTrailingValue(axis FlexDirection) YGValue {
+	if isRow(axis) && node.getStyle().margin_[EdgeEnd].isDefined() {
+		return node.getStyle().margin_[EdgeEnd].YGValue()
 	} else {
 		return node.getStyle().margin_[flexEndEdge(axis)].YGValue()
 	}
@@ -633,7 +633,7 @@ func (node *Node) marginTrailingValue(axis YGFlexDirection) YGValue {
 // resolveFlexBasisPtr
 func (node *Node) resolveFlexBasisPtr() YGValue {
 	flexBasis := node.getStyle().flexBasis().YGValue()
-	if flexBasis.unit != YGUnitAuto && flexBasis.unit != YGUnitUndefined {
+	if flexBasis.unit != UnitAuto && flexBasis.unit != UnitUndefined {
 		return flexBasis
 	}
 	if node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() > 0 {
@@ -645,7 +645,7 @@ func (node *Node) resolveFlexBasisPtr() YGValue {
 // resolveDimension
 func (node *Node) resolveDimension() {
 	style := node.getStyle()
-	for dim := YGDimensionWidth; dim < DimensionCount; dim++ {
+	for dim := DimensionWidth; dim < DimensionCount; dim++ {
 		if style.maxDimension(dim).isDefined() &&
 			inexactEquals(style.maxDimension(dim), style.minDimension(dim)) {
 			node.resolvedDimensions_[dim] = style.maxDimension(dim).YGValue()
@@ -656,9 +656,9 @@ func (node *Node) resolveDimension() {
 }
 
 // resolveDirection
-func (node *Node) resolveDirection(ownerDirection YGDirection) YGDirection {
-	if node.getStyle().direction() == YGDirectionInherit {
-		return If(ownerDirection != YGDirectionInherit, ownerDirection, YGDirectionLTR)
+func (node *Node) resolveDirection(ownerDirection Direction) Direction {
+	if node.getStyle().direction() == DirectionInherit {
+		return If(ownerDirection != DirectionInherit, ownerDirection, DirectionLTR)
 	} else {
 		return node.getStyle().direction()
 	}

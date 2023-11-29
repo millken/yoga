@@ -13,14 +13,14 @@ type YGSize struct {
 
 func DefaultLogger(config *Config,
 	node *Node,
-	level YGLogLevel,
+	level LogLevel,
 	format string,
 	args ...interface{}) int {
 	switch level {
-	case YGLogLevelError, YGLogLevelFatal:
+	case LogLevelError, LogLevelFatal:
 		n, _ := fmt.Fprintf(os.Stderr, format, args...)
 		return n
-	case YGLogLevelWarn, YGLogLevelInfo, YGLogLevelDebug, YGLogLevelVerbose:
+	case LogLevelWarn, LogLevelInfo, LogLevelDebug, LogLevelVerbose:
 		fallthrough
 	default:
 		n, _ := fmt.Printf(format, args...)
@@ -58,18 +58,18 @@ func If[T any](expr bool, a, b T) T {
 }
 
 var (
-	YGValueZero      = YGValue{0, YGUnitPoint}
-	YGValueUndefined = YGValue{YGUndefined, YGUnitUndefined}
-	YGValueAuto      = YGValue{YGUndefined, YGUnitAuto}
+	YGValueZero      = YGValue{0, UnitPoint}
+	YGValueUndefined = YGValue{YGUndefined, UnitUndefined}
+	YGValueAuto      = YGValue{YGUndefined, UnitAuto}
 )
 
 type YGValue struct {
 	value float32
-	unit  YGUnit
+	unit  Unit
 }
 
 func (v YGValue) isUndefined() bool {
-	return v.unit == YGUnitUndefined
+	return v.unit == UnitUndefined
 }
 
 func (v YGValue) equal(other YGValue) bool {
@@ -77,9 +77,9 @@ func (v YGValue) equal(other YGValue) bool {
 		return false
 	}
 	switch v.unit {
-	case YGUnitUndefined, YGUnitAuto:
+	case UnitUndefined, UnitAuto:
 		return true
-	case YGUnitPoint, YGUnitPercent:
+	case UnitPoint, UnitPercent:
 		return v.value == other.value
 	}
 	return false
@@ -91,9 +91,9 @@ func (v *YGValue) notEqual(other YGValue) bool {
 
 func resolveValue(value YGValue, ownerSize float32) FloatOptional {
 	switch value.unit {
-	case YGUnitPoint:
+	case UnitPoint:
 		return NewFloatOptional(value.value)
-	case YGUnitPercent:
+	case UnitPercent:
 		return NewFloatOptional(value.value * ownerSize * 0.01)
 	default:
 		return undefinedFloatOptional

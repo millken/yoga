@@ -7,50 +7,50 @@ YG_EXPORT float YGNodeLayoutGetRight(YGNodeConstRef node);
 YG_EXPORT float YGNodeLayoutGetBottom(YGNodeConstRef node);
 YG_EXPORT float YGNodeLayoutGetWidth(YGNodeConstRef node);
 YG_EXPORT float YGNodeLayoutGetHeight(YGNodeConstRef node);
-YG_EXPORT YGDirection YGNodeLayoutGetDirection(YGNodeConstRef node);
+YG_EXPORT Direction YGNodeLayoutGetDirection(YGNodeConstRef node);
 YG_EXPORT bool YGNodeLayoutGetHadOverflow(YGNodeConstRef node);
 
 // Get the computed values for these nodes after performing layout. If they were
 // set using point values then the returned value will be the same as
 // YGNodeStyleGetXXX. However if they were set using a percentage value then the
 // returned value is the computed value used during layout.
-YG_EXPORT float YGNodeLayoutGetMargin(YGNodeConstRef node, YGEdge edge);
-YG_EXPORT float YGNodeLayoutGetBorder(YGNodeConstRef node, YGEdge edge);
-YG_EXPORT float YGNodeLayoutGetPadding(YGNodeConstRef node, YGEdge edge);
+YG_EXPORT float YGNodeLayoutGetMargin(YGNodeConstRef node, Edge edge);
+YG_EXPORT float YGNodeLayoutGetBorder(YGNodeConstRef node, Edge edge);
+YG_EXPORT float YGNodeLayoutGetPadding(YGNodeConstRef node, Edge edge);
 */
 
 // LayoutLeft returns left
 func (n *Node) LayoutLeft() float32 {
-	return n.getLayout().position[YGEdgeLeft]
+	return n.getLayout().position[EdgeLeft]
 }
 
 // LayoutTop
 func (n *Node) LayoutTop() float32 {
-	return n.getLayout().position[YGEdgeTop]
+	return n.getLayout().position[EdgeTop]
 }
 
 // LayoutRight
 func (n *Node) LayoutRight() float32 {
-	return n.getLayout().position[YGEdgeRight]
+	return n.getLayout().position[EdgeRight]
 }
 
 // LayoutBottom
 func (n *Node) LayoutBottom() float32 {
-	return n.getLayout().position[YGEdgeBottom]
+	return n.getLayout().position[EdgeBottom]
 }
 
 // LayoutWidth returns width
 func (n *Node) LayoutWidth() float32 {
-	return n.getLayout().dimension(YGDimensionWidth)
+	return n.getLayout().dimension(DimensionWidth)
 }
 
 // LayoutHeight returns height
 func (n *Node) LayoutHeight() float32 {
-	return n.getLayout().dimension(YGDimensionHeight)
+	return n.getLayout().dimension(DimensionHeight)
 }
 
 // LayoutDirection
-func (n *Node) LayoutDirection() YGDirection {
+func (n *Node) LayoutDirection() Direction {
 	return n.getLayout().direction()
 }
 
@@ -60,24 +60,24 @@ func (n *Node) LayoutHadOverflow() bool {
 }
 
 // LayoutMargin
-func (n *Node) LayoutMargin(edge YGEdge) float32 {
+func (n *Node) LayoutMargin(edge Edge) float32 {
 	member := n.getLayout().margin
-	if edge > YGEdgeEnd {
+	if edge > EdgeEnd {
 		panic("Cannot get layout properties of multi-edge shorthands")
 	}
-	if edge == YGEdgeStart {
-		if n.getLayout().direction() == YGDirectionRTL {
-			return member[YGEdgeRight]
+	if edge == EdgeStart {
+		if n.getLayout().direction() == DirectionRTL {
+			return member[EdgeRight]
 		} else {
-			return member[YGEdgeLeft]
+			return member[EdgeLeft]
 		}
 	}
 
-	if edge == YGEdgeEnd {
-		if n.getLayout().direction() == YGDirectionRTL {
-			return member[YGEdgeLeft]
+	if edge == EdgeEnd {
+		if n.getLayout().direction() == DirectionRTL {
+			return member[EdgeLeft]
 		} else {
-			return member[YGEdgeRight]
+			return member[EdgeRight]
 		}
 	}
 
@@ -85,24 +85,24 @@ func (n *Node) LayoutMargin(edge YGEdge) float32 {
 }
 
 // LayoutBorder
-func (n *Node) LayoutBorder(edge YGEdge) float32 {
+func (n *Node) LayoutBorder(edge Edge) float32 {
 	member := n.getLayout().border
-	if edge > YGEdgeEnd {
+	if edge > EdgeEnd {
 		panic("Cannot get layout properties of multi-edge shorthands")
 	}
-	if edge == YGEdgeStart {
-		if n.getLayout().direction() == YGDirectionRTL {
-			return member[YGEdgeRight]
+	if edge == EdgeStart {
+		if n.getLayout().direction() == DirectionRTL {
+			return member[EdgeRight]
 		} else {
-			return member[YGEdgeLeft]
+			return member[EdgeLeft]
 		}
 	}
 
-	if edge == YGEdgeEnd {
-		if n.getLayout().direction() == YGDirectionRTL {
-			return member[YGEdgeLeft]
+	if edge == EdgeEnd {
+		if n.getLayout().direction() == DirectionRTL {
+			return member[EdgeLeft]
 		} else {
-			return member[YGEdgeRight]
+			return member[EdgeRight]
 		}
 	}
 
@@ -110,24 +110,24 @@ func (n *Node) LayoutBorder(edge YGEdge) float32 {
 }
 
 // LayoutPadding
-func (n *Node) LayoutPadding(edge YGEdge) float32 {
+func (n *Node) LayoutPadding(edge Edge) float32 {
 	member := n.getLayout().padding
-	if edge > YGEdgeEnd {
+	if edge > EdgeEnd {
 		panic("Cannot get layout properties of multi-edge shorthands")
 	}
-	if edge == YGEdgeStart {
-		if n.getLayout().direction() == YGDirectionRTL {
-			return member[YGEdgeRight]
+	if edge == EdgeStart {
+		if n.getLayout().direction() == DirectionRTL {
+			return member[EdgeRight]
 		} else {
-			return member[YGEdgeLeft]
+			return member[EdgeLeft]
 		}
 	}
 
-	if edge == YGEdgeEnd {
-		if n.getLayout().direction() == YGDirectionRTL {
-			return member[YGEdgeLeft]
+	if edge == EdgeEnd {
+		if n.getLayout().direction() == DirectionRTL {
+			return member[EdgeLeft]
 		} else {
-			return member[YGEdgeRight]
+			return member[EdgeRight]
 		}
 	}
 
