@@ -7,8 +7,8 @@ import (
 )
 
 type YGSize struct {
-	width  float32
-	height float32
+	Width  float32
+	Height float32
 }
 
 func DefaultLogger(config *Config,

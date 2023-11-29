@@ -294,7 +294,7 @@ func measureNodeWithMeasureFunc(
 			boundAxis(
 				node,
 				FlexDirectionRow,
-				If(widthMeasureMode == MeasureModeUndefined || widthMeasureMode == MeasureModeAtMost, measuredSize.width+paddingAndBorderAxisRow, availableWidth),
+				If(widthMeasureMode == MeasureModeUndefined || widthMeasureMode == MeasureModeAtMost, measuredSize.Width+paddingAndBorderAxisRow, availableWidth),
 				ownerWidth,
 				ownerWidth,
 			),
@@ -305,7 +305,7 @@ func measureNodeWithMeasureFunc(
 			boundAxis(
 				node,
 				FlexDirectionColumn,
-				If(heightMeasureMode == MeasureModeUndefined || heightMeasureMode == MeasureModeAtMost, measuredSize.height+paddingAndBorderAxisColumn, availableHeight),
+				If(heightMeasureMode == MeasureModeUndefined || heightMeasureMode == MeasureModeAtMost, measuredSize.Height+paddingAndBorderAxisColumn, availableHeight),
 				ownerHeight,
 				ownerWidth,
 			),

@@ -413,20 +413,20 @@ func (node *Node) setHasNewLayout(hasNewLayout bool) {
 	node.hasNewLayout_ = hasNewLayout
 }
 
-// setNodeType
-func (node *Node) setNodeType(nodeType NodeType) {
+// SetNodeType
+func (node *Node) SetNodeType(nodeType NodeType) {
 	node.nodeType_ = nodeType
 }
 
-// setMeasureFunc
-func (node *Node) setMeasureFunc(measureFunc YGMeasureFunc) {
+// SetMeasureFunc
+func (node *Node) SetMeasureFunc(measureFunc YGMeasureFunc) {
 	if measureFunc == nil {
-		node.setNodeType(NodeTypeDefault)
+		node.SetNodeType(NodeTypeDefault)
 	} else {
-		if node.getChildCount() == 0 {
+		if node.getChildCount() != 0 {
 			panic("Cannot set measure function: Nodes with measure functions cannot have children.")
 		}
-		node.setNodeType(NodeTypeText)
+		node.SetNodeType(NodeTypeText)
 	}
 	node.measureFunc_ = measureFunc
 }
