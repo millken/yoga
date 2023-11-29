@@ -3,10 +3,10 @@ package yoga
 const MaxCachedMeasurements int32 = 8
 
 type LayoutResults struct {
-	position            [4]float32
-	margin              [4]float32
-	border              [4]float32
-	padding             [4]float32
+	position_           [4]float32
+	margin_             [4]float32
+	border_             [4]float32
+	padding_            [4]float32
 	direction_          Direction
 	hadOverflow_        bool
 	dimension_          [2]float32
@@ -23,14 +23,14 @@ type LayoutResults struct {
 
 func NewLayoutResults() *LayoutResults {
 	return &LayoutResults{
-		position:                    [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
-		margin:                      [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
-		border:                      [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
-		padding:                     [4]float32{YGUndefined, YGUndefined, YGUndefined, YGUndefined},
+		position_:                   [4]float32{Undefined, Undefined, Undefined, Undefined},
+		margin_:                     [4]float32{Undefined, Undefined, Undefined, Undefined},
+		border_:                     [4]float32{Undefined, Undefined, Undefined, Undefined},
+		padding_:                    [4]float32{Undefined, Undefined, Undefined, Undefined},
 		direction_:                  DirectionInherit,
 		hadOverflow_:                false,
-		dimension_:                  [2]float32{YGUndefined, YGUndefined},
-		measuredDimensions_:         [2]float32{YGUndefined, YGUndefined},
+		dimension_:                  [2]float32{Undefined, Undefined},
+		measuredDimensions_:         [2]float32{Undefined, Undefined},
 		computedFlexBasisGeneration: 0,
 		computedFlexBasis:           undefinedFloatOptional,
 		lastOwnerDirection:          DirectionInherit,
@@ -71,11 +71,51 @@ func (l *LayoutResults) setMeasuredDimension(axis Dimension, value float32) {
 	l.measuredDimensions_[axis] = value
 }
 
+func (l *LayoutResults) position(edge Edge) float32 {
+	assertCardinalEdge(edge)
+	return l.position_[edge]
+}
+
+func (l *LayoutResults) setPosition(edge Edge, value float32) {
+	assertCardinalEdge(edge)
+	l.position_[edge] = value
+}
+
+func (l *LayoutResults) margin(edge Edge) float32 {
+	assertCardinalEdge(edge)
+	return l.margin_[edge]
+}
+
+func (l *LayoutResults) setMargin(edge Edge, value float32) {
+	assertCardinalEdge(edge)
+	l.margin_[edge] = value
+}
+
+func (l *LayoutResults) border(edge Edge) float32 {
+	assertCardinalEdge(edge)
+	return l.border_[edge]
+}
+
+func (l *LayoutResults) setBorder(edge Edge, value float32) {
+	assertCardinalEdge(edge)
+	l.border_[edge] = value
+}
+
+func (l *LayoutResults) padding(edge Edge) float32 {
+	assertCardinalEdge(edge)
+	return l.padding_[edge]
+}
+
+func (l *LayoutResults) setPadding(edge Edge, value float32) {
+	assertCardinalEdge(edge)
+	l.padding_[edge] = value
+}
+
 func (l *LayoutResults) isEqual(layout *LayoutResults) bool {
-	isEqual := inexactEquals(l.position[:], layout.position[:]) &&
-		inexactEquals(l.margin[:], layout.margin[:]) &&
-		inexactEquals(l.border[:], layout.border[:]) &&
-		inexactEquals(l.padding[:], layout.padding[:]) &&
+	isEqual := inexactEquals(l.position_[:], layout.position_[:]) &&
+		inexactEquals(l.margin_[:], layout.margin_[:]) &&
+		inexactEquals(l.border_[:], layout.border_[:]) &&
+		inexactEquals(l.padding_[:], layout.padding_[:]) &&
 		l.direction() == layout.direction() &&
 		l.hadOverflow() == layout.hadOverflow() &&
 		l.lastOwnerDirection == layout.lastOwnerDirection &&
@@ -92,4 +132,10 @@ func (l *LayoutResults) isEqual(layout *LayoutResults) bool {
 		isEqual = isEqual && (l.measuredDimensions_[1] == layout.measuredDimensions_[1])
 	}
 	return isEqual
+}
+
+func assertCardinalEdge(edge Edge) {
+	if edge > EdgeBottom {
+		panic("Edge must be top/left/bottom/right")
+	}
 }

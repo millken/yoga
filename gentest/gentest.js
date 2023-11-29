@@ -150,7 +150,7 @@ function checkDefaultValues() {
     {style: 'justify-content', value: 'flex-start'},
     {style: 'align-content', value: 'flex-start'},
     {style: 'align-items', value: 'stretch'},
-    {style: 'position', value: 'static'},
+    {style: 'position', value: 'relative'},
     {style: 'flex-wrap', value: 'nowrap'},
     {style: 'overflow', value: 'visible'},
     {style: 'flex-grow', value: '0'},
@@ -559,11 +559,11 @@ function justifyValue(e, value) {
 function positionValue(e, value) {
   switch (value) {
     case 'absolute':
-      return e.YGPositionTypeAbsolute;
+      return e.PositionTypeAbsolute;
     case 'static':
-      return e.YGPositionTypeStatic;
+      return e.PositionTypeStatic;
     default:
-      return e.YGPositionTypeRelative;
+      return e.PositionTypeRelative;
   }
 }
 
@@ -628,7 +628,7 @@ function isDefaultStyleValue(style, value) {
   if (defaultStyle == null) {
     switch (style) {
       case 'position':
-        defaultStyle = new Set(['static']);
+        defaultStyle = new Set(['relative']);
         break;
 
       case 'left':

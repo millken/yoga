@@ -64,6 +64,9 @@ func (cv CompactValue) YGValue() YGValue {
 }
 
 func CompactValueOf(value float32, unit Unit) CompactValue {
+	if IsNaN(value) || IsInf(value, 0) {
+		return CompactValueOfUndefined()
+	}
 	if value == 0.0 || (value < LOWER_BOUND && value > -LOWER_BOUND) {
 		zero := ZERO_BITS_POINT
 		if unit == UnitPercent {
@@ -90,8 +93,12 @@ func CompactValueOf(value float32, unit Unit) CompactValue {
 	return CompactValue{repr: data}
 }
 
-func CompactValueOfZero() CompactValue {
-	return CompactValue{repr: ZERO_BITS_POINT}
+func CompactValueOfPoint(value float32) CompactValue {
+	return CompactValueOf(value, UnitPoint)
+}
+
+func CompactValuePercent(value float32) CompactValue {
+	return CompactValueOf(value, UnitPercent)
 }
 
 func CompactValueOfUndefined() CompactValue {
@@ -100,11 +107,4 @@ func CompactValueOfUndefined() CompactValue {
 
 func CompactValueOfAuto() CompactValue {
 	return CompactValue{repr: AUTO_BITS}
-}
-
-func CompactValueOfMaybe(unit Unit, value float32) CompactValue {
-	if IsNaN(value) || IsInf(value, 0) {
-		return CompactValueOfUndefined()
-	}
-	return CompactValueOf(value, unit)
 }

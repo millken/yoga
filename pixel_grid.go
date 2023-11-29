@@ -21,13 +21,13 @@ func roundValueToPixelGrid(value float64, pointScaleFactor float64, forceCeil bo
 			If(!math.IsNaN(fractial) &&
 				(fractial > 0.5 || inexactEqual(fractial, 0.5)), 1.0, 0.0)
 	}
-	return If(math.IsNaN(scaledValue) || math.IsNaN(pointScaleFactor), YGUndefined, float32(scaledValue/pointScaleFactor))
+	return If(math.IsNaN(scaledValue) || math.IsNaN(pointScaleFactor), Undefined, float32(scaledValue/pointScaleFactor))
 }
 
 func roundLayoutResultsToPixelGrid(node *Node, absoluteLeft float64, absoluteTop float64) {
 	pointScaleFactor := float64(node.getConfig().GetPointScaleFactor())
-	nodeLeft := float64(node.getLayout().position[EdgeLeft])
-	nodeTop := float64(node.getLayout().position[EdgeTop])
+	nodeLeft := float64(node.getLayout().position(EdgeLeft))
+	nodeTop := float64(node.getLayout().position(EdgeTop))
 
 	nodeWidth := float64(node.getLayout().dimension(DimensionWidth))
 	nodeHeight := float64(node.getLayout().dimension(DimensionHeight))

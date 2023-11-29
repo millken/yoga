@@ -33,8 +33,8 @@ const (
 )
 
 var (
-	NaN                 = math.Float32frombits(uvnan)
-	YGUndefined float32 = NaN
+	NaN               = math.Float32frombits(uvnan)
+	Undefined float32 = NaN
 )
 
 // IsNaN reports whether f is an IEEE 754 “not-a-number” value.
@@ -59,8 +59,8 @@ func If[T any](expr bool, a, b T) T {
 
 var (
 	YGValueZero      = YGValue{0, UnitPoint}
-	YGValueUndefined = YGValue{YGUndefined, UnitUndefined}
-	YGValueAuto      = YGValue{YGUndefined, UnitAuto}
+	YGValueUndefined = YGValue{Undefined, UnitUndefined}
+	YGValueAuto      = YGValue{Undefined, UnitAuto}
 )
 
 type YGValue struct {

@@ -169,9 +169,9 @@ JavaEmitter.prototype = Object.create(Emitter.prototype, {
   OverflowVisible: {value: 'YogaOverflow.VISIBLE'},
   OverflowScroll: {value: 'YogaOverflow.SCROLL'},
 
-  YGPositionTypeAbsolute: {value: 'YogaPositionType.ABSOLUTE'},
-  YGPositionTypeRelative: {value: 'YogaPositionType.RELATIVE'},
-  YGPositionTypeStatic: {value: 'YogaPositionType.STATIC'},
+  PositionTypeAbsolute: {value: 'YogaPositionType.ABSOLUTE'},
+  PositionTypeRelative: {value: 'YogaPositionType.RELATIVE'},
+  PositionTypeStatic: {value: 'YogaPositionType.STATIC'},
 
   YGUndefined: {value: 'YogaConstants.UNDEFINED'},
 

@@ -125,9 +125,9 @@ CPPEmitter.prototype = Object.create(Emitter.prototype, {
   OverflowVisible: {value: 'OverflowVisible'},
   OverflowScroll: {value: 'OverflowScroll'},
 
-  YGPositionTypeAbsolute: {value: 'YGPositionTypeAbsolute'},
-  YGPositionTypeRelative: {value: 'YGPositionTypeRelative'},
-  YGPositionTypeStatic: {value: 'YGPositionTypeStatic'},
+  PositionTypeAbsolute: {value: 'PositionTypeAbsolute'},
+  PositionTypeRelative: {value: 'PositionTypeRelative'},
+  PositionTypeStatic: {value: 'PositionTypeStatic'},
 
   WrapNoWrap: {value: 'WrapNoWrap'},
   WrapWrap: {value: 'WrapWrap'},

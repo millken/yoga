@@ -360,18 +360,18 @@ func (o Overflow) String() string {
 type PositionType uint8
 
 const (
-	YGPositionTypeStatic PositionType = iota
-	YGPositionTypeRelative
-	YGPositionTypeAbsolute
+	PositionTypeStatic PositionType = iota
+	PositionTypeRelative
+	PositionTypeAbsolute
 )
 
 func (p PositionType) String() string {
 	switch p {
-	case YGPositionTypeStatic:
+	case PositionTypeStatic:
 		return "static"
-	case YGPositionTypeRelative:
+	case PositionTypeRelative:
 		return "relative"
-	case YGPositionTypeAbsolute:
+	case PositionTypeAbsolute:
 		return "absolute"
 	}
 	return "unknown"

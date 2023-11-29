@@ -536,26 +536,17 @@ func (node *Node) setLayoutDirection(direction Direction) {
 
 // setLayoutMargin
 func (node *Node) setLayoutMargin(margin float32, edge Edge) {
-	if int(edge) >= len(node.getLayout().margin) {
-		panic("Edge must be top/left/bottom/right")
-	}
-	node.getLayout().margin[edge] = margin
+	node.getLayout().setMargin(edge, margin)
 }
 
 // setLayoutBorder
 func (node *Node) setLayoutBorder(border float32, edge Edge) {
-	if int(edge) >= len(node.getLayout().border) {
-		panic("Edge must be top/left/bottom/right")
-	}
-	node.getLayout().border[edge] = border
+	node.getLayout().setBorder(edge, border)
 }
 
 // setLayoutPadding
 func (node *Node) setLayoutPadding(padding float32, edge Edge) {
-	if int(edge) >= len(node.getLayout().padding) {
-		panic("Edge must be top/left/bottom/right")
-	}
-	node.getLayout().padding[edge] = padding
+	node.getLayout().setPadding(edge, padding)
 }
 
 // setLayoutPosition
@@ -565,10 +556,7 @@ func (node *Node) setLayoutPosition(position float32, edge Edge) {
 		fmt.Printf("setLayoutPosition: %d %s=%f\n", atomic.LoadUint32(&gCurrentDebugCount),
 			edge.String(), position)
 	}
-	if int(edge) >= len(node.getLayout().position) {
-		panic("Edge must be top/left/bottom/right")
-	}
-	node.getLayout().position[edge] = position
+	node.getLayout().setPosition(edge, position)
 }
 
 // relativePosition
@@ -615,18 +603,18 @@ func (node *Node) setPosition(
 // getFlexStartMarginValue
 func (node *Node) getFlexStartMarginValue(axis FlexDirection) YGValue {
 	if isRow(axis) && node.getStyle().margin_[EdgeStart].isDefined() {
-		return node.getStyle().margin_[EdgeStart].YGValue()
+		return node.getStyle().margin(EdgeStart).YGValue()
 	} else {
-		return node.getStyle().margin_[flexStartEdge(axis)].YGValue()
+		return node.getStyle().margin(flexStartEdge(axis)).YGValue()
 	}
 }
 
 // marginTrailingValue
 func (node *Node) marginTrailingValue(axis FlexDirection) YGValue {
 	if isRow(axis) && node.getStyle().margin_[EdgeEnd].isDefined() {
-		return node.getStyle().margin_[EdgeEnd].YGValue()
+		return node.getStyle().margin(EdgeEnd).YGValue()
 	} else {
-		return node.getStyle().margin_[flexEndEdge(axis)].YGValue()
+		return node.getStyle().margin(flexEndEdge(axis)).YGValue()
 	}
 }
 
@@ -764,7 +752,7 @@ func (node *Node) resolveFlexShrink() float32 {
 
 // isNodeFlexible
 func (node *Node) isNodeFlexible() bool {
-	return (node.getStyle().positionType() != YGPositionTypeAbsolute) && (node.resolveFlexGrow() != 0 || node.resolveFlexShrink() != 0)
+	return (node.getStyle().positionType() != PositionTypeAbsolute) && (node.resolveFlexGrow() != 0 || node.resolveFlexShrink() != 0)
 }
 
 // print

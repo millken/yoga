@@ -1,7 +1,16 @@
 package yoga
 
 type YGStyle struct {
-	flags uint32
+	direction_      Direction
+	flexDirection_  FlexDirection
+	justifyContent_ Justify
+	alignContent_   Align
+	alignItems_     Align
+	alignSelf_      Align
+	positionType_   PositionType
+	flexWrap_       Wrap
+	overflow_       Overflow
+	display_        Display
 
 	flex_          FloatOptional
 	flexGrow_      FloatOptional
@@ -26,43 +35,40 @@ const (
 )
 
 var (
-	directionOffset      uint8 = 0
-	flexDirectionOffset  uint8 = directionOffset + minimumBitCount(Direction(0))
-	justifyContentOffset uint8 = flexDirectionOffset + minimumBitCount(FlexDirection(0))
-	alignContentOffset   uint8 = justifyContentOffset + minimumBitCount(Justify(0))
-	alignItemsOffset     uint8 = alignContentOffset + minimumBitCount(Align(0))
-	alignSelfOffset      uint8 = alignItemsOffset + minimumBitCount(Align(0))
-	positionTypeOffset   uint8 = alignSelfOffset + minimumBitCount(Align(0))
-	flexWrapOffset       uint8 = positionTypeOffset + minimumBitCount(PositionType(0))
-	overflowOffset       uint8 = flexWrapOffset + minimumBitCount(Wrap(0))
-	displayOffset        uint8 = overflowOffset + minimumBitCount(Overflow(0))
-
 	edgeUndefinedCompactValue      = [EdgeCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined()}
 	gutterUndefinedCompactValue    = [GutterCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined(), CompactValueOfUndefined()}
 	dimensionUndefinedCompactValue = [DimensionCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined()}
+	dimensionAutoCompactValue      = [DimensionCount]CompactValue{CompactValueOfAuto(), CompactValueOfAuto()}
 
 	defaultStyle = YGStyle{
-		flags:          0,
-		flex_:          undefinedFloatOptional,
-		flexGrow_:      undefinedFloatOptional,
-		flexShrink_:    undefinedFloatOptional,
-		flexBasis_:     CompactValueOfUndefined(),
-		margin_:        edgeUndefinedCompactValue,
-		position_:      edgeUndefinedCompactValue,
-		padding_:       edgeUndefinedCompactValue,
-		border_:        edgeUndefinedCompactValue,
-		gap_:           gutterUndefinedCompactValue,
-		dimensions_:    dimensionUndefinedCompactValue,
-		minDimensions_: dimensionUndefinedCompactValue,
-		maxDimensions_: dimensionUndefinedCompactValue,
-		aspectRatio_:   undefinedFloatOptional,
+		direction_:      DirectionInherit,
+		flexDirection_:  FlexDirectionColumn,
+		justifyContent_: JustifyFlexStart,
+		alignContent_:   AlignFlexStart,
+		alignItems_:     AlignStretch,
+		alignSelf_:      AlignAuto,
+		positionType_:   PositionTypeRelative,
+		flexWrap_:       WrapNoWrap,
+		overflow_:       OverflowVisible,
+		display_:        DisplayFlex,
+		flex_:           undefinedFloatOptional,
+		flexGrow_:       undefinedFloatOptional,
+		flexShrink_:     undefinedFloatOptional,
+		flexBasis_:      CompactValueOfAuto(),
+		margin_:         edgeUndefinedCompactValue,
+		position_:       edgeUndefinedCompactValue,
+		padding_:        edgeUndefinedCompactValue,
+		border_:         edgeUndefinedCompactValue,
+		gap_:            gutterUndefinedCompactValue,
+		dimensions_:     dimensionAutoCompactValue,
+		minDimensions_:  dimensionUndefinedCompactValue,
+		maxDimensions_:  dimensionUndefinedCompactValue,
+		aspectRatio_:    undefinedFloatOptional,
 	}
 )
 
 func NewStyle() *YGStyle {
 	return &YGStyle{
-		flags: 0,
-
 		flex_:          undefinedFloatOptional,
 		flexGrow_:      undefinedFloatOptional,
 		flexShrink_:    undefinedFloatOptional,
@@ -79,43 +85,83 @@ func NewStyle() *YGStyle {
 }
 
 func (s *YGStyle) direction() Direction {
-	return Direction(getEnumData(s.flags, directionOffset, Direction(0)))
+	return s.direction_
+}
+
+func (s *YGStyle) setDirection(direction Direction) {
+	s.direction_ = direction
 }
 
 func (s *YGStyle) flexDirection() FlexDirection {
-	return FlexDirection(getEnumData(s.flags, flexDirectionOffset, FlexDirection(0)))
+	return s.flexDirection_
+}
+
+func (s *YGStyle) setFlexDirection(flexDirection FlexDirection) {
+	s.flexDirection_ = flexDirection
 }
 
 func (s *YGStyle) justifyContent() Justify {
-	return Justify(getEnumData(s.flags, justifyContentOffset, Justify(0)))
+	return s.justifyContent_
+}
+
+func (s *YGStyle) setJustifyContent(justifyContent Justify) {
+	s.justifyContent_ = justifyContent
 }
 
 func (s *YGStyle) alignContent() Align {
-	return Align(getEnumData(s.flags, alignContentOffset, Align(0)))
+	return s.alignContent_
+}
+
+func (s *YGStyle) setAlignContent(alignContent Align) {
+	s.alignContent_ = alignContent
 }
 
 func (s *YGStyle) alignItems() Align {
-	return Align(getEnumData(s.flags, alignItemsOffset, Align(0)))
+	return s.alignItems_
+}
+
+func (s *YGStyle) setAlignItems(alignItems Align) {
+	s.alignItems_ = alignItems
 }
 
 func (s *YGStyle) alignSelf() Align {
-	return Align(getEnumData(s.flags, alignSelfOffset, Align(0)))
+	return s.alignSelf_
+}
+
+func (s *YGStyle) setAlignSelf(alignSelf Align) {
+	s.alignSelf_ = alignSelf
 }
 
 func (s *YGStyle) positionType() PositionType {
-	return PositionType(getEnumData(s.flags, positionTypeOffset, PositionType(0)))
+	return s.positionType_
+}
+
+func (s *YGStyle) setPositionType(positionType PositionType) {
+	s.positionType_ = positionType
 }
 
 func (s *YGStyle) flexWrap() Wrap {
-	return Wrap(getEnumData(s.flags, flexWrapOffset, Wrap(0)))
+	return s.flexWrap_
+}
+
+func (s *YGStyle) setFlexWrap(flexWrap Wrap) {
+	s.flexWrap_ = flexWrap
 }
 
 func (s *YGStyle) overflow() Overflow {
-	return Overflow(getEnumData(s.flags, overflowOffset, Overflow(0)))
+	return s.overflow_
+}
+
+func (s *YGStyle) setOverflow(overflow Overflow) {
+	s.overflow_ = overflow
 }
 
 func (s *YGStyle) display() Display {
-	return Display(getEnumData(s.flags, displayOffset, Display(0)))
+	return s.display_
+}
+
+func (s *YGStyle) setDisplay(display Display) {
+	s.display_ = display
 }
 
 func (s *YGStyle) flex() FloatOptional {
@@ -234,7 +280,14 @@ func (s *YGStyle) resolveRowGap() CompactValue {
 
 // equal
 func (s *YGStyle) equal(other *YGStyle) bool {
-	return s.flags == other.flags && inexactEqual(s.flex_.unwrap(), other.flex_.unwrap()) &&
+	return s.direction_ == other.direction_ &&
+		s.flexDirection_ == other.flexDirection_ &&
+		s.justifyContent_ == other.justifyContent_ &&
+		s.alignContent_ == other.alignContent_ &&
+		s.alignItems_ == other.alignItems_ && s.alignSelf_ == other.alignSelf_ &&
+		s.positionType_ == other.positionType_ && s.flexWrap_ == other.flexWrap_ &&
+		s.overflow_ == other.overflow_ && s.display_ == other.display_ &&
+		inexactEqual(s.flex_.unwrap(), other.flex_.unwrap()) &&
 		inexactEquals(s.flexGrow_, other.flexGrow_) &&
 		inexactEquals(s.flexShrink_, other.flexShrink_) &&
 		inexactEquals(s.flexBasis_, other.flexBasis_) &&

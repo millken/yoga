@@ -93,8 +93,8 @@ func nodeToString(str *strings.Builder, node *Node, options PrintOptions, level 
 		str.WriteString("layout=\"")
 		str.WriteString(fmt.Sprintf("width: %g; ", node.getLayout().dimension(DimensionWidth)))
 		str.WriteString(fmt.Sprintf("height: %g; ", node.getLayout().dimension(DimensionHeight)))
-		str.WriteString(fmt.Sprintf("top: %g;", node.getLayout().position[EdgeTop]))
-		str.WriteString(fmt.Sprintf("left: %g; ", node.getLayout().position[EdgeLeft]))
+		str.WriteString(fmt.Sprintf("top: %g;", node.getLayout().position(EdgeTop)))
+		str.WriteString(fmt.Sprintf("left: %g; ", node.getLayout().position(EdgeLeft)))
 		str.WriteString("\" ")
 	}
 

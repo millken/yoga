@@ -23,7 +23,7 @@ func calculateBaseline(node *Node) float32 {
 		if child.getLineIndex() > 0 {
 			break
 		}
-		if child.getStyle().positionType() == YGPositionTypeAbsolute {
+		if child.getStyle().positionType() == PositionTypeAbsolute {
 			continue
 		}
 		if resolveChildAlignment(node, child) == AlignBaseline ||
@@ -42,7 +42,7 @@ func calculateBaseline(node *Node) float32 {
 	}
 
 	baseline := calculateBaseline(baselineChild)
-	return baseline + baselineChild.getLayout().position[EdgeTop]
+	return baseline + baselineChild.getLayout().position(EdgeTop)
 }
 
 func isBaselineLayout(node *Node) bool {
@@ -55,7 +55,7 @@ func isBaselineLayout(node *Node) bool {
 	childCount := node.getChildCount()
 	for i := uint32(0); i < childCount; i++ {
 		child := node.getChild(i)
-		if child.getStyle().positionType() != YGPositionTypeAbsolute &&
+		if child.getStyle().positionType() != PositionTypeAbsolute &&
 			child.getStyle().alignSelf() == AlignBaseline {
 			return true
 		}

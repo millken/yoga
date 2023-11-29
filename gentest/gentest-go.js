@@ -121,9 +121,9 @@ function toValueGo(value) {
   OverflowVisible: {value: 'yoga.OverflowVisible'},
   OverflowScroll: {value: 'yoga.OverflowScroll'},
 
-  YGPositionTypeAbsolute: {value: 'yoga.YGPositionTypeAbsolute'},
-  YGPositionTypeRelative: {value: 'yoga.YGPositionTypeRelative'},
-  YGPositionTypeStatic: {value: 'yoga.YGPositionTypeStatic'},
+  PositionTypeAbsolute: {value: 'yoga.PositionTypeAbsolute'},
+  PositionTypeRelative: {value: 'yoga.PositionTypeRelative'},
+  PositionTypeStatic: {value: 'yoga.PositionTypeStatic'},
 
   WrapNoWrap: {value: 'yoga.WrapNoWrap'},
   WrapWrap: {value: 'yoga.WrapWrap'},
@@ -137,7 +137,7 @@ function toValueGo(value) {
   
     YGNodeCalculateLayout:{value:function(node, dir, experiments) {
       this.push(node + '.StyleSetDirection(' + dir + ')');
-      this.push('yoga.CalculateLayout('+node+',yoga.YGUndefined, yoga.YGUndefined, ' + dir +')');
+      this.push('yoga.CalculateLayout('+node+',yoga.Undefined, yoga.Undefined, ' + dir +')');
     }},
   
     YGNodeInsertChild:{value:function(parentName, nodeName, index) {

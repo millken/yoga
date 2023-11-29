@@ -17,14 +17,10 @@ func TestInexactEquals(t *testing.T) {
 		{YGValue{1, UnitPoint}, YGValue{1, UnitPoint}, true},
 		{YGValue{1, UnitPoint}, YGValue{2, UnitPoint}, false},
 		{YGValue{1, UnitPoint}, YGValue{1.00011, UnitPoint}, false},
-		{CompactValueOfZero(), CompactValueOfZero(), true},
-		{CompactValueOfZero(), CompactValueOfAuto(), false},
+
 		{FloatOptional{1}, FloatOptional{1}, true},
 		{FloatOptional{1}, FloatOptional{2}, false},
 		{FloatOptional{1}, FloatOptional{1.00011}, false},
-		{[]CompactValue{CompactValueOfZero()}, []CompactValue{CompactValueOfZero()}, true},
-		{[]CompactValue{CompactValueOfZero()}, []CompactValue{CompactValueOfAuto()}, false},
-		{[2]CompactValue{CompactValueOfZero(), CompactValueOfZero()}, [2]CompactValue{CompactValueOfZero(), CompactValueOfZero()}, false},
 	}
 	for _, test := range tests {
 		if inexactEquals(test.a, test.b) != test.expect {

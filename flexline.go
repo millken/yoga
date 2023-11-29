@@ -72,7 +72,7 @@ func calculateFlexLine(
 
 	for ; endOfLineIndex < uint32(len(node.getChildren())); endOfLineIndex++ {
 		child := node.getChild(endOfLineIndex)
-		if child.getStyle().display() == DisplayNone || child.getStyle().positionType() == YGPositionTypeAbsolute {
+		if child.getStyle().display() == DisplayNone || child.getStyle().positionType() == PositionTypeAbsolute {
 			if firstElementInLineIndex == endOfLineIndex {
 				firstElementInLineIndex++
 			}

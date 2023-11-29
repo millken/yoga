@@ -27,8 +27,8 @@ YG_EXPORT Align YGNodeStyleGetAlignSelf(YGNodeConstRef node);
 
 YG_EXPORT void YGNodeStyleSetPositionType(
     YGNodeRef node,
-    YGPositionType positionType);
-YG_EXPORT YGPositionType YGNodeStyleGetPositionType(YGNodeConstRef node);
+    PositionType positionType);
+YG_EXPORT PositionType YGNodeStyleGetPositionType(YGNodeConstRef node);
 
 YG_EXPORT void YGNodeStyleSetFlexWrap(YGNodeRef node, Wrap flexWrap);
 YG_EXPORT Wrap YGNodeStyleGetFlexWrap(YGNodeConstRef node);
@@ -115,7 +115,7 @@ func updateStyle[T float32 | Direction](node *Node, prop string, value T) {
 // StyleSetDirection
 func (n *Node) StyleSetDirection(direction Direction) {
 	if n.getStyle().direction() != direction {
-		setEnumData(&n.style_.flags, directionOffset, direction, uint8(direction))
+		n.getStyle().setDirection(direction)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -128,7 +128,7 @@ func (n *Node) StyleGetDirection() Direction {
 // StyleSetFlexDirection
 func (n *Node) StyleSetFlexDirection(flexDirection FlexDirection) {
 	if n.getStyle().flexDirection() != flexDirection {
-		setEnumData(&n.style_.flags, flexDirectionOffset, flexDirection, uint8(flexDirection))
+		n.getStyle().setFlexDirection(flexDirection)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -141,7 +141,7 @@ func (n *Node) StyleGetFlexDirection() FlexDirection {
 // StyleSetJustifyContent
 func (n *Node) StyleSetJustifyContent(justifyContent Justify) {
 	if n.getStyle().justifyContent() != justifyContent {
-		setEnumData(&n.style_.flags, justifyContentOffset, justifyContent, uint8(justifyContent))
+		n.getStyle().setJustifyContent(justifyContent)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -154,7 +154,7 @@ func (n *Node) StyleGetJustifyContent() Justify {
 // StyleSetAlignContent
 func (n *Node) StyleSetAlignContent(alignContent Align) {
 	if n.getStyle().alignContent() != alignContent {
-		setEnumData(&n.style_.flags, alignContentOffset, alignContent, uint8(alignContent))
+		n.getStyle().setAlignContent(alignContent)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -167,7 +167,7 @@ func (n *Node) StyleGetAlignContent() Align {
 // StyleSetAlignItems
 func (n *Node) StyleSetAlignItems(alignItems Align) {
 	if n.getStyle().alignItems() != alignItems {
-		setEnumData(&n.style_.flags, alignItemsOffset, alignItems, uint8(alignItems))
+		n.getStyle().setAlignItems(alignItems)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -180,7 +180,7 @@ func (n *Node) StyleGetAlignItems() Align {
 // StyleSetAlignSelf
 func (n *Node) StyleSetAlignSelf(alignSelf Align) {
 	if n.getStyle().alignSelf() != alignSelf {
-		setEnumData(&n.style_.flags, alignSelfOffset, alignSelf, uint8(alignSelf))
+		n.getStyle().setAlignSelf(alignSelf)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -193,7 +193,7 @@ func (n *Node) StyleGetAlignSelf() Align {
 // StyleSetFlexWrap
 func (n *Node) StyleSetFlexWrap(flexWrap Wrap) {
 	if n.getStyle().flexWrap() != flexWrap {
-		setEnumData(&n.style_.flags, flexWrapOffset, flexWrap, uint8(flexWrap))
+		n.getStyle().setFlexWrap(flexWrap)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -206,7 +206,7 @@ func (n *Node) StyleGetFlexWrap() Wrap {
 // StyleSetOverflow
 func (n *Node) StyleSetOverflow(overflow Overflow) {
 	if n.getStyle().overflow() != overflow {
-		setEnumData(&n.style_.flags, overflowOffset, overflow, uint8(overflow))
+		n.getStyle().setOverflow(overflow)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -214,7 +214,7 @@ func (n *Node) StyleSetOverflow(overflow Overflow) {
 // StyleSetDisplay
 func (n *Node) StyleSetDisplay(display Display) {
 	if n.getStyle().display() != display {
-		setEnumData(&n.style_.flags, displayOffset, display, uint8(display))
+		n.getStyle().setDisplay(display)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -235,7 +235,7 @@ func (n *Node) StyleSetFlex(flex float32) {
 
 // StyleGetFlex
 func (n *Node) StyleGetFlex() float32 {
-	return If(n.getStyle().flex().isUndefined(), YGUndefined, n.getStyle().flex().unwrap())
+	return If(n.getStyle().flex().isUndefined(), Undefined, n.getStyle().flex().unwrap())
 }
 
 // StyleSetFlexGrow
@@ -249,7 +249,7 @@ func (n *Node) StyleSetFlexGrow(flexGrow float32) {
 
 // StyleGetFlexGrow
 func (n *Node) StyleGetFlexGrow() float32 {
-	return If(n.getStyle().flexGrow().isUndefined(), YGUndefined, n.getStyle().flexGrow().unwrap())
+	return If(n.getStyle().flexGrow().isUndefined(), Undefined, n.getStyle().flexGrow().unwrap())
 }
 
 // StyleSetFlexShrink
@@ -263,12 +263,12 @@ func (n *Node) StyleSetFlexShrink(flexShrink float32) {
 
 // StyleGetFlexShrink
 func (n *Node) StyleGetFlexShrink() float32 {
-	return If(n.getStyle().flexShrink().isUndefined(), YGUndefined, n.getStyle().flexShrink().unwrap())
+	return If(n.getStyle().flexShrink().isUndefined(), Undefined, n.getStyle().flexShrink().unwrap())
 }
 
 // StyleSetFlexBasis
 func (n *Node) StyleSetFlexBasis(flexBasis float32) {
-	value := CompactValueOfMaybe(UnitPoint, flexBasis)
+	value := CompactValueOfPoint(flexBasis)
 	if !n.getStyle().flexBasis().equal(value) {
 		n.getStyle().flexBasis_ = value
 		n.markDirtyAndPropagate()
@@ -277,7 +277,7 @@ func (n *Node) StyleSetFlexBasis(flexBasis float32) {
 
 // StyleSetFlexBasisPercent
 func (n *Node) StyleSetFlexBasisPercent(flexBasis float32) {
-	value := CompactValueOfMaybe(UnitPercent, flexBasis)
+	value := CompactValuePercent(flexBasis)
 	if !n.getStyle().flexBasis().equal(value) {
 		n.getStyle().flexBasis_ = value
 		n.markDirtyAndPropagate()
@@ -297,14 +297,14 @@ func (n *Node) StyleSetFlexBasisAuto() {
 func (n *Node) StyleGetFlexBasis() YGValue {
 	flexBasis := n.getStyle().flexBasis().YGValue()
 	if flexBasis.unit == UnitUndefined || flexBasis.unit == UnitAuto {
-		flexBasis.value = YGUndefined
+		flexBasis.value = Undefined
 	}
 	return flexBasis
 }
 
 // StyleSetWidth sets width
 func (n *Node) StyleSetWidth(points float32) {
-	value := CompactValueOfMaybe(UnitPoint, points)
+	value := CompactValueOfPoint(points)
 	if !n.getStyle().dimension(DimensionWidth).equal(value) {
 		n.getStyle().setDimension(DimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -313,7 +313,7 @@ func (n *Node) StyleSetWidth(points float32) {
 
 // StyleSetWidthPercent sets width percent
 func (n *Node) StyleSetWidthPercent(percent float32) {
-	value := CompactValueOfMaybe(UnitPercent, percent)
+	value := CompactValuePercent(percent)
 	if !n.getStyle().dimension(DimensionWidth).equal(value) {
 		n.getStyle().setDimension(DimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -336,7 +336,7 @@ func (n *Node) StyleGetWidth() float32 {
 
 // StyleSetHeight sets height
 func (n *Node) StyleSetHeight(height float32) {
-	value := CompactValueOfMaybe(UnitPoint, height)
+	value := CompactValueOfPoint(height)
 	if !n.getStyle().dimension(DimensionHeight).equal(value) {
 		n.getStyle().setDimension(DimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -345,7 +345,7 @@ func (n *Node) StyleSetHeight(height float32) {
 
 // StyleSetHeightPercent sets height percent
 func (n *Node) StyleSetHeightPercent(height float32) {
-	value := CompactValueOfMaybe(UnitPercent, height)
+	value := CompactValuePercent(height)
 	if !n.getStyle().dimension(DimensionHeight).equal(value) {
 		n.getStyle().setDimension(DimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -369,7 +369,7 @@ func (n *Node) StyleGetHeight() float32 {
 // StyleSetPositionType
 func (n *Node) StyleSetPositionType(positionType PositionType) {
 	if n.getStyle().positionType() != positionType {
-		setEnumData(&n.style_.flags, positionTypeOffset, positionType, uint8(positionType))
+		n.getStyle().setPositionType(positionType)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -381,18 +381,18 @@ func (n *Node) StyleGetPositionType() PositionType {
 
 // StyleSetPosition
 func (n *Node) StyleSetPosition(edge Edge, position float32) {
-	value := CompactValueOfMaybe(UnitPoint, position)
+	value := CompactValueOfPoint(position)
 	if !n.getStyle().position(edge).equal(value) {
-		n.getStyle().position_[edge] = value
+		n.getStyle().setPosition(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
 
 // StyleSetPositionPercent
 func (n *Node) StyleSetPositionPercent(edge Edge, position float32) {
-	value := CompactValueOfMaybe(UnitPercent, position)
+	value := CompactValuePercent(position)
 	if !n.getStyle().position(edge).equal(value) {
-		n.getStyle().position_[edge] = value
+		n.getStyle().setPosition(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -401,25 +401,25 @@ func (n *Node) StyleSetPositionPercent(edge Edge, position float32) {
 func (n *Node) StyleGetPosition(edge Edge) YGValue {
 	position := n.getStyle().position(edge).YGValue()
 	if position.unit == UnitUndefined || position.unit == UnitAuto {
-		position.value = YGUndefined
+		position.value = Undefined
 	}
 	return position
 }
 
 // StyleSetMargin
 func (n *Node) StyleSetMargin(edge Edge, margin float32) {
-	value := CompactValueOfMaybe(UnitPoint, margin)
+	value := CompactValueOfPoint(margin)
 	if !n.getStyle().margin(edge).equal(value) {
-		n.getStyle().margin_[edge] = value
+		n.getStyle().setMargin(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
 
 // StyleSetMarginPercent
 func (n *Node) StyleSetMarginPercent(edge Edge, margin float32) {
-	value := CompactValueOfMaybe(UnitPercent, margin)
+	value := CompactValuePercent(margin)
 	if !n.getStyle().margin(edge).equal(value) {
-		n.getStyle().margin_[edge] = value
+		n.getStyle().setMargin(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -428,7 +428,7 @@ func (n *Node) StyleSetMarginPercent(edge Edge, margin float32) {
 func (n *Node) StyleSetMarginAuto(edge Edge) {
 	value := CompactValueOfAuto()
 	if !n.getStyle().margin(edge).equal(value) {
-		n.getStyle().margin_[edge] = value
+		n.getStyle().setMargin(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -437,25 +437,25 @@ func (n *Node) StyleSetMarginAuto(edge Edge) {
 func (n *Node) StyleGetMargin(edge Edge) YGValue {
 	margin := n.getStyle().margin(edge).YGValue()
 	if margin.unit == UnitUndefined || margin.unit == UnitAuto {
-		margin.value = YGUndefined
+		margin.value = Undefined
 	}
 	return margin
 }
 
 // StyleSetPadding
 func (n *Node) StyleSetPadding(edge Edge, padding float32) {
-	value := CompactValueOfMaybe(UnitPoint, padding)
+	value := CompactValueOfPoint(padding)
 	if !n.getStyle().padding(edge).equal(value) {
-		n.getStyle().padding_[edge] = value
+		n.getStyle().setPadding(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
 
 // StyleSetPaddingPercent
 func (n *Node) StyleSetPaddingPercent(edge Edge, padding float32) {
-	value := CompactValueOfMaybe(UnitPercent, padding)
+	value := CompactValuePercent(padding)
 	if !n.getStyle().padding(edge).equal(value) {
-		n.getStyle().padding_[edge] = value
+		n.getStyle().setPadding(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -464,16 +464,16 @@ func (n *Node) StyleSetPaddingPercent(edge Edge, padding float32) {
 func (n *Node) StyleGetPadding(edge Edge) YGValue {
 	padding := n.getStyle().padding(edge).YGValue()
 	if padding.unit == UnitUndefined || padding.unit == UnitAuto {
-		padding.value = YGUndefined
+		padding.value = Undefined
 	}
 	return padding
 }
 
 // StyleSetBorder
 func (n *Node) StyleSetBorder(edge Edge, border float32) {
-	value := CompactValueOfMaybe(UnitPoint, border)
+	value := CompactValueOfPoint(border)
 	if !n.getStyle().border(edge).equal(value) {
-		n.getStyle().border_[edge] = value
+		n.getStyle().setBorder(edge, value)
 		n.markDirtyAndPropagate()
 	}
 }
@@ -482,14 +482,14 @@ func (n *Node) StyleSetBorder(edge Edge, border float32) {
 func (n *Node) StyleGetBorder(edge Edge) float32 {
 	border := n.getStyle().border(edge)
 	if border.isUndefined() || border.isAuto() {
-		return YGUndefined
+		return Undefined
 	}
 	return border.YGValue().value
 }
 
 // StyleSetGap
 func (n *Node) StyleSetGap(gutter Gutter, gapLength float32) {
-	value := CompactValueOfMaybe(UnitPoint, gapLength)
+	value := CompactValueOfPoint(gapLength)
 	if !n.getStyle().gap_[gutter].equal(value) {
 		n.getStyle().gap_[gutter] = value
 		n.markDirtyAndPropagate()
@@ -500,14 +500,14 @@ func (n *Node) StyleSetGap(gutter Gutter, gapLength float32) {
 func (n *Node) StyleGetGap(gutter Gutter) float32 {
 	gap := n.getStyle().gap_[gutter]
 	if gap.isUndefined() || gap.isAuto() {
-		return YGUndefined
+		return Undefined
 	}
 	return gap.YGValue().value
 }
 
 // StyleSetMinWidth
 func (n *Node) StyleSetMinWidth(minWidth float32) {
-	value := CompactValueOfMaybe(UnitPoint, minWidth)
+	value := CompactValueOfPoint(minWidth)
 	if !n.getStyle().minDimension(DimensionWidth).equal(value) {
 		n.getStyle().setMinDimension(DimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -516,7 +516,7 @@ func (n *Node) StyleSetMinWidth(minWidth float32) {
 
 // StyleSetMinWidthPercent
 func (n *Node) StyleSetMinWidthPercent(minWidth float32) {
-	value := CompactValueOfMaybe(UnitPercent, minWidth)
+	value := CompactValuePercent(minWidth)
 	if !n.getStyle().minDimension(DimensionWidth).equal(value) {
 		n.getStyle().setMinDimension(DimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -530,7 +530,7 @@ func (n *Node) StyleGetMinWidth() YGValue {
 
 // StyleSetMinHeight
 func (n *Node) StyleSetMinHeight(minHeight float32) {
-	value := CompactValueOfMaybe(UnitPoint, minHeight)
+	value := CompactValueOfPoint(minHeight)
 	if !n.getStyle().minDimension(DimensionHeight).equal(value) {
 		n.getStyle().setMinDimension(DimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -539,7 +539,7 @@ func (n *Node) StyleSetMinHeight(minHeight float32) {
 
 // StyleSetMinHeightPercent
 func (n *Node) StyleSetMinHeightPercent(minHeight float32) {
-	value := CompactValueOfMaybe(UnitPercent, minHeight)
+	value := CompactValuePercent(minHeight)
 	if !n.getStyle().minDimension(DimensionHeight).equal(value) {
 		n.getStyle().setMinDimension(DimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -553,7 +553,7 @@ func (n *Node) StyleGetMinHeight() YGValue {
 
 // StyleSetMaxWidth
 func (n *Node) StyleSetMaxWidth(maxWidth float32) {
-	value := CompactValueOfMaybe(UnitPoint, maxWidth)
+	value := CompactValueOfPoint(maxWidth)
 	if !n.getStyle().maxDimension(DimensionWidth).equal(value) {
 		n.getStyle().setMaxDimension(DimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -562,7 +562,7 @@ func (n *Node) StyleSetMaxWidth(maxWidth float32) {
 
 // StyleSetMaxWidthPercent
 func (n *Node) StyleSetMaxWidthPercent(maxWidth float32) {
-	value := CompactValueOfMaybe(UnitPercent, maxWidth)
+	value := CompactValuePercent(maxWidth)
 	if !n.getStyle().maxDimension(DimensionWidth).equal(value) {
 		n.getStyle().setMaxDimension(DimensionWidth, value)
 		n.markDirtyAndPropagate()
@@ -576,7 +576,7 @@ func (n *Node) StyleGetMaxWidth() YGValue {
 
 // StyleSetMaxHeight
 func (n *Node) StyleSetMaxHeight(maxHeight float32) {
-	value := CompactValueOfMaybe(UnitPoint, maxHeight)
+	value := CompactValueOfPoint(maxHeight)
 	if !n.getStyle().maxDimension(DimensionHeight).equal(value) {
 		n.getStyle().setMaxDimension(DimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -585,7 +585,7 @@ func (n *Node) StyleSetMaxHeight(maxHeight float32) {
 
 // StyleSetMaxHeightPercent
 func (n *Node) StyleSetMaxHeightPercent(maxHeight float32) {
-	value := CompactValueOfMaybe(UnitPercent, maxHeight)
+	value := CompactValuePercent(maxHeight)
 	if !n.getStyle().maxDimension(DimensionHeight).equal(value) {
 		n.getStyle().setMaxDimension(DimensionHeight, value)
 		n.markDirtyAndPropagate()
@@ -608,5 +608,5 @@ func (n *Node) StyleSetAspectRatio(aspectRatio float32) {
 
 // StyleGetAspectRatio
 func (n *Node) StyleGetAspectRatio() float32 {
-	return If(n.getStyle().aspectRatio().isUndefined(), YGUndefined, n.getStyle().aspectRatio().unwrap())
+	return If(n.getStyle().aspectRatio().isUndefined(), Undefined, n.getStyle().aspectRatio().unwrap())
 }

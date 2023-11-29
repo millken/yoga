@@ -38,7 +38,7 @@ func setChildTrailingPosition(
 	size := child.getLayout().measuredDimension(dimension(axis))
 	child.setLayoutPosition(
 		node.getLayout().measuredDimension(dimension(axis))-size-
-			child.getLayout().position[flexStartEdge(axis)],
+			child.getLayout().position(flexStartEdge(axis)),
 		flexEndEdge(axis))
 }
 
@@ -100,8 +100,8 @@ func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode 
 	} else {
 		// Compute the flex basis and hypothetical main size (i.e. the clamped flex
 		// basis).
-		childWidth = YGUndefined
-		childHeight = YGUndefined
+		childWidth = Undefined
+		childHeight = Undefined
 		childWidthMeasureMode = MeasureModeUndefined
 		childHeightMeasureMode = MeasureModeUndefined
 
@@ -244,14 +244,14 @@ func measureNodeWithMeasureFunc(
 	}
 
 	if widthMeasureMode == MeasureModeUndefined {
-		availableWidth = YGUndefined
+		availableWidth = Undefined
 	}
 	if heightMeasureMode == MeasureModeUndefined {
-		availableHeight = YGUndefined
+		availableHeight = Undefined
 	}
 
-	padding := node.getLayout().padding
-	border := node.getLayout().border
+	padding := node.getLayout().padding_
+	border := node.getLayout().border_
 	paddingAndBorderAxisRow := padding[EdgeLeft] +
 		padding[EdgeRight] + border[EdgeLeft] + border[EdgeRight]
 	paddingAndBorderAxisColumn := padding[EdgeTop] +
@@ -325,8 +325,8 @@ func measureNodeWithoutChildren(
 	ownerWidth float32,
 	ownerHeight float32,
 ) {
-	padding := node.getLayout().padding
-	border := node.getLayout().border
+	padding := node.getLayout().padding_
+	border := node.getLayout().border_
 
 	width := availableWidth
 	if widthMeasureMode == MeasureModeUndefined || widthMeasureMode == MeasureModeAtMost {
@@ -420,7 +420,7 @@ func layoutAbsoluteChild(
 	crossAxis := resolveCrossDirection(mainAxis, direction)
 	isMainAxisRow := isRow(mainAxis)
 
-	var childWidth, childHeight float32 = YGUndefined, YGUndefined
+	var childWidth, childHeight float32 = Undefined, Undefined
 	var childWidthMeasureMode, childHeightMeasureMode MeasureMode = MeasureModeUndefined, MeasureModeUndefined
 
 	marginRow := child.getMarginForAxis(FlexDirectionRow, width)
@@ -663,7 +663,7 @@ func computeFlexBasisForChildren(
 			child.setPosition(childDirection, mainDim, crossDim, availableInnerWidth)
 		}
 
-		if child.getStyle().positionType() == YGPositionTypeAbsolute {
+		if child.getStyle().positionType() == PositionTypeAbsolute {
 			continue
 		}
 		if child == singleFlexChild {
@@ -1067,7 +1067,7 @@ func justifyMainAxis(
 	numberOfAutoMarginsOnCurrentLine := 0
 	for i := startOfLineIndex; i < flexLine.endOfLineIndex; i++ {
 		child := node.getChild(i)
-		if child.getStyle().positionType() != YGPositionTypeAbsolute {
+		if child.getStyle().positionType() != PositionTypeAbsolute {
 			if child.getFlexStartMarginValue(mainAxis).unit == UnitAuto {
 				numberOfAutoMarginsOnCurrentLine++
 			}
@@ -1123,7 +1123,7 @@ func justifyMainAxis(
 			continue
 		}
 
-		if childStyle.positionType() == YGPositionTypeAbsolute &&
+		if childStyle.positionType() == PositionTypeAbsolute &&
 			child.isInlineStartPositionDefined(mainAxis, direction) {
 			if performLayout {
 				child.setLayoutPosition(
@@ -1133,7 +1133,7 @@ func justifyMainAxis(
 					flexStartEdge(mainAxis))
 			}
 		} else {
-			if childStyle.positionType() != YGPositionTypeAbsolute {
+			if childStyle.positionType() != PositionTypeAbsolute {
 				if child.getFlexStartMarginValue(mainAxis).unit == UnitAuto {
 					flexLine.layout.mainDim += flexLine.layout.remainingFreeSpace /
 						float32(numberOfAutoMarginsOnCurrentLine)
@@ -1141,7 +1141,7 @@ func justifyMainAxis(
 
 				if performLayout {
 					child.setLayoutPosition(
-						childLayout.position[flexStartEdge(mainAxis)]+
+						childLayout.position(flexStartEdge(mainAxis))+
 							flexLine.layout.mainDim,
 						flexStartEdge(mainAxis))
 				}
@@ -1183,7 +1183,7 @@ func justifyMainAxis(
 				}
 			} else if performLayout {
 				child.setLayoutPosition(
-					childLayout.position[flexStartEdge(mainAxis)]+
+					childLayout.position(flexStartEdge(mainAxis))+
 						node.getInlineStartBorder(mainAxis, direction)+
 						leadingMainDim,
 					flexStartEdge(mainAxis))
@@ -1592,7 +1592,7 @@ func calculateLayoutImpl(
 				if child.getStyle().display() == DisplayNone {
 					continue
 				}
-				if child.getStyle().positionType() == YGPositionTypeAbsolute {
+				if child.getStyle().positionType() == PositionTypeAbsolute {
 					// If the child is absolutely positioned and has a top/left/bottom/right set, override all the previously computed positions to set it correctly.
 					isChildLeadingPosDefined := child.isInlineStartPositionDefined(crossAxis, direction)
 					if isChildLeadingPosDefined {
@@ -1604,7 +1604,7 @@ func calculateLayoutImpl(
 						)
 					}
 					// If leading position is not defined or calculations result in NaN, default to border + margin
-					if !isChildLeadingPosDefined || isUndefined(child.getLayout().position[flexStartEdge(crossAxis)]) {
+					if !isChildLeadingPosDefined || isUndefined(child.getLayout().position(flexStartEdge(crossAxis))) {
 						child.setLayoutPosition(
 							node.getInlineStartBorder(crossAxis, direction)+
 								child.getInlineStartMargin(crossAxis, direction, availableInnerWidth),
@@ -1696,7 +1696,7 @@ func calculateLayoutImpl(
 					}
 					// And we apply the position
 					child.setLayoutPosition(
-						child.getLayout().position[flexStartEdge(crossAxis)]+totalLineCrossDim+leadingCrossDim,
+						child.getLayout().position(flexStartEdge(crossAxis))+totalLineCrossDim+leadingCrossDim,
 						flexStartEdge(crossAxis),
 					)
 				}
@@ -1765,7 +1765,7 @@ func calculateLayoutImpl(
 				if child.getStyle().display() == DisplayNone {
 					continue
 				}
-				if child.getStyle().positionType() != YGPositionTypeAbsolute {
+				if child.getStyle().positionType() != PositionTypeAbsolute {
 					if child.getLineIndex() != i {
 						break
 					}
@@ -1796,7 +1796,7 @@ func calculateLayoutImpl(
 					if child.getStyle().display() == DisplayNone {
 						continue
 					}
-					if child.getStyle().positionType() != YGPositionTypeAbsolute {
+					if child.getStyle().positionType() != PositionTypeAbsolute {
 						switch resolveChildAlignment(node, child) {
 						case AlignFlexStart:
 							child.setLayoutPosition(
@@ -1963,10 +1963,10 @@ func calculateLayoutImpl(
 	if performLayout && node.getStyle().flexWrap() == WrapWrapReverse {
 		for i := uint32(0); i < childCount; i++ {
 			child := node.getChild(i)
-			if child.getStyle().positionType() != YGPositionTypeAbsolute {
+			if child.getStyle().positionType() != PositionTypeAbsolute {
 				child.setLayoutPosition(
 					node.getLayout().measuredDimension(dimension(crossAxis))-
-						child.getLayout().position[flexStartEdge(crossAxis)]-
+						child.getLayout().position(flexStartEdge(crossAxis))-
 						child.getLayout().measuredDimension(dimension(crossAxis)),
 					flexStartEdge(crossAxis),
 				)
@@ -1978,7 +1978,7 @@ func calculateLayoutImpl(
 		// STEP 10: SIZING AND POSITIONING ABSOLUTE CHILDREN
 		for _, child := range node.getChildren() {
 			if child.getStyle().display() == DisplayNone ||
-				child.getStyle().positionType() != YGPositionTypeAbsolute {
+				child.getStyle().positionType() != PositionTypeAbsolute {
 				continue
 			}
 			absolutePercentageAgainstPaddingEdge :=
@@ -2318,7 +2318,7 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		fmt.Printf("CalculateLayout  %d\n", atomic.LoadUint32(&gCurrentDebugCount))
 	}
 	node.resolveDimension()
-	width := YGUndefined
+	width := Undefined
 	widthMeasureMode := MeasureModeUndefined
 	style := node.getStyle()
 	if styleDefinesDimension(node, FlexDirectionRow, ownerWidth) {
@@ -2337,7 +2337,7 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		}
 	}
 
-	height := YGUndefined
+	height := Undefined
 	heightMeasureMode := MeasureModeUndefined
 	if styleDefinesDimension(node, FlexDirectionColumn, ownerHeight) {
 		height = (resolveValue(node.getResolvedDimension(dimension(FlexDirectionColumn)), ownerHeight).unwrap() +

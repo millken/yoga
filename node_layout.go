@@ -21,22 +21,22 @@ YG_EXPORT float YGNodeLayoutGetPadding(YGNodeConstRef node, Edge edge);
 
 // LayoutLeft returns left
 func (n *Node) LayoutLeft() float32 {
-	return n.getLayout().position[EdgeLeft]
+	return n.getLayout().position(EdgeLeft)
 }
 
 // LayoutTop
 func (n *Node) LayoutTop() float32 {
-	return n.getLayout().position[EdgeTop]
+	return n.getLayout().position(EdgeTop)
 }
 
 // LayoutRight
 func (n *Node) LayoutRight() float32 {
-	return n.getLayout().position[EdgeRight]
+	return n.getLayout().position(EdgeRight)
 }
 
 // LayoutBottom
 func (n *Node) LayoutBottom() float32 {
-	return n.getLayout().position[EdgeBottom]
+	return n.getLayout().position(EdgeBottom)
 }
 
 // LayoutWidth returns width
@@ -61,7 +61,7 @@ func (n *Node) LayoutHadOverflow() bool {
 
 // LayoutMargin
 func (n *Node) LayoutMargin(edge Edge) float32 {
-	member := n.getLayout().margin
+	member := n.getLayout().margin_
 	if edge > EdgeEnd {
 		panic("Cannot get layout properties of multi-edge shorthands")
 	}
@@ -86,7 +86,7 @@ func (n *Node) LayoutMargin(edge Edge) float32 {
 
 // LayoutBorder
 func (n *Node) LayoutBorder(edge Edge) float32 {
-	member := n.getLayout().border
+	member := n.getLayout().border_
 	if edge > EdgeEnd {
 		panic("Cannot get layout properties of multi-edge shorthands")
 	}
@@ -111,7 +111,7 @@ func (n *Node) LayoutBorder(edge Edge) float32 {
 
 // LayoutPadding
 func (n *Node) LayoutPadding(edge Edge) float32 {
-	member := n.getLayout().padding
+	member := n.getLayout().padding_
 	if edge > EdgeEnd {
 		panic("Cannot get layout properties of multi-edge shorthands")
 	}
