@@ -15,21 +15,6 @@ func clock() int64 {
 	return time.Now().UnixNano()
 }
 
-func compareDoubles(a, b *float64) int {
-	arg1 := *a
-	arg2 := *b
-
-	if arg1 < arg2 {
-		return -1
-	}
-
-	if arg1 > arg2 {
-		return 1
-	}
-
-	return 0
-}
-
 func printBenchmarkResult(name string, start int64, endTimes []int64) {
 	timesInMs := make([]float64, NUM_REPETITIONS)
 	mean := float64(0)
