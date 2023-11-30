@@ -16,19 +16,19 @@ func dimensionWithMargin(node *Node, axis FlexDirection, widthSize float32) floa
 }
 
 func styleDefinesDimension(node *Node, axis FlexDirection, ownerSize float32) bool {
-	isDefined := isDefined(node.getResolvedDimension(dimension(axis)).value)
+	isDefined := IsDefined(node.getResolvedDimension(dimension(axis)).value)
 	resolvedDimension := node.getResolvedDimension(dimension(axis))
 	return !(resolvedDimension.unit == UnitAuto ||
 		resolvedDimension.unit == UnitUndefined ||
 		(resolvedDimension.unit == UnitPoint && isDefined &&
 			resolvedDimension.value < 0.0) ||
 		(resolvedDimension.unit == UnitPercent && isDefined &&
-			(resolvedDimension.value < 0.0 || isUndefined(ownerSize))))
+			(resolvedDimension.value < 0.0 || IsUndefined(ownerSize))))
 }
 
 func isLayoutDimensionDefined(node *Node, axis FlexDirection) bool {
 	value := node.getLayout().measuredDimension(dimension(axis))
-	return isDefined(value) && value >= 0.0
+	return IsDefined(value) && value >= 0.0
 }
 
 func setChildTrailingPosition(
@@ -47,9 +47,9 @@ func constrainMaxSizeForMode(node *Node, axis FlexDirection, ownerAxisSize, owne
 	switch *mode {
 	case MeasureModeExactly:
 	case MeasureModeAtMost:
-		*size = If(isUndefined(maxSize) || maxSize > *size, *size, maxSize)
+		*size = If(IsUndefined(maxSize) || maxSize > *size, *size, maxSize)
 	case MeasureModeUndefined:
-		if isDefined(maxSize) {
+		if IsDefined(maxSize) {
 			*mode = MeasureModeAtMost
 			*size = maxSize
 		}
@@ -70,9 +70,9 @@ func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode 
 	isRowStyleDimDefined := styleDefinesDimension(child, FlexDirectionRow, ownerWidth)
 	isColumnStyleDimDefined := styleDefinesDimension(child, FlexDirectionColumn, ownerHeight)
 
-	if resolvedFlexBasis.isDefined() && isDefined(mainAxisSize) {
+	if resolvedFlexBasis.isDefined() && IsDefined(mainAxisSize) {
 		if child.getLayout().computedFlexBasis.isUndefined() ||
-			(child.getConfig().IsExperimentalFeatureEnabled(
+			(child.GetConfig().IsExperimentalFeatureEnabled(
 				ExperimentalFeatureWebFlexBasis) &&
 				child.getLayout().computedFlexBasisGeneration != generationCount) {
 			paddingAndBorder :=
@@ -126,7 +126,7 @@ func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode 
 		// major browsers appear to implement the following logic.
 		if (!isMainAxisRow && node.getStyle().overflow() == OverflowScroll) ||
 			node.getStyle().overflow() != OverflowScroll {
-			if isUndefined(childWidth) && isDefined(width) {
+			if IsUndefined(childWidth) && IsDefined(width) {
 				childWidth = width
 				childWidthMeasureMode = MeasureModeAtMost
 			}
@@ -134,7 +134,7 @@ func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode 
 
 		if (isMainAxisRow && node.getStyle().overflow() == OverflowScroll) ||
 			node.getStyle().overflow() != OverflowScroll {
-			if isUndefined(childHeight) && isDefined(height) {
+			if IsUndefined(childHeight) && IsDefined(height) {
 				childHeight = height
 				childHeightMeasureMode = MeasureModeAtMost
 			}
@@ -157,7 +157,7 @@ func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode 
 		// the cross axis to be measured exactly with the available inner width
 
 		hasExactWidth :=
-			isDefined(width) && widthMode == MeasureModeExactly
+			IsDefined(width) && widthMode == MeasureModeExactly
 		childWidthStretch :=
 			resolveChildAlignment(node, child) == AlignStretch &&
 				childWidthMeasureMode != MeasureModeExactly
@@ -173,7 +173,7 @@ func computeFlexBasisForChild(node *Node, child *Node, width float32, widthMode 
 		}
 
 		hasExactHeight :=
-			isDefined(height) && heightMode == MeasureModeExactly
+			IsDefined(height) && heightMode == MeasureModeExactly
 		childHeightStretch :=
 			resolveChildAlignment(node, child) == AlignStretch &&
 				childHeightMeasureMode != MeasureModeExactly
@@ -239,7 +239,7 @@ func measureNodeWithMeasureFunc(
 	layoutMarkerData *LayoutData,
 	reason LayoutPassReason,
 ) {
-	if !node.hasMeasureFunc() {
+	if !node.HasMeasureFunc() {
 		panic("Expected node to have custom measure function")
 	}
 
@@ -257,9 +257,9 @@ func measureNodeWithMeasureFunc(
 	paddingAndBorderAxisColumn := padding[EdgeTop] +
 		padding[EdgeBottom] + border[EdgeTop] + border[EdgeBottom]
 
-	innerWidth := If(isUndefined(availableWidth), availableWidth, maxOrDefined(0, availableWidth-paddingAndBorderAxisRow))
+	innerWidth := If(IsUndefined(availableWidth), availableWidth, maxOrDefined(0, availableWidth-paddingAndBorderAxisRow))
 
-	innerHeight := If(isUndefined(availableHeight), availableHeight, maxOrDefined(0, availableHeight-paddingAndBorderAxisColumn))
+	innerHeight := If(IsUndefined(availableHeight), availableHeight, maxOrDefined(0, availableHeight-paddingAndBorderAxisColumn))
 
 	if widthMeasureMode == MeasureModeExactly && heightMeasureMode == MeasureModeExactly {
 		node.setLayoutMeasuredDimension(
@@ -356,9 +356,9 @@ func measureNodeWithFixedSize(
 	ownerWidth float32,
 	ownerHeight float32,
 ) bool {
-	if (isDefined(availableWidth) &&
+	if (IsDefined(availableWidth) &&
 		widthMeasureMode == MeasureModeAtMost && availableWidth <= 0.0) ||
-		(isDefined(availableHeight) &&
+		(IsDefined(availableHeight) &&
 			heightMeasureMode == MeasureModeAtMost && availableHeight <= 0.0) ||
 		(widthMeasureMode == MeasureModeExactly &&
 			heightMeasureMode == MeasureModeExactly) {
@@ -366,7 +366,7 @@ func measureNodeWithFixedSize(
 			boundAxis(
 				node,
 				FlexDirectionRow,
-				If(isUndefined(availableWidth) || (widthMeasureMode == MeasureModeAtMost && availableWidth < 0.0), 0.0, availableWidth),
+				If(IsUndefined(availableWidth) || (widthMeasureMode == MeasureModeAtMost && availableWidth < 0.0), 0.0, availableWidth),
 				ownerWidth,
 				ownerWidth,
 			),
@@ -377,7 +377,7 @@ func measureNodeWithFixedSize(
 			boundAxis(
 				node,
 				FlexDirectionColumn,
-				If(isUndefined(availableHeight) || (heightMeasureMode == MeasureModeAtMost && availableHeight < 0.0), 0.0, availableHeight),
+				If(IsUndefined(availableHeight) || (heightMeasureMode == MeasureModeAtMost && availableHeight < 0.0), 0.0, availableHeight),
 				ownerHeight,
 				ownerWidth,
 			),
@@ -393,10 +393,10 @@ func zeroOutLayoutRecursively(node *Node) {
 	node.setLayout(LayoutResults{})
 	node.setLayoutDimension(0, DimensionWidth)
 	node.setLayoutDimension(0, DimensionHeight)
-	node.setHasNewLayout(true)
+	node.SetHasNewLayout(true)
 
 	node.cloneChildrenIfNeeded()
-	for _, child := range node.getChildren() {
+	for _, child := range node.GetChildren() {
 		zeroOutLayoutRecursively(child)
 	}
 }
@@ -455,28 +455,28 @@ func layoutAbsoluteChild(
 	}
 
 	childStyle := child.getStyle()
-	if (isUndefined(childWidth) != isUndefined(childHeight)) && childStyle.aspectRatio().isDefined() {
-		if isUndefined(childWidth) {
+	if (IsUndefined(childWidth) != IsUndefined(childHeight)) && childStyle.aspectRatio().isDefined() {
+		if IsUndefined(childWidth) {
 			childWidth = marginRow + (childHeight-marginColumn)*childStyle.aspectRatio().unwrap()
-		} else if isUndefined(childHeight) {
+		} else if IsUndefined(childHeight) {
 			childHeight = marginColumn + (childWidth-marginRow)/childStyle.aspectRatio().unwrap()
 		}
 	}
 
-	if isUndefined(childWidth) || isUndefined(childHeight) {
-		if isUndefined(childWidth) {
+	if IsUndefined(childWidth) || IsUndefined(childHeight) {
+		if IsUndefined(childWidth) {
 			childWidthMeasureMode = MeasureModeUndefined
 		} else {
 			childWidthMeasureMode = MeasureModeExactly
 		}
-		if isUndefined(childHeight) {
+		if IsUndefined(childHeight) {
 			childHeightMeasureMode = MeasureModeUndefined
 		} else {
 			childHeightMeasureMode = MeasureModeExactly
 		}
 
-		if !isMainAxisRow && isUndefined(childWidth) &&
-			widthMode != MeasureModeUndefined && isDefined(width) && width > 0 {
+		if !isMainAxisRow && IsUndefined(childWidth) &&
+			widthMode != MeasureModeUndefined && IsDefined(width) && width > 0 {
 			childWidth = width
 			childWidthMeasureMode = MeasureModeAtMost
 		}
@@ -539,7 +539,7 @@ func layoutAbsoluteChild(
 				child.getLayout().measuredDimension(dimension(mainAxis)),
 			flexStartEdge(mainAxis),
 		)
-	} else if node.getConfig().IsExperimentalFeatureEnabled(ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
+	} else if node.GetConfig().IsExperimentalFeatureEnabled(ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
 		child.isFlexStartPositionDefined(mainAxis) {
 		child.setLayoutPosition(
 			child.getFlexStartPosition(
@@ -575,7 +575,7 @@ func layoutAbsoluteChild(
 				child.getLayout().measuredDimension(dimension(crossAxis)),
 			flexStartEdge(crossAxis),
 		)
-	} else if node.getConfig().IsExperimentalFeatureEnabled(ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
+	} else if node.GetConfig().IsExperimentalFeatureEnabled(ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge) &&
 		child.isFlexStartPositionDefined(crossAxis) {
 		child.setLayoutPosition(
 			child.getFlexStartPosition(
@@ -599,7 +599,7 @@ func calculateAvailableInnerDimension(
 	availableInnerDim := availableDim - paddingAndBorder
 	// Max dimension overrides predefined dimension value; Min dimension in turn
 	// overrides both of the above
-	if isDefined(availableInnerDim) {
+	if IsDefined(availableInnerDim) {
 		// We want to make sure our available height does not violate min and max
 		// constraints
 		minDimensionOptional := resolveValue(node.getStyle().minDimension(dimension).YGValue(), ownerDim)
@@ -630,7 +630,7 @@ func computeFlexBasisForChildren(
 ) float32 {
 	totalOuterFlexBasis := float32(0.0)
 	var singleFlexChild *Node
-	children := node.getChildren()
+	children := node.GetChildren()
 	measureModeMainDim := If(isRow(mainAxis), widthMeasureMode, heightMeasureMode)
 
 	if measureModeMainDim == MeasureModeExactly {
@@ -652,7 +652,7 @@ func computeFlexBasisForChildren(
 		child.resolveDimension()
 		if child.getStyle().display() == DisplayNone {
 			zeroOutLayoutRecursively(child)
-			child.setHasNewLayout(true)
+			child.SetHasNewLayout(true)
 			child.setDirty(false)
 			continue
 		}
@@ -730,12 +730,12 @@ func distributeFreeSpaceSecondPass(
 		).unwrap()
 		updatedMainSize := childFlexBasis
 
-		if isDefined(flexLine.layout.remainingFreeSpace) && flexLine.layout.remainingFreeSpace < 0 {
+		if IsDefined(flexLine.layout.remainingFreeSpace) && flexLine.layout.remainingFreeSpace < 0 {
 			flexShrinkScaledFactor = -currentLineChild.resolveFlexShrink() * childFlexBasis
 			if flexShrinkScaledFactor != 0 {
 				var childSize float32
 
-				if isDefined(flexLine.layout.totalFlexShrinkScaledFactors) && flexLine.layout.totalFlexShrinkScaledFactors == 0 {
+				if IsDefined(flexLine.layout.totalFlexShrinkScaledFactors) && flexLine.layout.totalFlexShrinkScaledFactors == 0 {
 					childSize = childFlexBasis + flexShrinkScaledFactor
 				} else {
 					childSize = childFlexBasis + (flexLine.layout.remainingFreeSpace/flexLine.layout.totalFlexShrinkScaledFactors)*flexShrinkScaledFactor
@@ -749,7 +749,7 @@ func distributeFreeSpaceSecondPass(
 					availableInnerWidth,
 				)
 			}
-		} else if isDefined(flexLine.layout.remainingFreeSpace) && flexLine.layout.remainingFreeSpace > 0 {
+		} else if IsDefined(flexLine.layout.remainingFreeSpace) && flexLine.layout.remainingFreeSpace > 0 {
 			flexGrowFactor = currentLineChild.resolveFlexGrow()
 			if !IsNaN(flexGrowFactor) && flexGrowFactor != 0 {
 				updatedMainSize = boundAxis(
@@ -793,7 +793,7 @@ func distributeFreeSpaceSecondPass(
 			childCrossMeasureMode = MeasureModeExactly
 		} else if !styleDefinesDimension(currentLineChild, crossAxis, availableInnerCrossDim) {
 			childCrossSize = availableInnerCrossDim
-			childCrossMeasureMode = If(isUndefined(childCrossSize), MeasureModeUndefined, MeasureModeAtMost)
+			childCrossMeasureMode = If(IsUndefined(childCrossSize), MeasureModeUndefined, MeasureModeAtMost)
 		} else {
 			childCrossSize = resolveValue(
 				currentLineChild.getResolvedDimension(dimension(crossAxis)),
@@ -802,7 +802,7 @@ func distributeFreeSpaceSecondPass(
 			isLoosePercentageMeasurement :=
 				currentLineChild.getResolvedDimension(dimension(crossAxis)).unit == UnitPercent &&
 					measureModeCrossDim != MeasureModeExactly
-			if isUndefined(childCrossSize) || isLoosePercentageMeasurement {
+			if IsUndefined(childCrossSize) || isLoosePercentageMeasurement {
 				childCrossMeasureMode = MeasureModeUndefined
 			} else {
 				childCrossMeasureMode = MeasureModeExactly
@@ -896,7 +896,7 @@ func distributeFreeSpaceFirstPass(
 				-currentLineChild.resolveFlexShrink() * childFlexBasis
 
 			// Is this child able to shrink?
-			if isDefined(flexShrinkScaledFactor) &&
+			if IsDefined(flexShrinkScaledFactor) &&
 				flexShrinkScaledFactor != 0 {
 				baseMainSize = childFlexBasis +
 					flexLine.layout.remainingFreeSpace/
@@ -909,7 +909,7 @@ func distributeFreeSpaceFirstPass(
 					availableInnerMainDim,
 					availableInnerWidth,
 				)
-				if isDefined(baseMainSize) && isDefined(boundMainSize) &&
+				if IsDefined(baseMainSize) && IsDefined(boundMainSize) &&
 					baseMainSize != boundMainSize {
 					// By excluding this item's size and flex factor from remaining, this
 					// item's min/max constraints should also trigger in the second pass
@@ -921,12 +921,12 @@ func distributeFreeSpaceFirstPass(
 							currentLineChild.getLayout().computedFlexBasis.unwrap())
 				}
 			}
-		} else if isDefined(flexLine.layout.remainingFreeSpace) &&
+		} else if IsDefined(flexLine.layout.remainingFreeSpace) &&
 			flexLine.layout.remainingFreeSpace > 0 {
 			flexGrowFactor = currentLineChild.resolveFlexGrow()
 
 			// Is this child able to grow?
-			if isDefined(flexGrowFactor) && flexGrowFactor != 0 {
+			if IsDefined(flexGrowFactor) && flexGrowFactor != 0 {
 				baseMainSize = childFlexBasis +
 					flexLine.layout.remainingFreeSpace/
 						flexLine.layout.totalFlexGrowFactors*flexGrowFactor
@@ -938,7 +938,7 @@ func distributeFreeSpaceFirstPass(
 					availableInnerWidth,
 				)
 
-				if isDefined(baseMainSize) && isDefined(boundMainSize) &&
+				if IsDefined(baseMainSize) && IsDefined(boundMainSize) &&
 					baseMainSize != boundMainSize {
 					// By excluding this item's size and flex factor from remaining, this
 					// item's min/max constraints should also trigger in the second pass
@@ -1066,7 +1066,7 @@ func justifyMainAxis(
 
 	numberOfAutoMarginsOnCurrentLine := 0
 	for i := startOfLineIndex; i < flexLine.endOfLineIndex; i++ {
-		child := node.getChild(i)
+		child := node.GetChild(i)
 		if child.getStyle().positionType() != PositionTypeAbsolute {
 			if child.getFlexStartMarginValue(mainAxis).unit == UnitAuto {
 				numberOfAutoMarginsOnCurrentLine++
@@ -1115,7 +1115,7 @@ func justifyMainAxis(
 	isNodeBaselineLayout := isBaselineLayout(node)
 
 	for i := startOfLineIndex; i < flexLine.endOfLineIndex; i++ {
-		child := node.getChild(i)
+		child := node.GetChild(i)
 		childStyle := child.getStyle()
 		childLayout := child.getLayout()
 
@@ -1282,10 +1282,10 @@ func calculateLayoutImpl(
 		atomic.AddUint32(&gCurrentDebugCount, 1)
 		fmt.Printf("calculateLayoutImpl  %d\n", atomic.LoadUint32(&gCurrentDebugCount))
 	}
-	if !If(isUndefined(availableWidth), widthMeasureMode == MeasureModeUndefined, true) {
+	if !If(IsUndefined(availableWidth), widthMeasureMode == MeasureModeUndefined, true) {
 		panic("availableWidth is indefinite so widthMeasureMode must be MeasureModeUndefined")
 	}
-	if !If(isUndefined(availableHeight), heightMeasureMode == MeasureModeUndefined, true) {
+	if !If(IsUndefined(availableHeight), heightMeasureMode == MeasureModeUndefined, true) {
 		panic("availableHeight is indefinite so heightMeasureMode must be MeasureModeUndefined")
 	}
 
@@ -1330,7 +1330,7 @@ func calculateLayoutImpl(
 	node.setLayoutPadding(node.getInlineStartPadding(flexColumnDirection, direction, ownerWidth), EdgeTop)
 	node.setLayoutPadding(node.getInlineEndPadding(flexColumnDirection, direction, ownerWidth), EdgeBottom)
 
-	if node.hasMeasureFunc() {
+	if node.HasMeasureFunc() {
 		measureNodeWithMeasureFunc(
 			node,
 			availableWidth-marginAxisRow,
@@ -1345,7 +1345,7 @@ func calculateLayoutImpl(
 		return
 	}
 
-	childCount := node.getChildCount()
+	childCount := node.GetChildCount()
 	if childCount == 0 {
 		measureNodeWithoutChildren(
 			node,
@@ -1496,14 +1496,14 @@ func calculateLayoutImpl(
 				maxInnerMainDim = maxInnerWidth
 			}
 
-			if isDefined(minInnerMainDim) && flexLine.sizeConsumed < minInnerMainDim {
+			if IsDefined(minInnerMainDim) && flexLine.sizeConsumed < minInnerMainDim {
 				availableInnerMainDim = minInnerMainDim
-			} else if isDefined(maxInnerMainDim) && flexLine.sizeConsumed > maxInnerMainDim {
+			} else if IsDefined(maxInnerMainDim) && flexLine.sizeConsumed > maxInnerMainDim {
 				availableInnerMainDim = maxInnerMainDim
 			} else {
 				useLegacyStretchBehaviour := node.hasErrata(ErrataStretchFlexBasis)
 
-				if !useLegacyStretchBehaviour && ((isDefined(flexLine.layout.totalFlexGrowFactors) && flexLine.layout.totalFlexGrowFactors == 0) || (isDefined(node.resolveFlexGrow()) && node.resolveFlexGrow() == 0)) {
+				if !useLegacyStretchBehaviour && ((IsDefined(flexLine.layout.totalFlexGrowFactors) && flexLine.layout.totalFlexGrowFactors == 0) || (IsDefined(node.resolveFlexGrow()) && node.resolveFlexGrow() == 0)) {
 					availableInnerMainDim = flexLine.sizeConsumed
 				}
 
@@ -1511,7 +1511,7 @@ func calculateLayoutImpl(
 			}
 		}
 
-		if !sizeBasedOnContent && isDefined(availableInnerMainDim) {
+		if !sizeBasedOnContent && IsDefined(availableInnerMainDim) {
 			flexLine.layout.remainingFreeSpace = availableInnerMainDim - flexLine.sizeConsumed
 		} else if flexLine.sizeConsumed < 0 {
 			flexLine.layout.remainingFreeSpace = -flexLine.sizeConsumed
@@ -1588,7 +1588,7 @@ func calculateLayoutImpl(
 		// We can skip child alignment if we're just measuring the container.
 		if performLayout {
 			for i := startOfLineIndex; i < endOfLineIndex; i++ {
-				child := node.getChild(i)
+				child := node.GetChild(i)
 				if child.getStyle().display() == DisplayNone {
 					continue
 				}
@@ -1604,7 +1604,7 @@ func calculateLayoutImpl(
 						)
 					}
 					// If leading position is not defined or calculations result in NaN, default to border + margin
-					if !isChildLeadingPosDefined || isUndefined(child.getLayout().position(flexStartEdge(crossAxis))) {
+					if !isChildLeadingPosDefined || IsUndefined(child.getLayout().position(flexStartEdge(crossAxis))) {
 						child.setLayoutPosition(
 							node.getInlineStartBorder(crossAxis, direction)+
 								child.getInlineStartMargin(crossAxis, direction, availableInnerWidth),
@@ -1657,8 +1657,8 @@ func calculateLayoutImpl(
 							alignContent := node.getStyle().alignContent()
 							crossAxisDoesNotGrow := isNodeFlexWrap && alignContent != AlignStretch
 
-							childWidthMeasureMode := If(isUndefined(childWidth) || (!isMainAxisRow && crossAxisDoesNotGrow), MeasureModeUndefined, MeasureModeExactly)
-							childHeightMeasureMode := If(isUndefined(childHeight) || (isMainAxisRow && crossAxisDoesNotGrow), MeasureModeUndefined, MeasureModeExactly)
+							childWidthMeasureMode := If(IsUndefined(childWidth) || (!isMainAxisRow && crossAxisDoesNotGrow), MeasureModeUndefined, MeasureModeExactly)
+							childHeightMeasureMode := If(IsUndefined(childHeight) || (isMainAxisRow && crossAxisDoesNotGrow), MeasureModeUndefined, MeasureModeExactly)
 
 							calculateLayoutInternal(
 								child,
@@ -1718,7 +1718,7 @@ func calculateLayoutImpl(
 	if performLayout && (isNodeFlexWrap || isBaselineLayout(node)) {
 		crossDimLead := float32(0)
 		currentLead := leadingPaddingAndBorderCross
-		if isDefined(availableInnerCrossDim) {
+		if IsDefined(availableInnerCrossDim) {
 			remainingAlignContentDim := availableInnerCrossDim - totalLineCrossDim
 			switch node.getStyle().alignContent() {
 			case AlignFlexEnd:
@@ -1761,7 +1761,7 @@ func calculateLayoutImpl(
 			maxAscentForCurrentLine := float32(0)
 			maxDescentForCurrentLine := float32(0)
 			for ii = startIndex; ii < childCount; ii++ {
-				child := node.getChild(ii)
+				child := node.GetChild(ii)
 				if child.getStyle().display() == DisplayNone {
 					continue
 				}
@@ -1792,7 +1792,7 @@ func calculateLayoutImpl(
 			currentLead += If(i != 0, crossAxisGap, 0.0)
 			if performLayout {
 				for ii = startIndex; ii < endIndex; ii++ {
-					child := node.getChild(ii)
+					child := node.GetChild(ii)
 					if child.getStyle().display() == DisplayNone {
 						continue
 					}
@@ -1962,7 +1962,7 @@ func calculateLayoutImpl(
 	// As we only wrapped in normal direction yet, we need to reverse the positions on wrap-reverse.
 	if performLayout && node.getStyle().flexWrap() == WrapWrapReverse {
 		for i := uint32(0); i < childCount; i++ {
-			child := node.getChild(i)
+			child := node.GetChild(i)
 			if child.getStyle().positionType() != PositionTypeAbsolute {
 				child.setLayoutPosition(
 					node.getLayout().measuredDimension(dimension(crossAxis))-
@@ -1976,13 +1976,13 @@ func calculateLayoutImpl(
 
 	if performLayout {
 		// STEP 10: SIZING AND POSITIONING ABSOLUTE CHILDREN
-		for _, child := range node.getChildren() {
+		for _, child := range node.GetChildren() {
 			if child.getStyle().display() == DisplayNone ||
 				child.getStyle().positionType() != PositionTypeAbsolute {
 				continue
 			}
 			absolutePercentageAgainstPaddingEdge :=
-				node.getConfig().IsExperimentalFeatureEnabled(
+				node.GetConfig().IsExperimentalFeatureEnabled(
 					ExperimentalFeatureAbsolutePercentageAgainstPaddingEdge)
 
 			layoutAbsoluteChild(
@@ -2005,7 +2005,7 @@ func calculateLayoutImpl(
 		// Set trailing position if necessary.
 		if needsMainTrailingPos || needsCrossTrailingPos {
 			for i := uint32(0); i < childCount; i++ {
-				child := node.getChild(i)
+				child := node.GetChild(i)
 				if child.getStyle().display() == DisplayNone {
 					continue
 				}
@@ -2087,7 +2087,7 @@ func calculateLayoutInternal(
 	depth++
 
 	needToVisitNode :=
-		(node.isDirty() && layout.generationCount != generationCount) ||
+		(node.IsDirty() && layout.generationCount != generationCount) ||
 			layout.lastOwnerDirection != ownerDirection
 
 	if needToVisitNode {
@@ -2110,7 +2110,7 @@ func calculateLayoutInternal(
 	// dimensions. We handle nodes with measure functions specially here because
 	// they are the most expensive to measure, so it's worth avoiding redundant
 	// measurements if at all possible.
-	if node.hasMeasureFunc() {
+	if node.HasMeasureFunc() {
 		marginAxisRow := node.getMarginForAxis(FlexDirectionRow, ownerWidth)
 		marginAxisColumn := node.getMarginForAxis(FlexDirectionColumn, ownerWidth)
 
@@ -2127,7 +2127,7 @@ func calculateLayoutInternal(
 			layout.cachedLayout.computedHeight,
 			marginAxisRow,
 			marginAxisColumn,
-			node.getConfig(),
+			node.GetConfig(),
 		) {
 			cachedResults = &layout.cachedLayout
 		} else {
@@ -2145,7 +2145,7 @@ func calculateLayoutInternal(
 					layout.cachedMeasurements[i].computedHeight,
 					marginAxisRow,
 					marginAxisColumn,
-					node.getConfig(),
+					node.GetConfig(),
 				) {
 					cachedResults = &layout.cachedMeasurements[i]
 					break
@@ -2279,7 +2279,7 @@ func calculateLayoutInternal(
 		node.setLayoutDimension(layout.measuredDimension(DimensionWidth), DimensionWidth)
 		node.setLayoutDimension(layout.measuredDimension(DimensionHeight), DimensionHeight)
 
-		node.setHasNewLayout(true)
+		node.SetHasNewLayout(true)
 		node.setDirty(false)
 	}
 
@@ -2330,7 +2330,7 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		widthMeasureMode = MeasureModeAtMost
 	} else {
 		width = ownerWidth
-		if isUndefined(width) {
+		if IsUndefined(width) {
 			widthMeasureMode = MeasureModeUndefined
 		} else {
 			widthMeasureMode = MeasureModeExactly
@@ -2348,7 +2348,7 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		heightMeasureMode = MeasureModeAtMost
 	} else {
 		height = ownerHeight
-		if isUndefined(height) {
+		if IsUndefined(height) {
 			heightMeasureMode = MeasureModeUndefined
 		} else {
 			heightMeasureMode = MeasureModeExactly
@@ -2360,7 +2360,7 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		roundLayoutResultsToPixelGrid(node, 0.0, 0.0)
 
 		// #ifdef DEBUG
-		if node.getConfig().ShouldPrintTree() {
+		if node.GetConfig().ShouldPrintTree() {
 			vprint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle)
 		}
 		// #endif

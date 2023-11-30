@@ -57,7 +57,7 @@ func calculateFlexLine(
 	startOfLineIndex uint32,
 	lineCount uint32,
 ) FlexLine {
-	itemsInFlow := make([]*Node, 0, len(node.getChildren()))
+	itemsInFlow := make([]*Node, 0, len(node.GetChildren()))
 
 	sizeConsumed := float32(0)
 	totalFlexGrowFactors := float32(0)
@@ -70,8 +70,8 @@ func calculateFlexLine(
 	isNodeFlexWrap := node.getStyle().flexWrap() != WrapNoWrap
 	gap := node.getGapForAxis(mainAxis)
 
-	for ; endOfLineIndex < uint32(len(node.getChildren())); endOfLineIndex++ {
-		child := node.getChild(endOfLineIndex)
+	for ; endOfLineIndex < uint32(len(node.GetChildren())); endOfLineIndex++ {
+		child := node.GetChild(endOfLineIndex)
 		if child.getStyle().display() == DisplayNone || child.getStyle().positionType() == PositionTypeAbsolute {
 			if firstElementInLineIndex == endOfLineIndex {
 				firstElementInLineIndex++

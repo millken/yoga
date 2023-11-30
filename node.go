@@ -72,8 +72,10 @@ func NewNodeWithConfig(config *Config) *Node {
 }
 
 func NewNode() *Node {
-
 	return NewNodeWithConfig(&defaultConfig)
+}
+func (node *Node) CalculateLayout(ownerWidth, ownerHeight float32, ownerDirection Direction) {
+	CalculateLayout(node, ownerWidth, ownerHeight, ownerDirection)
 }
 
 func (node *Node) useWebDefaults() {
@@ -81,18 +83,18 @@ func (node *Node) useWebDefaults() {
 	node.StyleSetAlignContent(AlignStretch)
 }
 
-// getHasNewLayout
-func (node *Node) getHasNewLayout() bool {
+// GetHasNewLayout
+func (node *Node) GetHasNewLayout() bool {
 	return node.hasNewLayout_
 }
 
-// getNodeType
-func (node *Node) getNodeType() NodeType {
+// GetNodeType
+func (node *Node) GetNodeType() NodeType {
 	return node.nodeType_
 }
 
-// hasMeasureFunc
-func (node *Node) hasMeasureFunc() bool {
+// HasMeasureFunc
+func (node *Node) HasMeasureFunc() bool {
 	return node.measureFunc_ != nil
 }
 
@@ -105,8 +107,8 @@ func (node *Node) measure(
 	return node.measureFunc_(node, width, widthMode, height, heightMode)
 }
 
-// hasBaselineFunc
-func (node *Node) hasBaselineFunc() bool {
+// HasBaselineFunc
+func (node *Node) HasBaselineFunc() bool {
 	return node.baselineFunc_ != nil
 }
 
@@ -117,11 +119,11 @@ func (node *Node) baseline(width, height float32) float32 {
 
 // hasErrata
 func (node *Node) hasErrata(errata Errata) bool {
-	return node.config_.hasErrata(errata)
+	return node.config_.HasErrata(errata)
 }
 
-// getDirtiedFunc
-func (node *Node) getDirtiedFunc() YGDirtiedFunc {
+// GetDirtiedFunc
+func (node *Node) GetDirtiedFunc() YGDirtiedFunc {
 	return node.dirtiedFunc_
 }
 
@@ -140,38 +142,41 @@ func (node *Node) getLineIndex() uint32 {
 	return node.lineIndex_
 }
 
-// isReferenceBaseline
-func (node *Node) isReferenceBaseline() bool {
+// IsReferenceBaseline
+func (node *Node) IsReferenceBaseline() bool {
 	return node.isReferenceBaseline_
 }
 
-// getOwner
-func (node *Node) getOwner() *Node {
+// GetOwner
+func (node *Node) GetOwner() *Node {
 	return node.owner_
 }
 
-// getChildren
-func (node *Node) getChildren() []*Node {
+// GetChildren
+func (node *Node) GetChildren() []*Node {
 	return node.children_
 }
 
-// getChild
-func (node *Node) getChild(index uint32) *Node {
+// GetChild
+func (node *Node) GetChild(index uint32) *Node {
+	if index >= node.GetChildCount() {
+		panic("Index out of bounds")
+	}
 	return node.children_[index]
 }
 
-// getChildCount
-func (node *Node) getChildCount() uint32 {
+// GetChildCount
+func (node *Node) GetChildCount() uint32 {
 	return uint32(len(node.children_))
 }
 
-// getConfig
-func (node *Node) getConfig() *Config {
+// GetConfig
+func (node *Node) GetConfig() *Config {
 	return node.config_
 }
 
-// isDirty
-func (node *Node) isDirty() bool {
+// IsDirty
+func (node *Node) IsDirty() bool {
 	return node.isDirty_
 }
 
@@ -398,18 +403,18 @@ func (node *Node) getGapForAxis(axis FlexDirection) float32 {
 	return maxOrDefined(resolveCompactValue(gap, 0).unwrap(), 0)
 }
 
-// setContext
-func (node *Node) setContext(context interface{}) {
+// SetContext
+func (node *Node) SetContext(context interface{}) {
 	node.context_ = context
 }
 
-// setPrintFunc
-func (node *Node) setPrintFunc(printFunc YGPrintFunc) {
+// SetPrintFunc
+func (node *Node) SetPrintFunc(printFunc YGPrintFunc) {
 	node.printFunc_ = printFunc
 }
 
-// setHasNewLayout
-func (node *Node) setHasNewLayout(hasNewLayout bool) {
+// SetHasNewLayout
+func (node *Node) SetHasNewLayout(hasNewLayout bool) {
 	node.hasNewLayout_ = hasNewLayout
 }
 
@@ -423,7 +428,7 @@ func (node *Node) SetMeasureFunc(measureFunc YGMeasureFunc) {
 	if measureFunc == nil {
 		node.SetNodeType(NodeTypeDefault)
 	} else {
-		if node.getChildCount() != 0 {
+		if node.GetChildCount() != 0 {
 			panic("Cannot set measure function: Nodes with measure functions cannot have children.")
 		}
 		node.SetNodeType(NodeTypeText)
@@ -431,13 +436,13 @@ func (node *Node) SetMeasureFunc(measureFunc YGMeasureFunc) {
 	node.measureFunc_ = measureFunc
 }
 
-// setBaselineFunc
-func (node *Node) setBaselineFunc(baselineFunc YGBaselineFunc) {
+// SetBaselineFunc
+func (node *Node) SetBaselineFunc(baselineFunc YGBaselineFunc) {
 	node.baselineFunc_ = baselineFunc
 }
 
-// setDirtiedFunc
-func (node *Node) setDirtiedFunc(dirtiedFunc YGDirtiedFunc) {
+// SetDirtiedFunc
+func (node *Node) SetDirtiedFunc(dirtiedFunc YGDirtiedFunc) {
 	node.dirtiedFunc_ = dirtiedFunc
 }
 
@@ -456,9 +461,12 @@ func (node *Node) setLineIndex(lineIndex uint32) {
 	node.lineIndex_ = lineIndex
 }
 
-// setIsReferenceBaseline
-func (node *Node) setIsReferenceBaseline(isReferenceBaseline bool) {
-	node.isReferenceBaseline_ = isReferenceBaseline
+// SetIsReferenceBaseline
+func (node *Node) SetIsReferenceBaseline(isReferenceBaseline bool) {
+	if node.IsReferenceBaseline() == isReferenceBaseline {
+		node.isReferenceBaseline_ = isReferenceBaseline
+		node.markDirtyAndPropagate()
+	}
 }
 
 // setOwner
@@ -471,8 +479,8 @@ func (node *Node) setChildren(children []*Node) {
 	node.children_ = children
 }
 
-// setConfig
-func (node *Node) setConfig(config *Config) {
+// SetConfig
+func (node *Node) SetConfig(config *Config) {
 	if config == nil {
 		panic("config cannot be nil")
 	}
@@ -625,7 +633,7 @@ func (node *Node) resolveFlexBasisPtr() YGValue {
 		return flexBasis
 	}
 	if node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() > 0 {
-		return If(node.getConfig().UseWebDefaults(), YGValueAuto, YGValueZero)
+		return If(node.GetConfig().UseWebDefaults(), YGValueAuto, YGValueZero)
 	}
 	return YGValueAuto
 }
@@ -673,10 +681,10 @@ func (node *Node) replaceChildIdx(child *Node, index uint32) {
 
 // insertChild
 func (node *Node) InsertChild(child *Node, index uint32) {
-	if child.getOwner() != nil {
+	if child.GetOwner() != nil {
 		panic("Child already has a owner, it must be removed first.")
 	}
-	if node.hasMeasureFunc() {
+	if node.HasMeasureFunc() {
 		panic("Cannot add child: Nodes with measure functions cannot have children.")
 	}
 	node.children_ = append(node.children_, nil)
@@ -686,7 +694,13 @@ func (node *Node) InsertChild(child *Node, index uint32) {
 	node.markDirtyAndPropagate()
 }
 
-func (node *Node) removeChild(child *Node) {
+// SwapChild
+func (node *Node) SwapChild(child *Node, index uint32) {
+	node.replaceChildIdx(child, index)
+	child.setOwner(node)
+}
+
+func (node *Node) RemoveChild(child *Node) {
 	for i, c := range node.children_ {
 		if c == child {
 			node.removeChildIdx(uint32(i))
@@ -701,14 +715,32 @@ func (node *Node) removeChildIdx(index uint32) {
 	node.children_ = node.children_[:len(node.children_)-1]
 }
 
+// RemoveAllChildren
+func (node *Node) RemoveAllChildren() {
+	firstChild := node.GetChild(0)
+	if firstChild.GetOwner() == node {
+		for _, child := range node.children_ {
+			child.setLayout(LayoutResults{})
+			child.setOwner(nil)
+		}
+	}
+	node.clearChildren()
+	node.markDirtyAndPropagate()
+}
+
 // cloneChildrenIfNeeded
 func (node *Node) cloneChildrenIfNeeded() {
 	for i, child := range node.children_ {
-		if child.getOwner() != node {
+		if child.GetOwner() != node {
 			child := node.config_.cloneNode(child, node, uint32(i))
 			child.setOwner(node)
 		}
 	}
+}
+
+// MarkDirty
+func (node *Node) MarkDirty() {
+	node.markDirtyAndPropagate()
 }
 
 // markDirtyAndPropagate
@@ -716,15 +748,15 @@ func (node *Node) markDirtyAndPropagate() {
 	if !node.isDirty_ {
 		node.setDirty(true)
 		node.setLayoutComputedFlexBasis(undefinedFloatOptional)
-		if node.getOwner() != nil {
-			node.getOwner().markDirtyAndPropagate()
+		if node.GetOwner() != nil {
+			node.GetOwner().markDirtyAndPropagate()
 		}
 	}
 }
 
 // resolveFlexGrow
 func (node *Node) resolveFlexGrow() float32 {
-	if node.getOwner() == nil {
+	if node.GetOwner() == nil {
 		return 0
 	}
 	if node.getStyle().flexGrow().isDefined() {
@@ -738,16 +770,16 @@ func (node *Node) resolveFlexGrow() float32 {
 
 // resolveFlexShrink
 func (node *Node) resolveFlexShrink() float32 {
-	if node.getOwner() == nil {
+	if node.GetOwner() == nil {
 		return 0
 	}
 	if node.getStyle().flexShrink().isDefined() {
 		return node.getStyle().flexShrink().unwrap()
 	}
-	if !node.getConfig().UseWebDefaults() && node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() < 0 {
+	if !node.GetConfig().UseWebDefaults() && node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() < 0 {
 		return -node.getStyle().flex().unwrap()
 	}
-	return If(node.getConfig().UseWebDefaults(), WebDefaultFlexShrink, DefaultFlexShrink)
+	return If(node.GetConfig().UseWebDefaults(), WebDefaultFlexShrink, DefaultFlexShrink)
 }
 
 // isNodeFlexible
@@ -762,13 +794,13 @@ func (node *Node) print() {
 	}
 }
 
-// reset
-func (node *Node) reset() {
-	if node.getChildCount() != 0 {
+// Reset
+func (node *Node) Reset() {
+	if node.GetChildCount() != 0 {
 		panic("Cannot reset a node which still has children attached")
 	}
-	if node.getOwner() != nil {
+	if node.GetOwner() != nil {
 		panic("Cannot reset a node still attached to a owner")
 	}
-	node = NewNodeWithConfig(node.getConfig())
+	node = NewNodeWithConfig(node.GetConfig())
 }

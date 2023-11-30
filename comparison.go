@@ -4,34 +4,34 @@ import (
 	"math"
 )
 
-func isUndefined[T float32 | float64](value T) bool {
+func IsUndefined[T float32 | float64](value T) bool {
 	return value != value
 }
 
-func isDefined[T float32 | float64](value T) bool {
-	return !isUndefined(value)
+func IsDefined[T float32 | float64](value T) bool {
+	return !IsUndefined(value)
 }
 
 func maxOrDefined[T float32 | float64](a, b T) T {
-	if isDefined(a) && isDefined(b) {
+	if IsDefined(a) && IsDefined(b) {
 		return max(a, b)
 	}
-	return If[T](isUndefined(a), b, a)
+	return If[T](IsUndefined(a), b, a)
 }
 
 func minOrDefined[T float32 | float64](a, b T) T {
-	if isDefined(a) && isDefined(b) {
+	if IsDefined(a) && IsDefined(b) {
 		return min(a, b)
 	}
-	return If[T](isUndefined(a), b, a)
+	return If[T](IsUndefined(a), b, a)
 }
 
 // InexactEquals
 func inexactEqual[T float32 | float64](a, b T) bool {
-	if isDefined(a) && isDefined(b) {
+	if IsDefined(a) && IsDefined(b) {
 		return math.Abs(float64(a-b)) < 0.0001
 	}
-	return isUndefined(a) && isUndefined(b)
+	return IsUndefined(a) && IsUndefined(b)
 }
 
 func inexactEquals(a, b any) bool {

@@ -1,7 +1,7 @@
 package yoga
 
 func calculateBaseline(node *Node) float32 {
-	if node.hasBaselineFunc() {
+	if node.HasBaselineFunc() {
 		//Event.Publish(Event.NodeBaselineStart, node)
 
 		baseline := node.baseline(
@@ -17,9 +17,9 @@ func calculateBaseline(node *Node) float32 {
 	}
 
 	var baselineChild *Node
-	childCount := node.getChildCount()
+	childCount := node.GetChildCount()
 	for i := uint32(0); i < childCount; i++ {
-		child := node.getChild(i)
+		child := node.GetChild(i)
 		if child.getLineIndex() > 0 {
 			break
 		}
@@ -27,7 +27,7 @@ func calculateBaseline(node *Node) float32 {
 			continue
 		}
 		if resolveChildAlignment(node, child) == AlignBaseline ||
-			child.isReferenceBaseline() {
+			child.IsReferenceBaseline() {
 			baselineChild = child
 			break
 		}
@@ -52,9 +52,9 @@ func isBaselineLayout(node *Node) bool {
 	if node.getStyle().alignItems() == AlignBaseline {
 		return true
 	}
-	childCount := node.getChildCount()
+	childCount := node.GetChildCount()
 	for i := uint32(0); i < childCount; i++ {
-		child := node.getChild(i)
+		child := node.GetChild(i)
 		if child.getStyle().positionType() != PositionTypeAbsolute &&
 			child.getStyle().alignSelf() == AlignBaseline {
 			return true

@@ -32,10 +32,10 @@ func canUseCachedMeasurement(widthMode MeasureMode, availableWidth float32, heig
 	effectiveLastHeight := lastAvailableHeight
 
 	if useRoundedComparison {
-		effectiveWidth = roundValueToPixelGrid(float64(availableWidth), float64(pointScaleFactor), false, false)
-		effectiveHeight = roundValueToPixelGrid(float64(availableHeight), float64(pointScaleFactor), false, false)
-		effectiveLastWidth = roundValueToPixelGrid(float64(lastAvailableWidth), float64(pointScaleFactor), false, false)
-		effectiveLastHeight = roundValueToPixelGrid(float64(lastAvailableHeight), float64(pointScaleFactor), false, false)
+		effectiveWidth = RoundValueToPixelGrid(float64(availableWidth), float64(pointScaleFactor), false, false)
+		effectiveHeight = RoundValueToPixelGrid(float64(availableHeight), float64(pointScaleFactor), false, false)
+		effectiveLastWidth = RoundValueToPixelGrid(float64(lastAvailableWidth), float64(pointScaleFactor), false, false)
+		effectiveLastHeight = RoundValueToPixelGrid(float64(lastAvailableHeight), float64(pointScaleFactor), false, false)
 	}
 
 	hasSameWidthSpec := lastWidthMode == widthMode && inexactEqual(effectiveLastWidth, effectiveWidth)

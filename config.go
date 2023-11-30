@@ -49,7 +49,7 @@ func (config *Config) UseWebDefaults() bool {
 	return config.useWebDefaults_
 }
 
-func (config *Config) SetPrintTreeEnabled(printTree bool) {
+func (config *Config) SetShouldPrintTree(printTree bool) {
 	config.printTree_ = printTree
 }
 
@@ -73,28 +73,28 @@ func (config *Config) GetEnabledExperiments() EnumBitset {
 	return config.experimentalFeatures_
 }
 
-// setErrata
-func (config *Config) setErrata(errata Errata) {
+// SetErrata
+func (config *Config) SetErrata(errata Errata) {
 	config.errata_ = errata
 }
 
-// addErrata
-func (config *Config) addErrata(errata Errata) {
+// AddErrata
+func (config *Config) AddErrata(errata Errata) {
 	config.errata_ |= errata
 }
 
-// removeErrata
-func (config *Config) removeErrata(errata Errata) {
+// RemoveErrata
+func (config *Config) RemoveErrata(errata Errata) {
 	config.errata_ &= ^errata
 }
 
-// getErrata
-func (config *Config) getErrata() Errata {
+// GetErrata
+func (config *Config) GetErrata() Errata {
 	return config.errata_
 }
 
-// hasErrata
-func (config *Config) hasErrata(errata Errata) bool {
+// HasErrata
+func (config *Config) HasErrata(errata Errata) bool {
 	return config.errata_&errata != ErrataNone
 }
 
@@ -130,8 +130,8 @@ func (config *Config) log(node *Node, level LogLevel, format string, args ...any
 	}
 }
 
-// setCloneNodeCallback
-func (config *Config) setCloneNodeCallback(callback YGCloneNodeFunc) {
+// SetCloneNodeCallback
+func (config *Config) SetCloneNodeCallback(callback YGCloneNodeFunc) {
 	config.cloneNodeCallback_ = callback
 }
 
@@ -151,10 +151,6 @@ func (config *Config) cloneNode(oldNode *Node, owner *Node, childIndex uint32) *
 
 var defaultConfig Config
 
-func getDefault() *Config {
-	return &defaultConfig
-}
-
 func init() {
 	defaultConfig = Config{
 		logger_: DefaultLogger,
@@ -162,7 +158,7 @@ func init() {
 }
 
 func configUpdateInvalidatesLayout(oldConfig, newConfig *Config) bool {
-	return oldConfig.getErrata() != newConfig.getErrata() ||
+	return oldConfig.GetErrata() != newConfig.GetErrata() ||
 		oldConfig.GetEnabledExperiments() != newConfig.GetEnabledExperiments() ||
 		oldConfig.GetPointScaleFactor() != newConfig.GetPointScaleFactor() ||
 		oldConfig.UseWebDefaults() != newConfig.UseWebDefaults()

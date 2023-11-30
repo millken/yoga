@@ -2,7 +2,7 @@ package yoga
 
 import "math"
 
-func roundValueToPixelGrid(value float64, pointScaleFactor float64, forceCeil bool, forceFloor bool) float32 {
+func RoundValueToPixelGrid(value float64, pointScaleFactor float64, forceCeil bool, forceFloor bool) float32 {
 	scaledValue := value * pointScaleFactor
 	fractial := math.Mod(scaledValue, 1.0)
 	if fractial < 0.00001 {
@@ -25,7 +25,7 @@ func roundValueToPixelGrid(value float64, pointScaleFactor float64, forceCeil bo
 }
 
 func roundLayoutResultsToPixelGrid(node *Node, absoluteLeft float64, absoluteTop float64) {
-	pointScaleFactor := float64(node.getConfig().GetPointScaleFactor())
+	pointScaleFactor := float64(node.GetConfig().GetPointScaleFactor())
 	nodeLeft := float64(node.getLayout().position(EdgeLeft))
 	nodeTop := float64(node.getLayout().position(EdgeTop))
 
@@ -41,11 +41,11 @@ func roundLayoutResultsToPixelGrid(node *Node, absoluteLeft float64, absoluteTop
 	if pointScaleFactor != 0.0 {
 		// If a node has a custom measure function we never want to round down its
 		// size as this could lead to unwanted text truncation.
-		textRounding := node.getNodeType() == NodeTypeText
+		textRounding := node.GetNodeType() == NodeTypeText
 
-		node.setLayoutPosition(roundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding), EdgeLeft)
+		node.setLayoutPosition(RoundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding), EdgeLeft)
 
-		node.setLayoutPosition(roundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding), EdgeTop)
+		node.setLayoutPosition(RoundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding), EdgeTop)
 
 		// We multiply dimension by scale factor and if the result is close to the
 		// whole number, we don't have any fraction To verify if the result is close
@@ -56,26 +56,26 @@ func roundLayoutResultsToPixelGrid(node *Node, absoluteLeft float64, absoluteTop
 			!inexactEqual(math.Mod(nodeHeight*pointScaleFactor, 1.0), 1.0)
 
 		node.setLayoutDimension(
-			roundValueToPixelGrid(
+			RoundValueToPixelGrid(
 				absoluteNodeRight,
 				pointScaleFactor,
 				(textRounding && hasFractionalWidth),
 				(textRounding && !hasFractionalWidth))-
-				roundValueToPixelGrid(
+				RoundValueToPixelGrid(
 					absoluteNodeLeft, pointScaleFactor, false, textRounding), DimensionWidth)
 
 		node.setLayoutDimension(
-			roundValueToPixelGrid(
+			RoundValueToPixelGrid(
 				absoluteNodeBottom,
 				pointScaleFactor,
 				(textRounding && hasFractionalHeight),
 				(textRounding && !hasFractionalHeight))-
-				roundValueToPixelGrid(
+				RoundValueToPixelGrid(
 					absoluteNodeTop, pointScaleFactor, false, textRounding),
 			DimensionHeight)
 	}
 
-	for _, child := range node.getChildren() {
+	for _, child := range node.GetChildren() {
 		roundLayoutResultsToPixelGrid(child, absoluteNodeLeft, absoluteNodeTop)
 	}
 }

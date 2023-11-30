@@ -19,10 +19,6 @@ const (
 	BIAS                uint32  = 0x20000000
 )
 
-func NewCompactValue() CompactValue {
-	return CompactValue{repr: 0x7FC00000}
-}
-
 func (cv CompactValue) isUndefined() bool {
 	return cv.repr != AUTO_BITS && cv.repr != ZERO_BITS_POINT && cv.repr != ZERO_BITS_PERCENT && IsNaN(math.Float32frombits(cv.repr))
 }
@@ -102,7 +98,7 @@ func CompactValuePercent(value float32) CompactValue {
 }
 
 func CompactValueOfUndefined() CompactValue {
-	return NewCompactValue()
+	return CompactValue{repr: 0x7FC00000}
 }
 
 func CompactValueOfAuto() CompactValue {

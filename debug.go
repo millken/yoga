@@ -161,17 +161,17 @@ func nodeToString(str *strings.Builder, node *Node, options PrintOptions, level 
 		appendNumberIfNotUndefined(str, "top", style.position(EdgeTop).YGValue())
 		appendNumberIfNotUndefined(str, "bottom", style.position(EdgeBottom).YGValue())
 
-		if node.hasMeasureFunc() {
+		if node.HasMeasureFunc() {
 			str.WriteString(fmt.Sprintf("has-custom-measure-func: true; "))
 		}
 	}
 	str.WriteString("\">")
 
-	childCount := node.getChildCount()
+	childCount := node.GetChildCount()
 	if options&PrintOptionsChildren == PrintOptionsChildren && childCount > 0 {
 		str.WriteString("\n")
 		for i := uint32(0); i < childCount; i++ {
-			nodeToString(str, node.getChild(i), options, level+1)
+			nodeToString(str, node.GetChild(i), options, level+1)
 		}
 		indent(str, level)
 		str.WriteString("</div>")
@@ -182,5 +182,5 @@ func vprint(node *Node, printOptions PrintOptions) {
 	var str strings.Builder
 	str.Reset()
 	nodeToString(&str, node, printOptions, 0)
-	vlog(node.getConfig(), node, LogLevelDebug, str.String())
+	vlog(node.GetConfig(), node, LogLevelDebug, str.String())
 }

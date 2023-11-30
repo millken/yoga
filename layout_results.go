@@ -125,10 +125,10 @@ func (l *LayoutResults) isEqual(layout *LayoutResults) bool {
 	for i := uint32(0); i < uint32(MaxCachedMeasurements) && isEqual; i++ {
 		isEqual = isEqual && l.cachedMeasurements[i] == layout.cachedMeasurements[i]
 	}
-	if !isUndefined(l.measuredDimensions_[0]) || !isUndefined(layout.measuredDimensions_[0]) {
+	if !IsUndefined(l.measuredDimensions_[0]) || !IsUndefined(layout.measuredDimensions_[0]) {
 		isEqual = isEqual && (l.measuredDimensions_[0] == layout.measuredDimensions_[0])
 	}
-	if !isUndefined(l.measuredDimensions_[1]) || !isUndefined(layout.measuredDimensions_[1]) {
+	if !IsUndefined(l.measuredDimensions_[1]) || !IsUndefined(layout.measuredDimensions_[1]) {
 		isEqual = isEqual && (l.measuredDimensions_[1] == layout.measuredDimensions_[1])
 	}
 	return isEqual
