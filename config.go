@@ -1,12 +1,12 @@
 package yoga
 
-type YGCloneNodeFunc func(
+type CloneNodeFunc func(
 	oldNode *Node,
 	owner *Node,
 	childIndex uint32,
 ) *Node
 
-type YGLogger func(
+type Logger func(
 	config *Config,
 	node *Node,
 	level LogLevel,
@@ -15,8 +15,8 @@ type YGLogger func(
 ) int
 
 type Config struct {
-	cloneNodeCallback_    YGCloneNodeFunc
-	logger_               YGLogger
+	cloneNodeCallback_    CloneNodeFunc
+	logger_               Logger
 	useWebDefaults_       bool
 	printTree_            bool
 	experimentalFeatures_ EnumBitset
@@ -29,7 +29,7 @@ func ConfigNew() *Config {
 	return NewConfig(DefaultLogger)
 }
 
-func NewConfig(logger YGLogger) *Config {
+func NewConfig(logger Logger) *Config {
 	return &Config{
 		cloneNodeCallback_:    nil,
 		logger_:               logger,
@@ -119,7 +119,7 @@ func (config *Config) GetContext() any {
 }
 
 // SetLogger
-func (config *Config) SetLogger(logger YGLogger) {
+func (config *Config) SetLogger(logger Logger) {
 	config.logger_ = logger
 }
 
@@ -131,7 +131,7 @@ func (config *Config) log(node *Node, level LogLevel, format string, args ...any
 }
 
 // SetCloneNodeCallback
-func (config *Config) SetCloneNodeCallback(callback YGCloneNodeFunc) {
+func (config *Config) SetCloneNodeCallback(callback CloneNodeFunc) {
 	config.cloneNodeCallback_ = callback
 }
 
