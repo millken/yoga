@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-type YGSize struct {
+type Size struct {
 	Width  float32
 	Height float32
 }
@@ -58,21 +58,21 @@ func If[T any](expr bool, a, b T) T {
 }
 
 var (
-	YGValueZero      = YGValue{0, UnitPoint}
-	YGValueUndefined = YGValue{Undefined, UnitUndefined}
-	YGValueAuto      = YGValue{Undefined, UnitAuto}
+	ValueZero      = Value{0, UnitPoint}
+	ValueUndefined = Value{Undefined, UnitUndefined}
+	ValueAuto      = Value{Undefined, UnitAuto}
 )
 
-type YGValue struct {
+type Value struct {
 	value float32
 	unit  Unit
 }
 
-func (v YGValue) isUndefined() bool {
+func (v Value) IsUndefined() bool {
 	return v.unit == UnitUndefined
 }
 
-func (v YGValue) equal(other YGValue) bool {
+func (v Value) Equal(other Value) bool {
 	if v.unit != other.unit {
 		return false
 	}
@@ -85,11 +85,11 @@ func (v YGValue) equal(other YGValue) bool {
 	return false
 }
 
-func (v *YGValue) notEqual(other YGValue) bool {
-	return !v.equal(other)
+func (v *Value) NotEqual(other Value) bool {
+	return !v.Equal(other)
 }
 
-func resolveValue(value YGValue, ownerSize float32) FloatOptional {
+func resolveValue(value Value, ownerSize float32) FloatOptional {
 	switch value.unit {
 	case UnitPoint:
 		return NewFloatOptional(value.value)
@@ -101,5 +101,5 @@ func resolveValue(value YGValue, ownerSize float32) FloatOptional {
 }
 
 func resolveCompactValue(value CompactValue, ownerSize float32) FloatOptional {
-	return resolveValue(value.YGValue(), ownerSize)
+	return resolveValue(value.Value(), ownerSize)
 }

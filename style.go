@@ -1,6 +1,6 @@
 package yoga
 
-type YGStyle struct {
+type Style struct {
 	direction_      Direction
 	flexDirection_  FlexDirection
 	justifyContent_ Justify
@@ -40,7 +40,7 @@ var (
 	dimensionUndefinedCompactValue = [DimensionCount]CompactValue{CompactValueOfUndefined(), CompactValueOfUndefined()}
 	dimensionAutoCompactValue      = [DimensionCount]CompactValue{CompactValueOfAuto(), CompactValueOfAuto()}
 
-	defaultStyle = YGStyle{
+	defaultStyle = Style{
 		direction_:      DirectionInherit,
 		flexDirection_:  FlexDirectionColumn,
 		justifyContent_: JustifyFlexStart,
@@ -67,8 +67,8 @@ var (
 	}
 )
 
-func NewStyle() *YGStyle {
-	return &YGStyle{
+func NewStyle() *Style {
+	return &Style{
 		flex_:          undefinedFloatOptional,
 		flexGrow_:      undefinedFloatOptional,
 		flexShrink_:    undefinedFloatOptional,
@@ -84,185 +84,185 @@ func NewStyle() *YGStyle {
 	}
 }
 
-func (s *YGStyle) direction() Direction {
+func (s *Style) direction() Direction {
 	return s.direction_
 }
 
-func (s *YGStyle) setDirection(direction Direction) {
+func (s *Style) setDirection(direction Direction) {
 	s.direction_ = direction
 }
 
-func (s *YGStyle) flexDirection() FlexDirection {
+func (s *Style) flexDirection() FlexDirection {
 	return s.flexDirection_
 }
 
-func (s *YGStyle) setFlexDirection(flexDirection FlexDirection) {
+func (s *Style) setFlexDirection(flexDirection FlexDirection) {
 	s.flexDirection_ = flexDirection
 }
 
-func (s *YGStyle) justifyContent() Justify {
+func (s *Style) justifyContent() Justify {
 	return s.justifyContent_
 }
 
-func (s *YGStyle) setJustifyContent(justifyContent Justify) {
+func (s *Style) setJustifyContent(justifyContent Justify) {
 	s.justifyContent_ = justifyContent
 }
 
-func (s *YGStyle) alignContent() Align {
+func (s *Style) alignContent() Align {
 	return s.alignContent_
 }
 
-func (s *YGStyle) setAlignContent(alignContent Align) {
+func (s *Style) setAlignContent(alignContent Align) {
 	s.alignContent_ = alignContent
 }
 
-func (s *YGStyle) alignItems() Align {
+func (s *Style) alignItems() Align {
 	return s.alignItems_
 }
 
-func (s *YGStyle) setAlignItems(alignItems Align) {
+func (s *Style) setAlignItems(alignItems Align) {
 	s.alignItems_ = alignItems
 }
 
-func (s *YGStyle) alignSelf() Align {
+func (s *Style) alignSelf() Align {
 	return s.alignSelf_
 }
 
-func (s *YGStyle) setAlignSelf(alignSelf Align) {
+func (s *Style) setAlignSelf(alignSelf Align) {
 	s.alignSelf_ = alignSelf
 }
 
-func (s *YGStyle) positionType() PositionType {
+func (s *Style) positionType() PositionType {
 	return s.positionType_
 }
 
-func (s *YGStyle) setPositionType(positionType PositionType) {
+func (s *Style) setPositionType(positionType PositionType) {
 	s.positionType_ = positionType
 }
 
-func (s *YGStyle) flexWrap() Wrap {
+func (s *Style) flexWrap() Wrap {
 	return s.flexWrap_
 }
 
-func (s *YGStyle) setFlexWrap(flexWrap Wrap) {
+func (s *Style) setFlexWrap(flexWrap Wrap) {
 	s.flexWrap_ = flexWrap
 }
 
-func (s *YGStyle) overflow() Overflow {
+func (s *Style) overflow() Overflow {
 	return s.overflow_
 }
 
-func (s *YGStyle) setOverflow(overflow Overflow) {
+func (s *Style) setOverflow(overflow Overflow) {
 	s.overflow_ = overflow
 }
 
-func (s *YGStyle) display() Display {
+func (s *Style) display() Display {
 	return s.display_
 }
 
-func (s *YGStyle) setDisplay(display Display) {
+func (s *Style) setDisplay(display Display) {
 	s.display_ = display
 }
 
-func (s *YGStyle) flex() FloatOptional {
+func (s *Style) flex() FloatOptional {
 	return s.flex_
 }
 
-func (s *YGStyle) flexGrow() FloatOptional {
+func (s *Style) flexGrow() FloatOptional {
 	return s.flexGrow_
 }
 
-func (s *YGStyle) flexShrink() FloatOptional {
+func (s *Style) flexShrink() FloatOptional {
 	return s.flexShrink_
 }
 
-func (s *YGStyle) flexBasis() CompactValue {
+func (s *Style) flexBasis() CompactValue {
 	return s.flexBasis_
 }
 
-func (s *YGStyle) margin(edge Edge) CompactValue {
+func (s *Style) margin(edge Edge) CompactValue {
 	return s.margin_[edge]
 }
 
 // setMargin
-func (s *YGStyle) setMargin(edge Edge, value CompactValue) {
+func (s *Style) setMargin(edge Edge, value CompactValue) {
 	s.margin_[edge] = value
 }
 
-func (s *YGStyle) position(edge Edge) CompactValue {
+func (s *Style) position(edge Edge) CompactValue {
 	return s.position_[edge]
 }
 
 // setPosition
-func (s *YGStyle) setPosition(edge Edge, value CompactValue) {
+func (s *Style) setPosition(edge Edge, value CompactValue) {
 	s.position_[edge] = value
 }
 
-func (s *YGStyle) padding(edge Edge) CompactValue {
+func (s *Style) padding(edge Edge) CompactValue {
 	return s.padding_[edge]
 }
 
 // setPadding
-func (s *YGStyle) setPadding(edge Edge, value CompactValue) {
+func (s *Style) setPadding(edge Edge, value CompactValue) {
 	s.padding_[edge] = value
 }
 
-func (s *YGStyle) border(edge Edge) CompactValue {
+func (s *Style) border(edge Edge) CompactValue {
 	return s.border_[edge]
 }
 
 // setBorder
-func (s *YGStyle) setBorder(edge Edge, value CompactValue) {
+func (s *Style) setBorder(edge Edge, value CompactValue) {
 	s.border_[edge] = value
 }
 
-func (s *YGStyle) gap(gutter Gutter) CompactValue {
+func (s *Style) gap(gutter Gutter) CompactValue {
 	return s.gap_[gutter]
 }
 
 // setGap
-func (s *YGStyle) setGap(gutter Gutter, value CompactValue) {
+func (s *Style) setGap(gutter Gutter, value CompactValue) {
 	s.gap_[gutter] = value
 }
 
 // dimension
-func (s *YGStyle) dimension(dimension Dimension) CompactValue {
+func (s *Style) dimension(dimension Dimension) CompactValue {
 	return s.dimensions_[dimension]
 }
 
 // setDimension
-func (s *YGStyle) setDimension(dimension Dimension, value CompactValue) {
+func (s *Style) setDimension(dimension Dimension, value CompactValue) {
 	s.dimensions_[dimension] = value
 }
 
 // minDimension
-func (s *YGStyle) minDimension(dimension Dimension) CompactValue {
+func (s *Style) minDimension(dimension Dimension) CompactValue {
 	return s.minDimensions_[dimension]
 }
 
 // setMinDimension
-func (s *YGStyle) setMinDimension(dimension Dimension, value CompactValue) {
+func (s *Style) setMinDimension(dimension Dimension, value CompactValue) {
 	s.minDimensions_[dimension] = value
 }
 
 // maxDimension
-func (s *YGStyle) maxDimension(dimension Dimension) CompactValue {
+func (s *Style) maxDimension(dimension Dimension) CompactValue {
 	return s.maxDimensions_[dimension]
 }
 
 // setMaxDimension
-func (s *YGStyle) setMaxDimension(dimension Dimension, value CompactValue) {
+func (s *Style) setMaxDimension(dimension Dimension, value CompactValue) {
 	s.maxDimensions_[dimension] = value
 }
 
 // aspectRatio
-func (s *YGStyle) aspectRatio() FloatOptional {
+func (s *Style) aspectRatio() FloatOptional {
 	return s.aspectRatio_
 }
 
 // resolveColumnGap
-func (s *YGStyle) resolveColumnGap() CompactValue {
-	if s.gap_[GutterColumn].isDefined() {
+func (s *Style) resolveColumnGap() CompactValue {
+	if s.gap_[GutterColumn].IsDefined() {
 		return s.gap_[GutterColumn]
 	} else {
 		return s.gap_[GutterAll]
@@ -270,8 +270,8 @@ func (s *YGStyle) resolveColumnGap() CompactValue {
 }
 
 // resolveRowGap
-func (s *YGStyle) resolveRowGap() CompactValue {
-	if s.gap_[GutterRow].isDefined() {
+func (s *Style) resolveRowGap() CompactValue {
+	if s.gap_[GutterRow].IsDefined() {
 		return s.gap_[GutterRow]
 	} else {
 		return s.gap_[GutterAll]
@@ -279,7 +279,7 @@ func (s *YGStyle) resolveRowGap() CompactValue {
 }
 
 // equal
-func (s *YGStyle) equal(other *YGStyle) bool {
+func (s *Style) equal(other *Style) bool {
 	return s.direction_ == other.direction_ &&
 		s.flexDirection_ == other.flexDirection_ &&
 		s.justifyContent_ == other.justifyContent_ &&

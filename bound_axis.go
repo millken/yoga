@@ -12,14 +12,14 @@ func boundAxisWithinMinAndMax(node *Node, axis FlexDirection, value FloatOptiona
 
 	if isColumn(axis) {
 		min = resolveValue(
-			node.getStyle().minDimension(DimensionHeight).YGValue(), axisSize)
+			node.getStyle().minDimension(DimensionHeight).Value(), axisSize)
 		max = resolveValue(
-			node.getStyle().maxDimension(DimensionHeight).YGValue(), axisSize)
+			node.getStyle().maxDimension(DimensionHeight).Value(), axisSize)
 	} else if isRow(axis) {
 		min = resolveValue(
-			node.getStyle().minDimension(DimensionWidth).YGValue(), axisSize)
+			node.getStyle().minDimension(DimensionWidth).Value(), axisSize)
 		max = resolveValue(
-			node.getStyle().maxDimension(DimensionWidth).YGValue(), axisSize)
+			node.getStyle().maxDimension(DimensionWidth).Value(), axisSize)
 	}
 
 	if max.unwrap() >= 0 && value.unwrap() > max.unwrap() {

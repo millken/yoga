@@ -19,44 +19,44 @@ const (
 	BIAS                uint32  = 0x20000000
 )
 
-func (cv CompactValue) isUndefined() bool {
+func (cv CompactValue) IsUndefined() bool {
 	return cv.repr != AUTO_BITS && cv.repr != ZERO_BITS_POINT && cv.repr != ZERO_BITS_PERCENT && IsNaN(math.Float32frombits(cv.repr))
 }
 
-func (cv CompactValue) isDefined() bool {
-	return !cv.isUndefined()
+func (cv CompactValue) IsDefined() bool {
+	return !cv.IsUndefined()
 }
 
-func (cv CompactValue) isAuto() bool {
+func (cv CompactValue) IsAuto() bool {
 	return cv.repr == AUTO_BITS
 }
 
-func (cv CompactValue) equal(other CompactValue) bool {
+func (cv CompactValue) Equal(other CompactValue) bool {
 	return cv.repr == other.repr
 }
 
-func (cv CompactValue) YGValue() YGValue {
-	if cv.isUndefined() {
-		return YGValueUndefined
+func (cv CompactValue) Value() Value {
+	if cv.IsUndefined() {
+		return ValueUndefined
 	}
 	switch cv.repr {
 	case AUTO_BITS:
-		return YGValueAuto
+		return ValueAuto
 	case ZERO_BITS_POINT:
-		return YGValue{value: 0.0, unit: UnitPoint}
+		return Value{value: 0.0, unit: UnitPoint}
 	case ZERO_BITS_PERCENT:
-		return YGValue{value: 0.0, unit: UnitPercent}
+		return Value{value: 0.0, unit: UnitPercent}
 	}
 
 	if IsNaN(math.Float32frombits(cv.repr)) {
-		return YGValueUndefined
+		return ValueUndefined
 	}
 
 	data := cv.repr
 	data &= ^PERCENT_BIT
 	data += BIAS
 
-	return YGValue{value: math.Float32frombits(data), unit: If(cv.repr&0x40000000 != 0, UnitPercent, UnitPoint)}
+	return Value{value: math.Float32frombits(data), unit: If(cv.repr&0x40000000 != 0, UnitPercent, UnitPoint)}
 }
 
 func CompactValueOf(value float32, unit Unit) CompactValue {

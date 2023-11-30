@@ -39,8 +39,8 @@ func printBenchmarkResult(name string, start int64, endTimes []int64) {
 	fmt.Printf("%s: median: %f ms, stddev: %f ms\n", name, median/1e6, stddev/1e6)
 }
 
-func measure(node *yoga.Node, width float32, widthMode yoga.MeasureMode, height float32, heightMode yoga.MeasureMode) yoga.YGSize {
-	return yoga.YGSize{
+func measure(node *yoga.Node, width float32, widthMode yoga.MeasureMode, height float32, heightMode yoga.MeasureMode) yoga.Size {
+	return yoga.Size{
 		Width:  yoga.If(widthMode == yoga.MeasureModeUndefined, 10, width),
 		Height: yoga.If(heightMode == yoga.MeasureModeUndefined, 10, height),
 	}

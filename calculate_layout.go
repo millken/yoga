@@ -43,7 +43,7 @@ func setChildTrailingPosition(
 }
 
 func constrainMaxSizeForMode(node *Node, axis FlexDirection, ownerAxisSize, ownerWidth float32, mode *MeasureMode, size *float32) {
-	maxSize := resolveValue(node.getStyle().maxDimension(dimension(axis)).YGValue(), ownerAxisSize).unwrap() + node.getMarginForAxis(axis, ownerWidth)
+	maxSize := resolveValue(node.getStyle().maxDimension(dimension(axis)).Value(), ownerAxisSize).unwrap() + node.getMarginForAxis(axis, ownerWidth)
 	switch *mode {
 	case MeasureModeExactly:
 	case MeasureModeAtMost:
@@ -602,10 +602,10 @@ func calculateAvailableInnerDimension(
 	if IsDefined(availableInnerDim) {
 		// We want to make sure our available height does not violate min and max
 		// constraints
-		minDimensionOptional := resolveValue(node.getStyle().minDimension(dimension).YGValue(), ownerDim)
+		minDimensionOptional := resolveValue(node.getStyle().minDimension(dimension).Value(), ownerDim)
 		minInnerDim := If(minDimensionOptional.isUndefined(), 0.0, minDimensionOptional.unwrap()-paddingAndBorder)
 
-		maxDimensionOptional := resolveValue(node.getStyle().maxDimension(dimension).YGValue(), ownerDim)
+		maxDimensionOptional := resolveValue(node.getStyle().maxDimension(dimension).Value(), ownerDim)
 
 		maxInnerDim := If(maxDimensionOptional.isUndefined(), math.MaxFloat32, maxDimensionOptional.unwrap()-paddingAndBorder)
 
@@ -1046,8 +1046,8 @@ func justifyMainAxis(
 	gap := node.getGapForAxis(mainAxis)
 
 	if measureModeMainDim == MeasureModeAtMost && flexLine.layout.remainingFreeSpace > 0 {
-		if style.minDimension(dimension(mainAxis)).isDefined() &&
-			resolveValue(style.minDimension(dimension(mainAxis)).YGValue(), mainAxisOwnerSize).isDefined() {
+		if style.minDimension(dimension(mainAxis)).IsDefined() &&
+			resolveValue(style.minDimension(dimension(mainAxis)).Value(), mainAxisOwnerSize).isDefined() {
 			// This condition makes sure that if the size of main dimension(after
 			// considering child nodes main dim, leading and trailing padding etc)
 			// falls below min dimension, then the remainingFreeSpace is reassigned
@@ -1055,7 +1055,7 @@ func justifyMainAxis(
 
 			// `minAvailableMainDim` denotes minimum available space in which child
 			// can be laid out, it will exclude space consumed by padding and border.
-			minAvailableMainDim := resolveValue(style.minDimension(dimension(mainAxis)).YGValue(), mainAxisOwnerSize).unwrap() -
+			minAvailableMainDim := resolveValue(style.minDimension(dimension(mainAxis)).Value(), mainAxisOwnerSize).unwrap() -
 				leadingPaddingAndBorderMain - trailingPaddingAndBorderMain
 			occupiedSpaceByChildNodes := availableInnerMainDim - flexLine.layout.remainingFreeSpace
 			flexLine.layout.remainingFreeSpace = maxOrDefined(0.0, minAvailableMainDim-occupiedSpaceByChildNodes)
@@ -1484,10 +1484,10 @@ func calculateLayoutImpl(
 		sizeBasedOnContent := false
 		if measureModeMainDim != MeasureModeExactly {
 			style := node.getStyle()
-			minInnerWidth := resolveValue(style.minDimension(DimensionWidth).YGValue(), ownerWidth).unwrap() - paddingAndBorderAxisRow
-			maxInnerWidth := resolveValue(style.maxDimension(DimensionWidth).YGValue(), ownerWidth).unwrap() - paddingAndBorderAxisRow
-			minInnerHeight := resolveValue(style.minDimension(DimensionHeight).YGValue(), ownerHeight).unwrap() - paddingAndBorderAxisColumn
-			maxInnerHeight := resolveValue(style.maxDimension(DimensionHeight).YGValue(), ownerHeight).unwrap() - paddingAndBorderAxisColumn
+			minInnerWidth := resolveValue(style.minDimension(DimensionWidth).Value(), ownerWidth).unwrap() - paddingAndBorderAxisRow
+			maxInnerWidth := resolveValue(style.maxDimension(DimensionWidth).Value(), ownerWidth).unwrap() - paddingAndBorderAxisRow
+			minInnerHeight := resolveValue(style.minDimension(DimensionHeight).Value(), ownerHeight).unwrap() - paddingAndBorderAxisColumn
+			maxInnerHeight := resolveValue(style.maxDimension(DimensionHeight).Value(), ownerHeight).unwrap() - paddingAndBorderAxisColumn
 
 			minInnerMainDim := minInnerHeight
 			maxInnerMainDim := maxInnerHeight
@@ -2325,8 +2325,8 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		width = (resolveValue(node.getResolvedDimension(dimension(FlexDirectionRow)), ownerWidth).unwrap() +
 			node.getMarginForAxis(FlexDirectionRow, ownerWidth))
 		widthMeasureMode = MeasureModeExactly
-	} else if resolveValue(style.maxDimension(DimensionWidth).YGValue(), ownerWidth).isDefined() {
-		width = resolveValue(style.maxDimension(DimensionWidth).YGValue(), ownerWidth).unwrap()
+	} else if resolveValue(style.maxDimension(DimensionWidth).Value(), ownerWidth).isDefined() {
+		width = resolveValue(style.maxDimension(DimensionWidth).Value(), ownerWidth).unwrap()
 		widthMeasureMode = MeasureModeAtMost
 	} else {
 		width = ownerWidth
@@ -2343,8 +2343,8 @@ func CalculateLayout(node *Node, ownerWidth, ownerHeight float32, ownerDirection
 		height = (resolveValue(node.getResolvedDimension(dimension(FlexDirectionColumn)), ownerHeight).unwrap() +
 			node.getMarginForAxis(FlexDirectionColumn, ownerWidth))
 		heightMeasureMode = MeasureModeExactly
-	} else if resolveValue(style.maxDimension(DimensionHeight).YGValue(), ownerHeight).isDefined() {
-		height = resolveValue(style.maxDimension(DimensionHeight).YGValue(), ownerHeight).unwrap()
+	} else if resolveValue(style.maxDimension(DimensionHeight).Value(), ownerHeight).isDefined() {
+		height = resolveValue(style.maxDimension(DimensionHeight).Value(), ownerHeight).unwrap()
 		heightMeasureMode = MeasureModeAtMost
 	} else {
 		height = ownerHeight

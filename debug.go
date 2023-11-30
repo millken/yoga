@@ -39,17 +39,17 @@ func appendFloatOptionalIfDefined(base *strings.Builder, str string, value Float
 	}
 }
 
-func appendNumberIfNotAuto(base *strings.Builder, str string, value YGValue) {
+func appendNumberIfNotAuto(base *strings.Builder, str string, value Value) {
 	if value.unit != UnitAuto {
 		appendNumberIfNotUndefined(base, str, value)
 	}
 }
 
-func appendNumberIfNotZero(base *strings.Builder, str string, number YGValue) {
+func appendNumberIfNotZero(base *strings.Builder, str string, number Value) {
 	if number.unit == UnitAuto {
 		base.WriteString(str)
 		base.WriteString(": auto; ")
-	} else if !number.isUndefined() && number.value != 0 {
+	} else if !number.IsUndefined() && number.value != 0 {
 		appendNumberIfNotUndefined(base, str, number)
 	}
 }
@@ -63,15 +63,15 @@ func areFourValuesEqual(four [EdgeCount]CompactValue) bool {
 func appendEdges(base *strings.Builder, key string, edges [EdgeCount]CompactValue) {
 	if areFourValuesEqual(edges) {
 		edgeValue := (&nodeDefaults).computeEdgeValueForColumn(edges, EdgeLeft)
-		appendNumberIfNotUndefined(base, key, edgeValue.YGValue())
+		appendNumberIfNotUndefined(base, key, edgeValue.Value())
 	} else {
 		for edge := EdgeLeft; edge < EdgeCount; edge++ {
-			appendNumberIfNotZero(base, fmt.Sprintf("%s-%s", key, edge.String()), edges[edge].YGValue())
+			appendNumberIfNotZero(base, fmt.Sprintf("%s-%s", key, edge.String()), edges[edge].Value())
 		}
 	}
 }
 
-func appendNumberIfNotUndefined(base *strings.Builder, str string, number YGValue) {
+func appendNumberIfNotUndefined(base *strings.Builder, str string, number Value) {
 	if number.unit != UnitUndefined {
 		if number.unit == UnitAuto {
 			base.WriteString(str)
@@ -119,7 +119,7 @@ func nodeToString(str *strings.Builder, node *Node, options PrintOptions, level 
 		}
 		appendFloatOptionalIfDefined(str, "flex-grow", style.flexGrow())
 		appendFloatOptionalIfDefined(str, "flex-shrink", style.flexShrink())
-		appendNumberIfNotAuto(str, "flex-basis", style.flexBasis().YGValue())
+		appendNumberIfNotAuto(str, "flex-basis", style.flexBasis().Value())
 		appendFloatOptionalIfDefined(str, "flex", style.flex())
 
 		if style.flexWrap() != oriStyle.flexWrap() {
@@ -138,28 +138,28 @@ func nodeToString(str *strings.Builder, node *Node, options PrintOptions, level 
 		appendEdges(str, "padding", style.padding_)
 		appendEdges(str, "border", style.border_)
 
-		if style.gap(GutterAll).isDefined() {
-			appendNumberIfNotUndefined(str, "gap", style.gap(GutterAll).YGValue())
+		if style.gap(GutterAll).IsDefined() {
+			appendNumberIfNotUndefined(str, "gap", style.gap(GutterAll).Value())
 		} else {
-			appendNumberIfNotUndefined(str, "column-gap", style.gap(GutterColumn).YGValue())
-			appendNumberIfNotUndefined(str, "row-gap", style.gap(GutterRow).YGValue())
+			appendNumberIfNotUndefined(str, "column-gap", style.gap(GutterColumn).Value())
+			appendNumberIfNotUndefined(str, "row-gap", style.gap(GutterRow).Value())
 		}
 
-		appendNumberIfNotAuto(str, "width", style.dimension(DimensionWidth).YGValue())
-		appendNumberIfNotAuto(str, "height", style.dimension(DimensionHeight).YGValue())
-		appendNumberIfNotAuto(str, "max-width", style.maxDimension(DimensionWidth).YGValue())
-		appendNumberIfNotAuto(str, "max-height", style.maxDimension(DimensionHeight).YGValue())
-		appendNumberIfNotAuto(str, "min-width", style.minDimension(DimensionWidth).YGValue())
-		appendNumberIfNotAuto(str, "min-height", style.minDimension(DimensionHeight).YGValue())
+		appendNumberIfNotAuto(str, "width", style.dimension(DimensionWidth).Value())
+		appendNumberIfNotAuto(str, "height", style.dimension(DimensionHeight).Value())
+		appendNumberIfNotAuto(str, "max-width", style.maxDimension(DimensionWidth).Value())
+		appendNumberIfNotAuto(str, "max-height", style.maxDimension(DimensionHeight).Value())
+		appendNumberIfNotAuto(str, "min-width", style.minDimension(DimensionWidth).Value())
+		appendNumberIfNotAuto(str, "min-height", style.minDimension(DimensionHeight).Value())
 
 		if style.positionType() != oriStyle.positionType() {
 			str.WriteString(fmt.Sprintf("position: %s; ", style.positionType().String()))
 		}
 
-		appendNumberIfNotUndefined(str, "left", style.position(EdgeLeft).YGValue())
-		appendNumberIfNotUndefined(str, "right", style.position(EdgeRight).YGValue())
-		appendNumberIfNotUndefined(str, "top", style.position(EdgeTop).YGValue())
-		appendNumberIfNotUndefined(str, "bottom", style.position(EdgeBottom).YGValue())
+		appendNumberIfNotUndefined(str, "left", style.position(EdgeLeft).Value())
+		appendNumberIfNotUndefined(str, "right", style.position(EdgeRight).Value())
+		appendNumberIfNotUndefined(str, "top", style.position(EdgeTop).Value())
+		appendNumberIfNotUndefined(str, "bottom", style.position(EdgeBottom).Value())
 
 		if node.HasMeasureFunc() {
 			str.WriteString(fmt.Sprintf("has-custom-measure-func: true; "))

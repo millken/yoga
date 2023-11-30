@@ -5,19 +5,19 @@ import (
 	"sync/atomic"
 )
 
-type YGMeasureFunc func(
+type MeasureFunc func(
 	node *Node,
 	width float32,
 	widthMode MeasureMode,
 	height float32,
 	heightMode MeasureMode,
-) YGSize
+) Size
 
-type YGBaselineFunc func(node *Node, width, height float32) float32
+type BaselineFunc func(node *Node, width, height float32) float32
 
-type YGPrintFunc func(node *Node)
+type PrintFunc func(node *Node)
 
-type YGDirtiedFunc func(node *Node)
+type DirtiedFunc func(node *Node)
 
 type Node struct {
 	hasNewLayout_        bool
@@ -25,17 +25,17 @@ type Node struct {
 	isDirty_             bool
 	nodeType_            NodeType
 	context_             interface{}
-	measureFunc_         YGMeasureFunc
-	baselineFunc_        YGBaselineFunc
-	printFunc_           YGPrintFunc
-	dirtiedFunc_         YGDirtiedFunc
-	style_               YGStyle
+	measureFunc_         MeasureFunc
+	baselineFunc_        BaselineFunc
+	printFunc_           PrintFunc
+	dirtiedFunc_         DirtiedFunc
+	style_               Style
 	layout_              LayoutResults
 	lineIndex_           uint32
 	owner_               *Node
 	children_            []*Node
 	config_              *Config
-	resolvedDimensions_  [2]YGValue
+	resolvedDimensions_  [2]Value
 }
 
 var (
@@ -55,7 +55,7 @@ var (
 		owner_:               nil,
 		children_:            make([]*Node, 0),
 		config_:              &defaultConfig,
-		resolvedDimensions_:  [2]YGValue{},
+		resolvedDimensions_:  [2]Value{},
 	}
 )
 
@@ -103,7 +103,7 @@ func (node *Node) measure(
 	widthMode MeasureMode,
 	height float32,
 	heightMode MeasureMode,
-) YGSize {
+) Size {
 	return node.measureFunc_(node, width, widthMode, height, heightMode)
 }
 
@@ -123,12 +123,12 @@ func (node *Node) hasErrata(errata Errata) bool {
 }
 
 // GetDirtiedFunc
-func (node *Node) GetDirtiedFunc() YGDirtiedFunc {
+func (node *Node) GetDirtiedFunc() DirtiedFunc {
 	return node.dirtiedFunc_
 }
 
 // getStyle
-func (node *Node) getStyle() *YGStyle {
+func (node *Node) getStyle() *Style {
 	return &node.style_
 }
 
@@ -181,12 +181,12 @@ func (node *Node) IsDirty() bool {
 }
 
 // getResolvedDimensions
-func (node *Node) getResolvedDimensions() [2]YGValue {
+func (node *Node) getResolvedDimensions() [2]Value {
 	return node.resolvedDimensions_
 }
 
 // getResolvedDimension
-func (node *Node) getResolvedDimension(dimension Dimension) YGValue {
+func (node *Node) getResolvedDimension(dimension Dimension) Value {
 	return node.resolvedDimensions_[dimension]
 }
 
@@ -195,9 +195,9 @@ func (node *Node) computeEdgeValueForColumn(
 	edges [EdgeCount]CompactValue,
 	edge Edge,
 ) CompactValue {
-	if edges[edge].isDefined() {
+	if edges[edge].IsDefined() {
 		return edges[edge]
-	} else if edges[EdgeVertical].isDefined() {
+	} else if edges[EdgeVertical].IsDefined() {
 		return edges[EdgeVertical]
 	} else {
 		return edges[EdgeAll]
@@ -210,11 +210,11 @@ func (node *Node) computeEdgeValueForRow(
 	rowEdge Edge,
 	edge Edge,
 ) CompactValue {
-	if edges[rowEdge].isDefined() {
+	if edges[rowEdge].IsDefined() {
 		return edges[rowEdge]
-	} else if edges[edge].isDefined() {
+	} else if edges[edge].IsDefined() {
 		return edges[edge]
-	} else if edges[EdgeHorizontal].isDefined() {
+	} else if edges[EdgeHorizontal].IsDefined() {
 		return edges[EdgeHorizontal]
 	} else {
 		return edges[EdgeAll]
@@ -235,28 +235,28 @@ func (node *Node) getInlineEndEdgeUsingErrata(flexDirection FlexDirection, direc
 func (node *Node) isFlexStartPositionDefined(axis FlexDirection) bool {
 	startEdge := flexStartEdge(axis)
 	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
-	return leadingPosition.isDefined()
+	return leadingPosition.IsDefined()
 }
 
 // isInlineStartPositionDefined
 func (node *Node) isInlineStartPositionDefined(axis FlexDirection, direction Direction) bool {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
 	leadingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().position_, startEdge))
-	return leadingPosition.isDefined()
+	return leadingPosition.IsDefined()
 }
 
 // isFlexEndPositionDefined
 func (node *Node) isFlexEndPositionDefined(axis FlexDirection) bool {
 	endEdge := flexEndEdge(axis)
 	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
-	return trailingPosition.isDefined()
+	return trailingPosition.IsDefined()
 }
 
 // isInlineEndPositionDefined
 func (node *Node) isInlineEndPositionDefined(axis FlexDirection, direction Direction) bool {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
 	trailingPosition := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().position_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().position_, endEdge))
-	return trailingPosition.isDefined()
+	return trailingPosition.IsDefined()
 }
 
 // getFlexStartPosition
@@ -320,28 +320,28 @@ func (node *Node) getFlexStartBorder(axis FlexDirection, direction Direction) fl
 	leadRelativeFlexItemEdge := flexStartRelativeEdge(axis, direction)
 	startEdge := flexStartEdge(axis)
 	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, leadRelativeFlexItemEdge, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
-	return maxOrDefined(leadingBorder.YGValue().value, 0)
+	return maxOrDefined(leadingBorder.Value().value, 0)
 }
 
 // getInlineStartBorder
 func (node *Node) getInlineStartBorder(axis FlexDirection, direction Direction) float32 {
 	startEdge := node.getInlineStartEdgeUsingErrata(axis, direction)
 	leadingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, EdgeStart, startEdge), node.computeEdgeValueForColumn(node.getStyle().border_, startEdge))
-	return maxOrDefined(leadingBorder.YGValue().value, 0)
+	return maxOrDefined(leadingBorder.Value().value, 0)
 }
 
 // getFlexEndBorder
 func (node *Node) getFlexEndBorder(axis FlexDirection, direction Direction) float32 {
 	trailRelativeFlexItemEdge := flexEndRelativeEdge(axis, direction)
 	trailingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, trailRelativeFlexItemEdge, flexEndEdge(axis)), node.computeEdgeValueForColumn(node.getStyle().border_, flexEndEdge(axis)))
-	return maxOrDefined(trailingBorder.YGValue().value, 0)
+	return maxOrDefined(trailingBorder.Value().value, 0)
 }
 
 // getInlineEndBorder
 func (node *Node) getInlineEndBorder(axis FlexDirection, direction Direction) float32 {
 	endEdge := node.getInlineEndEdgeUsingErrata(axis, direction)
 	trailingBorder := If(isRow(axis), node.computeEdgeValueForRow(node.getStyle().border_, EdgeEnd, endEdge), node.computeEdgeValueForColumn(node.getStyle().border_, endEdge))
-	return maxOrDefined(trailingBorder.YGValue().value, 0)
+	return maxOrDefined(trailingBorder.Value().value, 0)
 }
 
 // getFlexStartPadding
@@ -409,7 +409,7 @@ func (node *Node) SetContext(context interface{}) {
 }
 
 // SetPrintFunc
-func (node *Node) SetPrintFunc(printFunc YGPrintFunc) {
+func (node *Node) SetPrintFunc(printFunc PrintFunc) {
 	node.printFunc_ = printFunc
 }
 
@@ -424,7 +424,7 @@ func (node *Node) SetNodeType(nodeType NodeType) {
 }
 
 // SetMeasureFunc
-func (node *Node) SetMeasureFunc(measureFunc YGMeasureFunc) {
+func (node *Node) SetMeasureFunc(measureFunc MeasureFunc) {
 	if measureFunc == nil {
 		node.SetNodeType(NodeTypeDefault)
 	} else {
@@ -437,17 +437,17 @@ func (node *Node) SetMeasureFunc(measureFunc YGMeasureFunc) {
 }
 
 // SetBaselineFunc
-func (node *Node) SetBaselineFunc(baselineFunc YGBaselineFunc) {
+func (node *Node) SetBaselineFunc(baselineFunc BaselineFunc) {
 	node.baselineFunc_ = baselineFunc
 }
 
 // SetDirtiedFunc
-func (node *Node) SetDirtiedFunc(dirtiedFunc YGDirtiedFunc) {
+func (node *Node) SetDirtiedFunc(dirtiedFunc DirtiedFunc) {
 	node.dirtiedFunc_ = dirtiedFunc
 }
 
 // setStyle
-func (node *Node) setStyle(style YGStyle) {
+func (node *Node) setStyle(style Style) {
 	node.style_ = style
 }
 
@@ -609,44 +609,44 @@ func (node *Node) setPosition(
 }
 
 // getFlexStartMarginValue
-func (node *Node) getFlexStartMarginValue(axis FlexDirection) YGValue {
-	if isRow(axis) && node.getStyle().margin_[EdgeStart].isDefined() {
-		return node.getStyle().margin(EdgeStart).YGValue()
+func (node *Node) getFlexStartMarginValue(axis FlexDirection) Value {
+	if isRow(axis) && node.getStyle().margin_[EdgeStart].IsDefined() {
+		return node.getStyle().margin(EdgeStart).Value()
 	} else {
-		return node.getStyle().margin(flexStartEdge(axis)).YGValue()
+		return node.getStyle().margin(flexStartEdge(axis)).Value()
 	}
 }
 
 // marginTrailingValue
-func (node *Node) marginTrailingValue(axis FlexDirection) YGValue {
-	if isRow(axis) && node.getStyle().margin_[EdgeEnd].isDefined() {
-		return node.getStyle().margin(EdgeEnd).YGValue()
+func (node *Node) marginTrailingValue(axis FlexDirection) Value {
+	if isRow(axis) && node.getStyle().margin_[EdgeEnd].IsDefined() {
+		return node.getStyle().margin(EdgeEnd).Value()
 	} else {
-		return node.getStyle().margin(flexEndEdge(axis)).YGValue()
+		return node.getStyle().margin(flexEndEdge(axis)).Value()
 	}
 }
 
 // resolveFlexBasisPtr
-func (node *Node) resolveFlexBasisPtr() YGValue {
-	flexBasis := node.getStyle().flexBasis().YGValue()
+func (node *Node) resolveFlexBasisPtr() Value {
+	flexBasis := node.getStyle().flexBasis().Value()
 	if flexBasis.unit != UnitAuto && flexBasis.unit != UnitUndefined {
 		return flexBasis
 	}
 	if node.getStyle().flex().isDefined() && node.getStyle().flex().unwrap() > 0 {
-		return If(node.GetConfig().UseWebDefaults(), YGValueAuto, YGValueZero)
+		return If(node.GetConfig().UseWebDefaults(), ValueAuto, ValueZero)
 	}
-	return YGValueAuto
+	return ValueAuto
 }
 
 // resolveDimension
 func (node *Node) resolveDimension() {
 	style := node.getStyle()
 	for dim := DimensionWidth; dim < DimensionCount; dim++ {
-		if style.maxDimension(dim).isDefined() &&
+		if style.maxDimension(dim).IsDefined() &&
 			inexactEquals(style.maxDimension(dim), style.minDimension(dim)) {
-			node.resolvedDimensions_[dim] = style.maxDimension(dim).YGValue()
+			node.resolvedDimensions_[dim] = style.maxDimension(dim).Value()
 		} else {
-			node.resolvedDimensions_[dim] = style.dimension(dim).YGValue()
+			node.resolvedDimensions_[dim] = style.dimension(dim).Value()
 		}
 	}
 }

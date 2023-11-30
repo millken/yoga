@@ -46,15 +46,15 @@ func inexactEquals(a, b any) bool {
 		case float64:
 			return inexactEqual(a, b)
 		}
-	case YGValue:
+	case Value:
 		switch b := b.(type) {
-		case YGValue:
-			return a.equal(b)
+		case Value:
+			return a.Equal(b)
 		}
 	case CompactValue:
 		switch b := b.(type) {
 		case CompactValue:
-			return inexactEquals(a.YGValue(), b.YGValue())
+			return inexactEquals(a.Value(), b.Value())
 		}
 	case FloatOptional:
 		switch b := b.(type) {
@@ -65,7 +65,7 @@ func inexactEquals(a, b any) bool {
 		switch b := b.(type) {
 		case []CompactValue:
 			for i := 0; i < len(a); i++ {
-				if !inexactEquals(a[i].YGValue(), b[i].YGValue()) {
+				if !inexactEquals(a[i].Value(), b[i].Value()) {
 					return false
 				}
 			}
