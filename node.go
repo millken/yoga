@@ -83,6 +83,10 @@ func (node *Node) useWebDefaults() {
 	node.StyleSetAlignContent(AlignStretch)
 }
 
+func (node *Node) GetContext() interface{} {
+	return node.context_
+}
+
 // GetHasNewLayout
 func (node *Node) GetHasNewLayout() bool {
 	return node.hasNewLayout_
