@@ -704,6 +704,7 @@ func (node *Node) RemoveChild(child *Node) {
 	for i, c := range node.children_ {
 		if c == child {
 			node.removeChildIdx(uint32(i))
+			child.setOwner(nil)
 			break
 		}
 	}
