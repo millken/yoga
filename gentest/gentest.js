@@ -6,7 +6,7 @@
  */
 
 /* eslint-env browser */
-/* global CPPEmitter:readable, JavaEmitter:readable, JavascriptEmitter:readable */
+/* global CPPEmitter:readable, JavaEmitter:readable, JavascriptEmitter:readable, GoEmitter:readable */
 
 const INVISIBLE_BORDER_STYLES = ['none', 'initial'];
 
@@ -14,8 +14,8 @@ window.onload = function () {
   checkDefaultValues();
 
   printTest(
-    new GoEmitter(),
-    'go',
+    new CPPEmitter(),
+    'cpp',
     document.body.children[0],
     document.body.children[1],
     document.body.children[2],
@@ -32,6 +32,14 @@ window.onload = function () {
   printTest(
     new JavascriptEmitter(),
     'js',
+    document.body.children[0],
+    document.body.children[1],
+    document.body.children[2],
+  );
+
+  printTest(
+    new GoEmitter(),
+    'go',
     document.body.children[0],
     document.body.children[1],
     document.body.children[2],

@@ -104,8 +104,22 @@ for (const fileName of fixtures) {
     log => !log.message.replace(/^[^"]*/, '').startsWith('"gentest-log:'),
   );
 
+console.log(`Found ${testLogs.length} test logs for ${fileNameNoExtension}`);
+for (let i = 0; i < testLogs.length; i++) {
+  const logContent = testLogs[i].message.replace(/^[^"]*/, '');
+  console.log(`Log ${i}: ${logContent.substring(0, 100)}...`);
+
+  // Try to parse to see if it's valid JSON
+  try {
+    JSON.parse(logContent);
+    console.log(`  Log ${i} is valid JSON`);
+  } catch (e) {
+    console.log(`  Log ${i} is NOT valid JSON: ${e.message}`);
+  }
+}
+
   await fs.writeFile(
-    `${yogaDir}/../${fileNameNoExtension}_test.go`,
+    `${yogaDir}/tests/generated/${fileNameNoExtension}.cpp`,
     addSignatureToSourceCode(
       JSON.parse(testLogs[0].message.replace(/^[^"]*/, '')),
     ),
@@ -130,6 +144,29 @@ for (const fileName of fixtures) {
       ),
     ),
   );
+
+if (testLogs.length > 3) {
+  try {
+    const goLog = testLogs[3].message.replace(/^[^"]*/, '');
+    console.log(`Go log length: ${goLog.length}`);
+    console.log(`Go log start: ${goLog.substring(0, 100)}...`);
+    console.log(`Go log end: ${goLog.substring(goLog.length - 100)}...`);
+
+    let goCode = JSON.parse(goLog);
+    goCode = goCode.replace('YogaTest', fileNameNoExtension);
+
+    await fs.writeFile(
+      `${yogaDir}/../tests/${fileNameNoExtension}_test.go`,
+      addSignatureToSourceCode(goCode),
+    );
+    console.log(`Generated Go test: ${fileNameNoExtension}_test.go`);
+  } catch (e) {
+    console.log('Error parsing Go test code:', e.message);
+    console.log('Go log content:', testLogs[3].message);
+  }
+} else {
+  console.log('Skipping Go test generation - insufficient test logs');
+}
 
   if (suspend) {
     const rl = readline.createInterface({input: stdin, output: stdout});

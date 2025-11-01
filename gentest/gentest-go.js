@@ -40,10 +40,10 @@ GoEmitter.prototype = Object.create(Emitter.prototype, {
         '',
         'import (',
         '  "testing"',
-
         ' "github.com/millken/yoga"',
         ' "github.com/dnsoa/go/assert"',
         ')',
+        '',
       ]);
     },
   },
@@ -624,12 +624,7 @@ GoEmitter.prototype = Object.create(Emitter.prototype, {
 
   YGNodeSetMeasureFunc: {
     value: function (nodeName, innerText, flexDirection) {
-      //TODO: add measure function
-      this.push(
-        `//${nodeName}.SetMeasureFunc(instrinsicSizeMeasureFunc.bind({text: "${innerText}", flexDirection: ${toValueGo(
-          flexDirection,
-        )}}));`,
-      );
+      this.push(`${nodeName}.SetMeasureFunc(intrinsicSizeMeasureFunc("${innerText}", ${flexDirection}));`);
     },
   },
 });
