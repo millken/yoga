@@ -342,7 +342,7 @@ func (n *Node) GetComputedLayout() Layout {
 	return Layout{}
 }
 
-// GetHadOverflow checks if the node had overflow
+// HadOverflow checks if the node had overflow
 func (n *Node) HadOverflow() bool {
 	if n.node != nil {
 		return bool(C.YGNodeLayoutGetHadOverflow(n.node))

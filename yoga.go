@@ -1,3 +1,4 @@
+// Package yoga is a Go binding for the Yoga layout engine.
 package yoga
 
 /*
