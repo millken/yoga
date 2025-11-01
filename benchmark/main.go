@@ -60,17 +60,16 @@ func benchmark(name string, benchFn func()) {
 func main() {
 	benchmark("Stack with flex", func() {
 		root := yoga.NewNode()
-		root.StyleSetWidth(100)
-		root.StyleSetHeight(100)
+		root.SetWidth(100)
+		root.SetHeight(100)
 
 		for i := 0; i < 10; i++ {
 			child := yoga.NewNode()
-			child.SetMeasureFunc(measure)
-			child.StyleSetFlex(1)
+			// child.SetMeasureFunc(measure)
+			child.SetFlex(1)
 			root.InsertChild(child, 0)
 		}
-
-		yoga.CalculateLayout(root, yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
+		root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
 	})
 
 	benchmark("Align stretch in undefined axis", func() {
@@ -78,12 +77,11 @@ func main() {
 
 		for i := 0; i < 10; i++ {
 			child := yoga.NewNode()
-			child.StyleSetHeight(20)
-			child.SetMeasureFunc(measure)
+			child.SetHeight(20)
+			// child.SetMeasureFunc(measure)
 			root.InsertChild(child, 0)
 		}
-
-		yoga.CalculateLayout(root, yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
+		root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
 	})
 
 	benchmark("Nested flex", func() {
@@ -91,17 +89,17 @@ func main() {
 
 		for i := 0; i < 10; i++ {
 			child := yoga.NewNode()
-			child.StyleSetFlex(1)
+			child.SetFlex(1)
 			root.InsertChild(child, 0)
 			for ii := 0; ii < 10; ii++ {
 				grandChild := yoga.NewNode()
-				grandChild.SetMeasureFunc(measure)
-				grandChild.StyleSetFlex(1)
+				// grandChild.SetMeasureFunc(measure)
+				grandChild.SetFlex(1)
 				child.InsertChild(grandChild, 0)
 			}
 		}
 
-		yoga.CalculateLayout(root, yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
+		root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
 	})
 
 	benchmark("Huge nested layout", func() {
@@ -109,37 +107,37 @@ func main() {
 
 		for i := 0; i < 10; i++ {
 			child := yoga.NewNode()
-			child.StyleSetFlexGrow(1)
-			child.StyleSetWidth(10)
-			child.StyleSetHeight(10)
+			child.SetFlexGrow(1)
+			child.SetWidth(10)
+			child.SetHeight(10)
 			root.InsertChild(child, 0)
 			for ii := 0; ii < 10; ii++ {
 				grandChild := yoga.NewNode()
-				grandChild.StyleSetFlexDirection(yoga.FlexDirectionRow)
-				grandChild.StyleSetFlexGrow(1)
-				grandChild.StyleSetWidth(10)
-				grandChild.StyleSetHeight(10)
+				grandChild.SetFlexDirection(yoga.FlexDirectionRow)
+				grandChild.SetFlexGrow(1)
+				grandChild.SetWidth(10)
+				grandChild.SetHeight(10)
 				child.InsertChild(grandChild, 0)
 
 				for iii := 0; iii < 10; iii++ {
 					greatGrandChild := yoga.NewNode()
-					greatGrandChild.StyleSetFlexGrow(1)
-					greatGrandChild.StyleSetWidth(10)
-					greatGrandChild.StyleSetHeight(10)
+					greatGrandChild.SetFlexGrow(1)
+					greatGrandChild.SetWidth(10)
+					greatGrandChild.SetHeight(10)
 					grandChild.InsertChild(greatGrandChild, 0)
 
 					for iiii := 0; iiii < 10; iiii++ {
 						greatGreatGrandChild := yoga.NewNode()
-						greatGreatGrandChild.StyleSetFlexDirection(yoga.FlexDirectionRow)
-						greatGreatGrandChild.StyleSetFlexGrow(1)
-						greatGreatGrandChild.StyleSetWidth(10)
-						greatGreatGrandChild.StyleSetHeight(10)
+						greatGreatGrandChild.SetFlexDirection(yoga.FlexDirectionRow)
+						greatGreatGrandChild.SetFlexGrow(1)
+						greatGreatGrandChild.SetWidth(10)
+						greatGreatGrandChild.SetHeight(10)
 						greatGrandChild.InsertChild(greatGreatGrandChild, 0)
 					}
 				}
 			}
 		}
 
-		yoga.CalculateLayout(root, yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
+		root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
 	})
 }

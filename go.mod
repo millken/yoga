@@ -1,3 +1,6 @@
 module github.com/millken/yoga
 
-go 1.21.1
+go 1.24.8
+
+
+require github.com/dnsoa/go/assert v1.1.1

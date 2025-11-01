@@ -1,0 +1,7 @@
+# Python requirements for Yoga build scripts
+# Note: Most dependencies are part of Python standard library
+
+# Optional: For enhanced features
+# colorama>=0.4.4  # Cross-platform colored terminal text
+# tqdm>=4.62.0     # Progress bars
+# psutil>=5.8.0    # System and process utilities

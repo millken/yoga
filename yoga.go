@@ -1,32 +1,17 @@
 package yoga
 
-import (
-	"fmt"
-	"math"
-	"os"
-)
+/*
+#cgo CXXFLAGS: -std=c++20
+#cgo CPPFLAGS: -I${SRCDIR}/include
+#cgo darwin,arm64 LDFLAGS: -L${SRCDIR}/_libs/darwin/arm64 -lyogacore -lstdc++
+#cgo linux,amd64 LDFLAGS: -L${SRCDIR}/_libs/linux/amd64 -lyogacore -lstdc++ -lm
+#cgo windows,amd64 LDFLAGS: -L${SRCDIR}/_libs/windows/amd64 -lyogacore -lstdc++
+#include <yoga/Yoga.h>
 
-type Size struct {
-	Width  float32
-	Height float32
-}
 
-func DefaultLogger(config *Config,
-	node *Node,
-	level LogLevel,
-	format string,
-	args ...interface{}) int {
-	switch level {
-	case LogLevelError, LogLevelFatal:
-		n, _ := fmt.Fprintf(os.Stderr, format, args...)
-		return n
-	case LogLevelWarn, LogLevelInfo, LogLevelDebug, LogLevelVerbose:
-		fallthrough
-	default:
-		n, _ := fmt.Printf(format, args...)
-		return n
-	}
-}
+*/
+import "C"
+import "math"
 
 const (
 	uvnan = 0x7FC00001
@@ -35,11 +20,17 @@ const (
 var (
 	NaN               = math.Float32frombits(uvnan)
 	Undefined float32 = NaN
+	Zero      float32 = 0.0
 )
 
-// IsNaN reports whether f is an IEEE 754 “not-a-number” value.
+// IsNaN reports whether f is an IEEE 754 "not-a-number" value.
 func IsNaN(f float32) (is bool) {
 	return f != f
+}
+
+// FloatIsUndefined reports whether a float value represents undefined.
+func FloatIsUndefined(value float32) bool {
+	return IsNaN(value)
 }
 
 func IsInf(f float32, sign int) bool {
@@ -55,51 +46,4 @@ func If[T any](expr bool, a, b T) T {
 		return a
 	}
 	return b
-}
-
-var (
-	ValueZero      = Value{0, UnitPoint}
-	ValueUndefined = Value{Undefined, UnitUndefined}
-	ValueAuto      = Value{Undefined, UnitAuto}
-)
-
-type Value struct {
-	value float32
-	unit  Unit
-}
-
-func (v Value) IsUndefined() bool {
-	return v.unit == UnitUndefined
-}
-
-func (v Value) Equal(other Value) bool {
-	if v.unit != other.unit {
-		return false
-	}
-	switch v.unit {
-	case UnitUndefined, UnitAuto:
-		return true
-	case UnitPoint, UnitPercent:
-		return v.value == other.value
-	}
-	return false
-}
-
-func (v *Value) NotEqual(other Value) bool {
-	return !v.Equal(other)
-}
-
-func resolveValue(value Value, ownerSize float32) FloatOptional {
-	switch value.unit {
-	case UnitPoint:
-		return NewFloatOptional(value.value)
-	case UnitPercent:
-		return NewFloatOptional(value.value * ownerSize * 0.01)
-	default:
-		return undefinedFloatOptional
-	}
-}
-
-func resolveCompactValue(value CompactValue, ownerSize float32) FloatOptional {
-	return resolveValue(value.Value(), ownerSize)
 }
