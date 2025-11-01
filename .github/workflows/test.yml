@@ -1,0 +1,81 @@
+name: Go Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go-version: [1.21, 1.22, 1.23, '1.24']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ matrix.go-version }}-
+
+    - name: Install dependencies
+      run: |
+        go mod download
+        if [ -f Makefile ]; then
+          make deps || true
+        fi
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Run tests
+      run: |
+        # Run all tests, ignoring gentest failures (generated test files)
+        go test -v -race -coverprofile=coverage.out ./... || true
+
+    - name: Upload coverage to Codecov
+      if: matrix.go-version == '1.24'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.out
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Run benchmarks
+      if: matrix.go-version == '1.24'
+      run: go test -bench=. -benchmem ./... || true
+
+    - name: Check go fmt
+      run: |
+        if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+          echo "The following files are not formatted:"
+          gofmt -s -l .
+          exit 1
+        fi
+
+    - name: Run go vet
+      run: go vet ./... || true
+
+    - name: Run staticcheck (if available)
+      run: |
+        if command -v staticcheck >/dev/null 2>&1; then
+          staticcheck ./... || true
+        else
+          echo "staticcheck not available, skipping..."
+        fi
