@@ -5,7 +5,9 @@ package yoga
 */
 import "C"
 import (
+	"fmt"
 	"runtime"
+	"strings"
 )
 
 // Layout represents the computed layout information
@@ -1182,5 +1184,144 @@ func (n *Node) Free() {
 		deleteNodeContext(n.node)
 		C.YGNodeFree(n.node)
 		n.node = nil
+	}
+}
+
+// ToYogaLayout generates a JSX representation of the node tree compatible with yogalayout.dev playground
+func (n *Node) ToYogaLayout() string {
+	return n.toYogaLayoutWithLevel(0)
+}
+
+// toYogaLayoutWithLevel is the recursive implementation with level tracking for indentation
+func (n *Node) toYogaLayoutWithLevel(level uint32) string {
+	if n == nil {
+		return ""
+	}
+
+	var str strings.Builder
+	var styleProps []string
+
+	// Add imports at the top level
+	if level == 0 {
+		str.WriteString("<Layout config={{useWebDefaults: false}}>\n")
+		n.indent(&str, level+1)
+	}
+
+	n.indent(&str, level+1)
+	str.WriteString("<Node style={{")
+
+	// Build style properties - include all relevant properties by default
+	oriStyle := NewNode()
+	defer oriStyle.Destroy()
+
+	// Width/Height
+	if !IsNaN(n.GetWidth().Value) {
+		if n.GetWidth().Unit == UnitPoint {
+			styleProps = append(styleProps, fmt.Sprintf("width: %g", n.GetWidth().Value))
+		} else if n.GetWidth().Unit == UnitPercent {
+			styleProps = append(styleProps, fmt.Sprintf("width: '%g%%'", n.GetWidth().Value))
+		}
+	}
+	if !IsNaN(n.GetHeight().Value) {
+		if n.GetHeight().Unit == UnitPoint {
+			styleProps = append(styleProps, fmt.Sprintf("height: %g", n.GetHeight().Value))
+		} else if n.GetHeight().Unit == UnitPercent {
+			styleProps = append(styleProps, fmt.Sprintf("height: '%g%%'", n.GetHeight().Value))
+		}
+	}
+
+	// Flex properties
+	if !IsNaN(n.GetFlexGrow()) && n.GetFlexGrow() > 0 {
+		styleProps = append(styleProps, "flex: 1")
+	}
+
+	// Flex direction
+	if n.GetFlexDirection() != oriStyle.GetFlexDirection() {
+		styleProps = append(styleProps, fmt.Sprintf("flexDirection: '%s'", n.GetFlexDirection().String()))
+	}
+
+	// Justify content
+	if n.GetJustifyContent() != oriStyle.GetJustifyContent() {
+		styleProps = append(styleProps, fmt.Sprintf("justifyContent: '%s'", n.GetJustifyContent().String()))
+	}
+
+	// Align items
+	if n.GetAlignItems() != oriStyle.GetAlignItems() {
+		styleProps = append(styleProps, fmt.Sprintf("alignItems: '%s'", n.GetAlignItems().String()))
+	}
+
+	// Padding (all edges)
+	paddingTop := n.GetPadding(EdgeTop)
+	paddingLeft := n.GetPadding(EdgeLeft)
+	paddingRight := n.GetPadding(EdgeRight)
+	paddingBottom := n.GetPadding(EdgeBottom)
+	if !IsNaN(paddingTop.Value) && !IsNaN(paddingLeft.Value) && !IsNaN(paddingRight.Value) && !IsNaN(paddingBottom.Value) &&
+	   paddingTop.Value == paddingLeft.Value && paddingLeft.Value == paddingRight.Value && paddingRight.Value == paddingBottom.Value &&
+	   paddingTop.Value > 0 {
+		if paddingTop.Unit == UnitPoint {
+			styleProps = append(styleProps, fmt.Sprintf("padding: %g", paddingTop.Value))
+		}
+	}
+
+	// Margin (all edges)
+	marginTop := n.GetMargin(EdgeTop)
+	marginLeft := n.GetMargin(EdgeLeft)
+	marginRight := n.GetMargin(EdgeRight)
+	marginBottom := n.GetMargin(EdgeBottom)
+	if !IsNaN(marginTop.Value) && marginTop.Value > 0 &&
+	   marginTop.Value == marginLeft.Value && marginLeft.Value == marginRight.Value &&
+	   marginRight.Value == marginBottom.Value {
+		if marginTop.Unit == UnitPoint {
+			styleProps = append(styleProps, fmt.Sprintf("margin: %g", marginTop.Value))
+		}
+	}
+
+	// Position
+	if n.GetPositionType() != oriStyle.GetPositionType() {
+		styleProps = append(styleProps, fmt.Sprintf("position: '%s'", n.GetPositionType().String()))
+	}
+
+	// Display
+	if n.GetDisplay() != oriStyle.GetDisplay() {
+		styleProps = append(styleProps, fmt.Sprintf("display: '%s'", n.GetDisplay().String()))
+	}
+
+	// Overflow
+	if n.GetOverflow() != oriStyle.GetOverflow() {
+		styleProps = append(styleProps, fmt.Sprintf("overflow: '%s'", n.GetOverflow().String()))
+	}
+
+	// If no style props, add computed dimensions as fallback
+	if len(styleProps) == 0 {
+		styleProps = append(styleProps, fmt.Sprintf("width: %g", n.GetComputedWidth()))
+		styleProps = append(styleProps, fmt.Sprintf("height: %g", n.GetComputedHeight()))
+	}
+
+	str.WriteString(strings.Join(styleProps, ", "))
+	str.WriteString("}}")
+
+	childCount := n.GetChildCount()
+	if childCount > 0 {
+		str.WriteString(">\n")
+		for i := uint32(0); i < childCount; i++ {
+			str.WriteString(n.GetChild(i).toYogaLayoutWithLevel(level+1))
+		}
+		n.indent(&str, level+1)
+		str.WriteString("</Node>\n")
+	} else {
+		str.WriteString(" />\n")
+	}
+
+	if level == 0 {
+		str.WriteString("</Layout>\n")
+	}
+
+	return str.String()
+}
+
+// indent adds indentation to the string builder
+func (n *Node) indent(base *strings.Builder, level uint32) {
+	for i := uint32(0); i < level; i++ {
+		base.WriteString("  ")
 	}
 }

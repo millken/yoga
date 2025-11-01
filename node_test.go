@@ -1,6 +1,7 @@
 package yoga
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -98,6 +99,10 @@ func TestNodeNewLayoutAPIs(t *testing.T) {
 
 	if computedHeight <= 0 {
 		t.Errorf("Expected computed height > 0, got %f", computedHeight)
+	}
+	htmlStr := node.ToYogaLayout()
+	if len(htmlStr) == 0 {
+		t.Errorf("Expected non-empty HTML string representation of node")
 	}
 }
 
@@ -295,6 +300,110 @@ func TestNodeContext(t *testing.T) {
 
 	if afterLayoutString != "layout test" {
 		t.Errorf("Expected context 'layout test' after layout, got '%s'", afterLayoutString)
+	}
+}
+
+func TestNodeToYogaLayout(t *testing.T) {
+	// Test classic mobile layout: Header, Content, Footer
+	root := NewNode()
+	defer root.Destroy()
+
+	// Root container - full screen
+	root.SetWidth(375)  // iPhone width
+	root.SetHeight(667) // iPhone height
+	// Note: flexDirection defaults to column, which is what we want for mobile layout
+
+	// Header - 60px height
+	header := NewNode()
+	defer header.Destroy()
+	header.SetHeight(60)
+	header.SetFlexDirection(FlexDirectionRow)
+	header.SetAlignItems(AlignCenter)
+	header.SetPadding(EdgeHorizontal, 16)
+
+	// Header title (flexible space)
+	headerTitle := NewNode()
+	defer headerTitle.Destroy()
+	headerTitle.SetFlexGrow(1)
+
+	// Header menu button
+	headerMenu := NewNode()
+	defer headerMenu.Destroy()
+	headerMenu.SetWidth(44)
+	headerMenu.SetHeight(44)
+
+	// Content - flexible
+	content := NewNode()
+	defer content.Destroy()
+	content.SetFlexGrow(1)
+	content.SetPadding(EdgeAll, 16)
+	content.SetFlexDirection(FlexDirectionColumn)
+
+	// Content items
+	for i := 0; i < 5; i++ {
+		item := NewNode()
+		defer item.Destroy()
+		item.SetHeight(80)
+		item.SetMargin(EdgeBottom, 12)
+		content.InsertChild(item, uint32(i))
+	}
+
+	// Footer - 80px height
+	footer := NewNode()
+	defer footer.Destroy()
+	footer.SetHeight(80)
+	footer.SetFlexDirection(FlexDirectionRow)
+	footer.SetJustifyContent(JustifySpaceAround)
+	footer.SetAlignItems(AlignCenter)
+	footer.SetPadding(EdgeHorizontal, 20)
+
+	// Footer navigation items
+	for i := 0; i < 4; i++ {
+		navItem := NewNode()
+		defer navItem.Destroy()
+		navItem.SetWidth(50)
+		navItem.SetHeight(50)
+		footer.InsertChild(navItem, uint32(i))
+	}
+
+	// Assemble the header first
+	header.InsertChild(headerTitle, 0)
+	header.InsertChild(headerMenu, 1)
+
+	// Assemble the layout
+	root.InsertChild(header, 0)
+	root.InsertChild(content, 1)
+	root.InsertChild(footer, 2)
+
+	// Calculate layout
+	root.CalculateLayout(Undefined, Undefined, DirectionLTR)
+
+	// Generate Yoga Layout format
+	html := root.ToYogaLayout()
+
+	// Verify the generated Yoga Layout format
+	if !strings.Contains(html, "<Layout config={{useWebDefaults: false}}>") {
+		t.Errorf("Expected Layout container")
+	}
+	if !strings.Contains(html, "</Layout>") {
+		t.Errorf("Expected closing Layout tag")
+	}
+
+	// Check for main structure - note that column is default, so it may not appear in output
+	// We expect at least one non-default flexDirection (row for header/footer)
+	if !strings.Contains(html, "flexDirection: 'row'") {
+		t.Errorf("Expected row flex direction for header or footer")
+	}
+
+	// Look for key structural elements
+	hasRoot := strings.Contains(html, "width: 375")
+	hasHeader := strings.Contains(html, "height: 60")
+	hasContent := strings.Contains(html, "flex: 1")
+	hasFooter := strings.Contains(html, "justifyContent: 'space-around'")
+
+	if !hasRoot || !hasHeader || !hasContent || !hasFooter {
+		t.Errorf("Expected complete mobile layout structure (root: %v, header: %v, content: %v, footer: %v)",
+			hasRoot, hasHeader, hasContent, hasFooter)
 	}
 }
 
