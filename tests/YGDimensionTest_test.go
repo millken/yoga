@@ -11,93 +11,92 @@
 package yoga_test
 
 import (
-  "testing"
- "github.com/millken/yoga"
- "github.com/dnsoa/go/assert"
+	"github.com/dnsoa/go/assert"
+	"github.com/millken/yoga"
+	"testing"
 )
 
 func TestWrapChild(t *testing.T) {
-  config := yoga.NewConfig()
+	config := yoga.NewConfig()
 
-  root := yoga.NewNodeWithConfig(config)
-  root.SetPositionType(yoga.PositionTypeAbsolute)
+	root := yoga.NewNodeWithConfig(config)
+	root.SetPositionType(yoga.PositionTypeAbsolute)
 
-  root_child0 := yoga.NewNodeWithConfig(config)
-  root_child0.SetWidth(100)
-  root_child0.SetHeight(100)
-  root.InsertChild(root_child0, 0)
-  root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
+	root_child0 := yoga.NewNodeWithConfig(config)
+	root_child0.SetWidth(100)
+	root_child0.SetHeight(100)
+	root.InsertChild(root_child0, 0)
+	root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
 
-  assert.Equal(t, 0, root.GetComputedLeft())
-  assert.Equal(t, 0, root.GetComputedTop())
-  assert.Equal(t, 100, root.GetComputedWidth())
-  assert.Equal(t, 100, root.GetComputedHeight())
+	assert.Equal(t, 0, root.GetComputedLeft())
+	assert.Equal(t, 0, root.GetComputedTop())
+	assert.Equal(t, 100, root.GetComputedWidth())
+	assert.Equal(t, 100, root.GetComputedHeight())
 
-  assert.Equal(t, 0, root_child0.GetComputedLeft())
-  assert.Equal(t, 0, root_child0.GetComputedTop())
-  assert.Equal(t, 100, root_child0.GetComputedWidth())
-  assert.Equal(t, 100, root_child0.GetComputedHeight())
+	assert.Equal(t, 0, root_child0.GetComputedLeft())
+	assert.Equal(t, 0, root_child0.GetComputedTop())
+	assert.Equal(t, 100, root_child0.GetComputedWidth())
+	assert.Equal(t, 100, root_child0.GetComputedHeight())
 
-  root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionRTL)
+	root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionRTL)
 
-  assert.Equal(t, 0, root.GetComputedLeft())
-  assert.Equal(t, 0, root.GetComputedTop())
-  assert.Equal(t, 100, root.GetComputedWidth())
-  assert.Equal(t, 100, root.GetComputedHeight())
+	assert.Equal(t, 0, root.GetComputedLeft())
+	assert.Equal(t, 0, root.GetComputedTop())
+	assert.Equal(t, 100, root.GetComputedWidth())
+	assert.Equal(t, 100, root.GetComputedHeight())
 
-  assert.Equal(t, 0, root_child0.GetComputedLeft())
-  assert.Equal(t, 0, root_child0.GetComputedTop())
-  assert.Equal(t, 100, root_child0.GetComputedWidth())
-  assert.Equal(t, 100, root_child0.GetComputedHeight())
-  config.Destroy()
+	assert.Equal(t, 0, root_child0.GetComputedLeft())
+	assert.Equal(t, 0, root_child0.GetComputedTop())
+	assert.Equal(t, 100, root_child0.GetComputedWidth())
+	assert.Equal(t, 100, root_child0.GetComputedHeight())
+	config.Destroy()
 }
 
 func TestWrapGrandchild(t *testing.T) {
-  config := yoga.NewConfig()
+	config := yoga.NewConfig()
 
-  root := yoga.NewNodeWithConfig(config)
-  root.SetPositionType(yoga.PositionTypeAbsolute)
+	root := yoga.NewNodeWithConfig(config)
+	root.SetPositionType(yoga.PositionTypeAbsolute)
 
-  root_child0 := yoga.NewNodeWithConfig(config)
-  root.InsertChild(root_child0, 0)
+	root_child0 := yoga.NewNodeWithConfig(config)
+	root.InsertChild(root_child0, 0)
 
-  root_child0_child0 := yoga.NewNodeWithConfig(config)
-  root_child0_child0.SetWidth(100)
-  root_child0_child0.SetHeight(100)
-  root_child0.InsertChild(root_child0_child0, 0)
-  root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
+	root_child0_child0 := yoga.NewNodeWithConfig(config)
+	root_child0_child0.SetWidth(100)
+	root_child0_child0.SetHeight(100)
+	root_child0.InsertChild(root_child0_child0, 0)
+	root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionLTR)
 
-  assert.Equal(t, 0, root.GetComputedLeft())
-  assert.Equal(t, 0, root.GetComputedTop())
-  assert.Equal(t, 100, root.GetComputedWidth())
-  assert.Equal(t, 100, root.GetComputedHeight())
+	assert.Equal(t, 0, root.GetComputedLeft())
+	assert.Equal(t, 0, root.GetComputedTop())
+	assert.Equal(t, 100, root.GetComputedWidth())
+	assert.Equal(t, 100, root.GetComputedHeight())
 
-  assert.Equal(t, 0, root_child0.GetComputedLeft())
-  assert.Equal(t, 0, root_child0.GetComputedTop())
-  assert.Equal(t, 100, root_child0.GetComputedWidth())
-  assert.Equal(t, 100, root_child0.GetComputedHeight())
+	assert.Equal(t, 0, root_child0.GetComputedLeft())
+	assert.Equal(t, 0, root_child0.GetComputedTop())
+	assert.Equal(t, 100, root_child0.GetComputedWidth())
+	assert.Equal(t, 100, root_child0.GetComputedHeight())
 
-  assert.Equal(t, 0, root_child0_child0.GetComputedLeft())
-  assert.Equal(t, 0, root_child0_child0.GetComputedTop())
-  assert.Equal(t, 100, root_child0_child0.GetComputedWidth())
-  assert.Equal(t, 100, root_child0_child0.GetComputedHeight())
+	assert.Equal(t, 0, root_child0_child0.GetComputedLeft())
+	assert.Equal(t, 0, root_child0_child0.GetComputedTop())
+	assert.Equal(t, 100, root_child0_child0.GetComputedWidth())
+	assert.Equal(t, 100, root_child0_child0.GetComputedHeight())
 
-  root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionRTL)
+	root.CalculateLayout(yoga.Undefined, yoga.Undefined, yoga.DirectionRTL)
 
-  assert.Equal(t, 0, root.GetComputedLeft())
-  assert.Equal(t, 0, root.GetComputedTop())
-  assert.Equal(t, 100, root.GetComputedWidth())
-  assert.Equal(t, 100, root.GetComputedHeight())
+	assert.Equal(t, 0, root.GetComputedLeft())
+	assert.Equal(t, 0, root.GetComputedTop())
+	assert.Equal(t, 100, root.GetComputedWidth())
+	assert.Equal(t, 100, root.GetComputedHeight())
 
-  assert.Equal(t, 0, root_child0.GetComputedLeft())
-  assert.Equal(t, 0, root_child0.GetComputedTop())
-  assert.Equal(t, 100, root_child0.GetComputedWidth())
-  assert.Equal(t, 100, root_child0.GetComputedHeight())
+	assert.Equal(t, 0, root_child0.GetComputedLeft())
+	assert.Equal(t, 0, root_child0.GetComputedTop())
+	assert.Equal(t, 100, root_child0.GetComputedWidth())
+	assert.Equal(t, 100, root_child0.GetComputedHeight())
 
-  assert.Equal(t, 0, root_child0_child0.GetComputedLeft())
-  assert.Equal(t, 0, root_child0_child0.GetComputedTop())
-  assert.Equal(t, 100, root_child0_child0.GetComputedWidth())
-  assert.Equal(t, 100, root_child0_child0.GetComputedHeight())
-  config.Destroy()
+	assert.Equal(t, 0, root_child0_child0.GetComputedLeft())
+	assert.Equal(t, 0, root_child0_child0.GetComputedTop())
+	assert.Equal(t, 100, root_child0_child0.GetComputedWidth())
+	assert.Equal(t, 100, root_child0_child0.GetComputedHeight())
+	config.Destroy()
 }
-

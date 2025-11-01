@@ -289,12 +289,12 @@ func EdgeFromString(s string) (Edge, error) {
 type Errata uint32
 
 const (
-	ErrataNone Errata = 0
-	ErrataStretchFlexBasis Errata = 1
+	ErrataNone                                         Errata = 0
+	ErrataStretchFlexBasis                             Errata = 1
 	ErrataAbsolutePositionWithoutInsetsExcludesPadding Errata = 2
-	ErrataAbsolutePercentAgainstInnerSize Errata = 4
-	ErrataAll Errata = 2147483647
-	ErrataClassic Errata = 2147483646
+	ErrataAbsolutePercentAgainstInnerSize              Errata = 4
+	ErrataAll                                          Errata = 2147483647
+	ErrataClassic                                      Errata = 2147483646
 )
 
 // String returns the string representation of Errata
@@ -783,4 +783,3 @@ func WrapFromString(s string) (Wrap, error) {
 		return 0, fmt.Errorf("unknown Wrap: %s", s)
 	}
 }
-

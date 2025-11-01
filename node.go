@@ -1256,8 +1256,8 @@ func (n *Node) toYogaLayoutWithLevel(level uint32) string {
 	paddingRight := n.GetPadding(EdgeRight)
 	paddingBottom := n.GetPadding(EdgeBottom)
 	if !IsNaN(paddingTop.Value) && !IsNaN(paddingLeft.Value) && !IsNaN(paddingRight.Value) && !IsNaN(paddingBottom.Value) &&
-	   paddingTop.Value == paddingLeft.Value && paddingLeft.Value == paddingRight.Value && paddingRight.Value == paddingBottom.Value &&
-	   paddingTop.Value > 0 {
+		paddingTop.Value == paddingLeft.Value && paddingLeft.Value == paddingRight.Value && paddingRight.Value == paddingBottom.Value &&
+		paddingTop.Value > 0 {
 		if paddingTop.Unit == UnitPoint {
 			styleProps = append(styleProps, fmt.Sprintf("padding: %g", paddingTop.Value))
 		}
@@ -1269,8 +1269,8 @@ func (n *Node) toYogaLayoutWithLevel(level uint32) string {
 	marginRight := n.GetMargin(EdgeRight)
 	marginBottom := n.GetMargin(EdgeBottom)
 	if !IsNaN(marginTop.Value) && marginTop.Value > 0 &&
-	   marginTop.Value == marginLeft.Value && marginLeft.Value == marginRight.Value &&
-	   marginRight.Value == marginBottom.Value {
+		marginTop.Value == marginLeft.Value && marginLeft.Value == marginRight.Value &&
+		marginRight.Value == marginBottom.Value {
 		if marginTop.Unit == UnitPoint {
 			styleProps = append(styleProps, fmt.Sprintf("margin: %g", marginTop.Value))
 		}
@@ -1304,7 +1304,7 @@ func (n *Node) toYogaLayoutWithLevel(level uint32) string {
 	if childCount > 0 {
 		str.WriteString(">\n")
 		for i := uint32(0); i < childCount; i++ {
-			str.WriteString(n.GetChild(i).toYogaLayoutWithLevel(level+1))
+			str.WriteString(n.GetChild(i).toYogaLayoutWithLevel(level + 1))
 		}
 		n.indent(&str, level+1)
 		str.WriteString("</Node>\n")

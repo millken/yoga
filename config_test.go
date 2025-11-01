@@ -34,22 +34,22 @@ func TestConfigLogger(t *testing.T) {
 
 	// Test basic logger functionality
 	var logMessages []struct {
-		config *Config
-		node   *Node
-		level  LogLevel
+		config  *Config
+		node    *Node
+		level   LogLevel
 		message string
 	}
 
 	testLogger := func(config *Config, node *Node, level LogLevel, message string) int {
 		logMessages = append(logMessages, struct {
-			config *Config
-			node   *Node
-			level  LogLevel
+			config  *Config
+			node    *Node
+			level   LogLevel
 			message string
 		}{
-			config: config,
-			node:   node,
-			level:  level,
+			config:  config,
+			node:    node,
+			level:   level,
 			message: message,
 		})
 		return 1 // Return success
